@@ -1,4 +1,4 @@
 library(testthat)
-library(admiralext)
+library(admiralci)
 
-test_check("admiralext")
+test_check("admiralci")
