@@ -34,7 +34,7 @@ workflow to work and is completely optional.
 Following the installation of system dependencies, R, and package
 dependencies, each workflow does something different.
 
-### [`check-templates.yml`](./github/workflows/check-templates.yml)
+### [`check-templates.yml`](./.github/workflows/check-templates.yml)
 
 This workflow checks for issues within template scripts. For example, in
 admiral package there are several template scripts with admiral-based
@@ -43,7 +43,7 @@ admiral functions, we want to make sure these template scripts execute
 appropriately. Functions in the template scripts that are deprecated or
 used inappropriately will cause this workflow to fail.
 
-### [`code-coverage.yml`](./github/workflows/code-coverage.yml)
+### [`code-coverage.yml`](./.github/workflows/code-coverage.yml)
 
 This workflow measures code coverage for unit tests and reports the code
 coverage as a percentage of the *total number of lines covered by unit
@@ -55,7 +55,7 @@ coverage.
 Report summaries and badges for coverage are generated using a series of
 other GitHub Actions.
 
-### [`links.yml`](./github/workflows/links.yml)
+### [`links.yml`](./.github/workflows/links.yml)
 
 This workflow checks whether URLs embedded in code and documentation are
 valid. Invalid URLs result in workflow failures. This workflow uses
@@ -64,7 +64,7 @@ links. Occasionally this check will detect false positives of urls that
 look like urls. To remedy, please add this false positive to the
 `.lycheeignore` file.
 
-### [`lintr.yml`](./github/workflows/lintr.yml)
+### [`lintr.yml`](./.github/workflows/lintr.yml)
 
 Static code analysis is performed by this workflow, which in turn uses
 the [`lintr`](https://lintr.r-lib.org/) R package.
@@ -72,7 +72,7 @@ the [`lintr`](https://lintr.r-lib.org/) R package.
 Any [`.lintr`](.lintr) configurations in the repository will be by this
 workflow.
 
-### [`man-pages.yml`](./github/workflows/man-pages.yml)
+### [`man-pages.yml`](./.github/workflows/man-pages.yml)
 
 This workflow checks if the manual pages in the `man/` directory of the
 package are up-to-date with ROxygen comments in the code.
@@ -81,7 +81,7 @@ Workflow failures indicate that the manual pages are not up-to-date with
 ROxygen comments, and corrective actions are provided in the workflow
 log.
 
-### [`pkgdown.yml`](./github/workflows/pkgdown.yml)
+### [`pkgdown.yml`](./.github/workflows/pkgdown.yml)
 
 Documentation for the R package is generated via this workflow. This
 workflow uses the [`pkgdown`](pkgdown) framework to generate
@@ -93,27 +93,27 @@ Moreover, an additional `Versions` dropdown is generated via the
 GitHub Action, so that an end user can view multiple versions of the
 documentation for the package.
 
-### [`r-cmd-check.yml`](./github/workflows/r-cmd-check.yml)
+### [`r-cmd-check.yml`](./.github/workflows/r-cmd-check.yml)
 
 This workflow performs `R CND check` for the package. Failed workflows
 are typically indicative of problems encountered during the check, and
 therefore an indication that the package does not meet quality
 standards.
 
-### [`r-pkg-validation.yml`](./github/workflows/r-pkg-validation.yml)
+### [`r-pkg-validation.yml`](./.github/workflows/r-pkg-validation.yml)
 
 When a new release of the package is made, this workflow executes to
 create a validation report via
 [theValidatoR](https://github.com/marketplace/actions/r-package-validation-report).
 The PDF report is then attached to the release within GitHub.
 
-### [`readme-render.yml`](./github/workflows/readme-render.yml)
+### [`readme-render.yml`](./.github/workflows/readme-render.yml)
 
 If your codebase uses a [`README.Rmd` file](README.Rmd) (like this
 repository), then this workflow will automatically render a `README.md`
 and commit it to your branch.
 
-### [`spellcheck.yml`](./github/workflows/spellcheck.yml)
+### [`spellcheck.yml`](./.github/workflows/spellcheck.yml)
 
 Spellchecks are performed by this workflow, and the
 [`spelling`](https://docs.ropensci.org/spelling/) R package is used to
@@ -123,7 +123,7 @@ that you want the spell check to ignore, for example *CDISC* is not an
 English word but a common acronym used within Pharma. The workflow will
 flag this until a user adds it to the `inst/WORDLIST`.
 
-### [`style.yml`](./github/workflows/style.yml%60)
+### [`style.yml`](./.github/workflows/style.yml%60)
 
 Code style is enforced via the [`styler`](https://styler.r-lib.org/) R
 package. Custom style configurations, if any, will be honored by this
@@ -143,8 +143,8 @@ reusability via the
 GitHub Actions event.
 
 The contents of the `.github/workflows/common.yml` file are available in
-the [`common.yml.inactive`](./github/workflows/common.yml.inactive) file
-in this repository.
+the [`common.yml.inactive`](./.github/workflows/common.yml.inactive)
+file in this repository.
 
 ### Copy as-is (not recommended)
 
