@@ -3,15 +3,19 @@ name: R Package Validation report
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '3.6'
+        required: false
+        type: string
   release:
     types: [published]
 
 jobs:
   r-pkg-validation:
-    name: Create report 📃
-    runs-on: ubuntu-latest
-    container:
-      image: rocker/verse:4.2.1
+    name: Generate
+    runs-on: ubuntu-20.04
     # Set Github token permissions
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -20,19 +24,58 @@ jobs:
       packages: write
       deployments: write
     steps:
-      - name: Checkout repo 🛎
+      ##################### BEGIN boilerplate steps #####################
+      - name: Get branch names
+        id: branch-name
+        uses: tj-actions/branch-names@v5.4
+
+      - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Build report 🏗
-        uses: insightsengineering/thevalidatoR@v1
         with:
-          name: validation_report.pdf
+          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Upload report to release 🔼
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          _R_VERSION="${{ inputs.r-version }}"
+          R_VERSION=${_R_VERSION:-"3.6"}
+          echo "::set-output name=R_VERSION::$R_VERSION"
+        shell: bash
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ steps.normalizer.outputs.R_VERSION }}
+
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.local/share/renv
+            ~/.staged.dependencies
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: ${{ runner.os }}-renv-
+
+      - name: Run Staged dependencies
+        uses: insightsengineering/staged-dependencies-action@v1
+        with:
+          run-system-dependencies: true
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+          SD_ENABLE_CHECK: false
+          SD_GIT_REF: ${{ steps.branch-name.outputs.base_ref_branch }}
+      ##################### END boilerplate steps #####################
+
+      - name: Build report
+        uses: insightsengineering/thevalidatoR@v1
+        id: validation
+
+      - name: Upload report to release
+        if: success()
         uses: svenstaro/upload-release-action@v2
         with:
-          file: ./validation_report.pdf
-          asset_name: validation-report.pdf
+          file: ${{ steps.validation.outputs.report_output_filename }}
+          asset_name: ${{ steps.validation.outputs.report_output_filename }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }}
-          overwrite: true
+          overwrite: false

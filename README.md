@@ -28,7 +28,7 @@ The latter is used in conjunction with the
 [`staged_dependencies.yaml`](../../staged_dependencies.yaml) file in
 order to install dependencies that are in the *same stage of
 development* as the current package. You can read more about how it
-works [here](sd-repo). Note that the latter is not necesary for this
+works [here](sd-repo). Note that the latter is not necessary for this
 workflow to work and is completely optional.
 
 Following the installation of system dependencies, R, and package
@@ -58,7 +58,7 @@ other GitHub Actions.
 ### [`links.yml`](./github/workflows/links.yml)
 
 This workflow checks whether URLs embedded in code and documentation are
-valid. Invalid URLs reults in workflow failures. This workflow uses
+valid. Invalid URLs result in workflow failures. This workflow uses
 [`lychee`](https://github.com/lycheeverse/lychee) to detect broken
 links. Occasionally this check will detect false positives of urls that
 look like urls. To remedy, please add this false positive to the
@@ -119,7 +119,7 @@ Spellchecks are performed by this workflow, and the
 [`spelling`](https://docs.ropensci.org/spelling/) R package is used to
 detect spelling mistakes. Failed workflows typically indicate misspelled
 words. In the `inst/WORDLIST` file, you can add words and or acronyms
-that you want the spell check to ignore, for example occds is not an
+that you want the spell check to ignore, for example *CDISC* is not an
 English word but a common acronym used within Pharma. The workflow will
 flag this until a user adds it to the `inst/WORDLIST`.
 

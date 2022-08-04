@@ -12,7 +12,7 @@ on:
       - devel
       - pre-release
 
-name: R-CMD-check
+name: R CMD Check
 
 concurrency:
   group: r-cmd-check-${{ github.event.pull_request.number || github.ref }}
@@ -28,9 +28,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-latest, r: '3.6', repos: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
-          - {os: ubuntu-latest, r: '4.0', repos: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
-          - {os: ubuntu-latest, r: 'release', repos: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
+          - {os: ubuntu-20.04, r: '3.6', repos: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
+          - {os: ubuntu-20.04, r: '4.0', repos: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
+          - {os: ubuntu-20.04, r: 'release', repos: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -40,7 +40,7 @@ jobs:
 
     steps:
       ##################### BEGIN boilerplate steps #####################
-      - name: Get branch names 🌿
+      - name: Get branch names
         id: branch-name
         uses: tj-actions/branch-names@v5.4
 
@@ -49,7 +49,7 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Setup R 📊
+      - name: Setup R
         uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.config.r }}
@@ -59,11 +59,13 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.R_LIBS_USER }}
+          path: |
+            ${{ env.R_LIBS_USER }}
+            ~/.staged.dependencies
           key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('DESCRIPTION') }}
           restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}
 
-      - name: Run Staged dependencies 🎦
+      - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true

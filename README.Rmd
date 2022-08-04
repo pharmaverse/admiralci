@@ -17,7 +17,7 @@ Please refer to the [`.github/workflows`](.github/workflows) directory to view t
 
 Most workflows have a `BEGIN boilderplate steps` and `END boilderplate steps` section within them which define some standard steps required for installing system dependencies, R version and R packages which serve as dependencies for the package.
 
-The underlying mechanisms for installing R and Pandoc are defined in [`r-lib/actions`][r-lib-actions], while the installation of system dependencies and R package dependencies is managed via the [Staged Dependencies GitHub Action][sd-action]. The latter is used in conjunction with the [`staged_dependencies.yaml`](../../staged_dependencies.yaml) file in order to install dependencies that are in the _same stage of development_ as the current package. You can read more about how it works [here](sd-repo). Note that the latter is not necesary for this workflow to work and is completely optional.
+The underlying mechanisms for installing R and Pandoc are defined in [`r-lib/actions`][r-lib-actions], while the installation of system dependencies and R package dependencies is managed via the [Staged Dependencies GitHub Action][sd-action]. The latter is used in conjunction with the [`staged_dependencies.yaml`](../../staged_dependencies.yaml) file in order to install dependencies that are in the _same stage of development_ as the current package. You can read more about how it works [here](sd-repo). Note that the latter is not necessary for this workflow to work and is completely optional.
 
 Following the installation of system dependencies, R, and package dependencies, each workflow does something different.
 
@@ -35,7 +35,7 @@ Report summaries and badges for coverage are generated using a series of other G
 
 ### [`links.yml`](./github/workflows/links.yml)
 
-This workflow checks whether URLs embedded in code and documentation are valid. Invalid URLs reults in workflow failures. This workflow uses [`lychee`][lychee] to detect broken links.   Occasionally this check will detect false positives of urls that look like urls.  To remedy, please add this false positive to the `.lycheeignore` file.   
+This workflow checks whether URLs embedded in code and documentation are valid. Invalid URLs result in workflow failures. This workflow uses [`lychee`][lychee] to detect broken links.   Occasionally this check will detect false positives of urls that look like urls.  To remedy, please add this false positive to the `.lycheeignore` file.   
 
 ### [`lintr.yml`](./github/workflows/lintr.yml)
 
@@ -69,7 +69,7 @@ If your codebase uses a [`README.Rmd` file](README.Rmd) (like this repository), 
 
 ### [`spellcheck.yml`](./github/workflows/spellcheck.yml)
 
-Spellchecks are performed by this workflow, and the [`spelling`][spelling] R package is used to detect spelling mistakes. Failed workflows typically indicate misspelled words.  In the `inst/WORDLIST` file, you can add words and or acronyms that you want the spell check to ignore, for example occds is not an English word but a common acronym used within Pharma.  The workflow will flag this until a user adds it to the `inst/WORDLIST`.
+Spellchecks are performed by this workflow, and the [`spelling`][spelling] R package is used to detect spelling mistakes. Failed workflows typically indicate misspelled words.  In the `inst/WORDLIST` file, you can add words and or acronyms that you want the spell check to ignore, for example _CDISC_ is not an English word but a common acronym used within Pharma.  The workflow will flag this until a user adds it to the `inst/WORDLIST`.
 
 ### [`style.yml`](./github/workflows/style.yml`)
 

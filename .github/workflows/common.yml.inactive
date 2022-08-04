@@ -15,8 +15,6 @@ on:
       - devel
       - pre-release
       - test
-  pull_request_review:
-    types: [submitted]
   release:
     types: [published]
 
