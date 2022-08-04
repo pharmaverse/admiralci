@@ -1,6 +1,12 @@
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '3.6'
+        required: false
+        type: string
   push:
     branches:
       - main
@@ -12,7 +18,7 @@ on:
       - devel
       - pre-release
 
-name: Man Pages 📜
+name: Man Pages
 
 concurrency:
   group: roxygen-${{ github.event.pull_request.number || github.ref }}
@@ -20,7 +26,7 @@ concurrency:
 
 jobs:
   lint:
-    name: Roxygen 🅾️
+    name: Roxygen
     runs-on: ubuntu-20.04
     if: >
       !contains(github.event.commits[0].message, '[skip lint]')
@@ -28,7 +34,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       ##################### BEGIN boilerplate steps #####################
-      - name: Get branch names 🌿
+      - name: Get branch names
         id: branch-name
         uses: tj-actions/branch-names@v5.4
 
@@ -37,19 +43,29 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Setup R 📊
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          _R_VERSION="${{ inputs.r-version }}"
+          R_VERSION=${_R_VERSION:-"3.6"}
+          echo "::set-output name=R_VERSION::$R_VERSION"
+        shell: bash
+
+      - name: Setup R
         uses: r-lib/actions/setup-r@v1
         with:
-          r-version: 3.6
+          r-version: ${{ steps.normalizer.outputs.R_VERSION }}
 
       - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: ~/.local/share/renv
+          path: |
+            ~/.local/share/renv
+            ~/.staged.dependencies
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: ${{ runner.os }}-renv-
 
-      - name: Run Staged dependencies 🎦
+      - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true
@@ -59,20 +75,20 @@ jobs:
           SD_GIT_REF: ${{ steps.branch-name.outputs.base_ref_branch }}
       ##################### END boilerplate steps #####################
 
-      - name: Generate man pages 📄
+      - name: Generate man pages
         run: roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))
         shell: Rscript {0}
 
-      - name: Roxygen check 🅾
+      - name: Roxygen check
         if: "!startsWith(github.event.comment.body, '/roxygenize')"
         run: |
           git status -s
-          if [[ -n `git status -s | grep man` ]]
+          if [[ -n `git status -s | grep -E "man|DESCRIPTION"` ]]
           then {
             ROXYGEN_VERSION="$(Rscript -e 'packageVersion("roxygen2")' | awk '{print $NF}')"
             echo "🙈 Manuals are not up-to-date with roxygen comments!"
             echo "🔀 The following differences were noted:"
-            git diff man/*
+            git diff man/* DESCRIPTION
             echo -e "\n💻 Please rerun the following command on your workstation and push your changes"
             echo "--------------------------------------------------------------------"
             echo "roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))"

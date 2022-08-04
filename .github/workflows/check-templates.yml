@@ -1,8 +1,22 @@
 on:
   workflow_dispatch:
   workflow_call:
-  pull_request_review:
-    types: [submitted]
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '3.6'
+        required: false
+        type: string
+  push:
+    branches:
+      - main
+      - devel
+      - pre-release
+  pull_request:
+    branches:
+      - main
+      - devel
+      - pre-release
 
 name: Check Templates
 
@@ -12,16 +26,15 @@ concurrency:
 
 jobs:
   check_templates:
-    name: check_templates
+    name: Verify
     if: >
-      github.event.review.state == 'approved'
-        && !contains(github.event.commits[0].message, '[skip check_templates]')
-    runs-on: ubuntu-latest
+      !contains(github.event.commits[0].message, '[skip check_templates]')
+    runs-on: ubuntu-20.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       ##################### BEGIN boilerplate steps #####################
-      - name: Get branch names 🌿
+      - name: Get branch names
         id: branch-name
         uses: tj-actions/branch-names@v5.4
 
@@ -30,18 +43,29 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - uses: r-lib/actions/setup-r@v1
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          _R_VERSION="${{ inputs.r-version }}"
+          R_VERSION=${_R_VERSION:-"3.6"}
+          echo "::set-output name=R_VERSION::$R_VERSION"
+        shell: bash
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v1
         with:
-          r-version: 3.6
+          r-version: ${{ steps.normalizer.outputs.R_VERSION }}
 
       - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: ~/.local/share/renv
+          path: |
+            ~/.local/share/renv
+            ~/.staged.dependencies
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: ${{ runner.os }}-renv-
 
-      - name: Run Staged dependencies 🎦
+      - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true

@@ -1,6 +1,17 @@
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '3.6'
+        required: false
+        type: string
+      skip-coverage-badges:
+        description: 'Skip code coverage badge creation'
+        default: false
+        required: false
+        type: boolean
   push:
     branches:
       - main
@@ -12,7 +23,7 @@ on:
       - devel
       - pre-release
 
-name: Code Coverage ☂
+name: Code Coverage
 
 concurrency:
   group: coverage-${{ github.event.pull_request.number || github.ref }}
@@ -20,7 +31,7 @@ concurrency:
 
 jobs:
   coverage:
-    name: Test Coverage 🧪
+    name: Test Coverage
     runs-on: ubuntu-20.04
     if: >
       !contains(github.event.commits[0].message, '[skip coverage]')
@@ -30,7 +41,7 @@ jobs:
       coverage-percent: ${{ steps.set-coverage-percentage.outputs.coverage-percentage }}
     steps:
       ##################### BEGIN boilerplate steps #####################
-      - name: Get branch names 🌿
+      - name: Get branch names
         id: branch-name
         uses: tj-actions/branch-names@v5.4
 
@@ -39,22 +50,32 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Setup R 📊
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          _R_VERSION="${{ inputs.r-version }}"
+          R_VERSION=${_R_VERSION:-"3.6"}
+          echo "::set-output name=R_VERSION::$R_VERSION"
+        shell: bash
+
+      - name: Setup R
         uses: r-lib/actions/setup-r@v1
         with:
-          r-version: 3.6
+          r-version: ${{ steps.normalizer.outputs.R_VERSION }}
 
       - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: ~/.local/share/renv
+          path: |
+            ~/.local/share/renv
+            ~/.staged.dependencies
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: ${{ runner.os }}-renv-
 
       - name: Setup Pandoc
         uses: r-lib/actions/setup-pandoc@v1
 
-      - name: Run Staged dependencies 🎦
+      - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true
@@ -145,7 +166,10 @@ jobs:
   badge:
     name: Generate badge for coverage
     needs: [coverage]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    if: >
+      inputs.skip-coverage-badges != 'true' ||
+        !contains(github.event.commits[0].message, '[skip coverage]')
     steps:
     - name: Checkout the badges branch in repo
       uses: actions/checkout@v3
