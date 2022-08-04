@@ -25,11 +25,12 @@ installation of system dependencies and R package dependencies is
 managed via the [Staged Dependencies GitHub
 Action](https://github.com/marketplace/actions/staged-dependencies-action).
 The latter is used in conjunction with the
-[`staged_dependencies.yaml`](../../staged_dependencies.yaml) file in
-order to install dependencies that are in the *same stage of
-development* as the current package. You can read more about how it
-works [here](sd-repo). Note that the latter is not necessary for this
-workflow to work and is completely optional.
+[`staged_dependencies.yaml`](staged_dependencies.yaml) file in order to
+install dependencies that are in the *same stage of development* as the
+current package. You can read more about how it works
+[here](https://github.com/openpharma/staged.dependencies). Note that the
+latter is not necessary for this workflow to work and is completely
+optional.
 
 Following the installation of system dependencies, R, and package
 dependencies, each workflow does something different.
@@ -123,7 +124,7 @@ that you want the spell check to ignore, for example *CDISC* is not an
 English word but a common acronym used within Pharma. The workflow will
 flag this until a user adds it to the `inst/WORDLIST`.
 
-### [`style.yml`](./.github/workflows/style.yml%60)
+### [`style.yml`](./.github/workflows/style.yml)
 
 Code style is enforced via the [`styler`](https://styler.r-lib.org/) R
 package. Custom style configurations, if any, will be honored by this
