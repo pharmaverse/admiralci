@@ -46,9 +46,16 @@ jobs:
       - name: Normalize inputs
         id: normalizer
         run: |
+          BRANCH_NAME=${{ steps.branch-name.outputs.head_ref_branch }}
+          if [ "$BRANCH_NAME" == "" ]
+          then {
+            BRANCH_NAME=$(git name-rev HEAD | awk -F '/' '{print $NF}' | sed 's/~.*//')
+          }
+          fi
           _R_VERSION="${{ inputs.r-version }}"
           R_VERSION=${_R_VERSION:-"3.6"}
           echo "::set-output name=R_VERSION::$R_VERSION"
+          echo "::set-output name=BRANCH_NAME::$BRANCH_NAME"
         shell: bash
 
       - name: Setup R
@@ -72,7 +79,7 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
           SD_ENABLE_CHECK: false
-          SD_GIT_REF: ${{ steps.branch-name.outputs.head_ref_branch }}
+          SD_GIT_REF: ${{ steps.normalizer.outputs.BRANCH_NAME }}
       ##################### END boilerplate steps #####################
 
       - name: Install package
