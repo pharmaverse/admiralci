@@ -69,7 +69,7 @@ jobs:
           _R_VERSION="${{ inputs.r-version }}"
           R_VERSION=${_R_VERSION:-"3.6"}
           echo "::set-output name=R_VERSION::$R_VERSION"
-          echo "::set-output name=BRANCH_NAME::$BRANCH"
+          echo "::set-output name=SD_BRANCH::$BRANCH"
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,7 +95,7 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
           SD_ENABLE_CHECK: false
-          SD_GIT_REF: ${{ steps.normalizer.outputs.BRANCH_NAME }}
+          SD_GIT_REF: ${{ steps.normalizer.outputs.SD_BRANCH }}
       ##################### END boilerplate steps #####################
 
       - name: Install package
