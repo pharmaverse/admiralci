@@ -70,7 +70,6 @@ jobs:
         with:
           run-system-dependencies: true
           enable-check: false
-          git-ref: ${{ steps.branch-name.outputs.current_branch }}
           renv-restore: false
           cran-repos: "CRAN=${{ matrix.config.repos }}"
         env:
