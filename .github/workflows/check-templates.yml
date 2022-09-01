@@ -53,6 +53,7 @@ jobs:
             BRANCH_NAME=$(git name-rev HEAD | awk -F '/' '{print $NF}' | sed 's/~.*//')
           }
           fi
+          echo "GITHUB_REF is $GITHUB_REF"
           echo "BRANCH_NAME is $(git name-rev HEAD)"
           _R_VERSION="${{ inputs.r-version }}"
           R_VERSION=${_R_VERSION:-"3.6"}
