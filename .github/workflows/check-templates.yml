@@ -92,10 +92,10 @@ jobs:
         uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true
+          enable-check: false
+          git-ref: ${{ steps.normalizer.outputs.SD_GIT_REF }}
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-          SD_ENABLE_CHECK: false
-          SD_GIT_REF: ${{ steps.normalizer.outputs.SD_GIT_REF }}
       ##################### END boilerplate steps #####################
 
       - name: Install package

@@ -69,12 +69,12 @@ jobs:
         uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true
+          enable-check: false
+          git-ref: ${{ steps.branch-name.outputs.base_ref_branch }}
+          renv-restore: false
+          cran-repos: "CRAN=${{ matrix.config.repos }}"
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-          SD_ENABLE_CHECK: false
-          SD_GIT_REF: ${{ steps.branch-name.outputs.base_ref_branch }}
-          SD_RENV_RESTORE: false
-          SD_CRAN_REPOSITORIES: "CRAN=${{ matrix.config.repos }}"
       #####################c#####################
 
       - name: Check
