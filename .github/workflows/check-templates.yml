@@ -56,7 +56,7 @@ jobs:
             BRANCH=$(git name-rev HEAD | awk '{print $NF}')
           }
           fi
-          if [ ${BRANCH} =~ "remotes/pull/*" ]
+          if [[ $BRANCH == remotes/pull/* ]]
           then {
             PR=$(remove_substring "$BRANCH" "/merge")
             PR=$(remove_substring "$BRANCH" "remotes/")
