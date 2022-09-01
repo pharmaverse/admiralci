@@ -59,7 +59,7 @@ jobs:
           if [[ $BRANCH == remotes/pull/* ]]
           then {
             PR=$(remove_substring "$BRANCH" "/merge")
-            PR=$(remove_substring "$BRANCH" "remotes/")
+            PR=$(remove_substring "$PR" "remotes/")
             echo "Accessing repos/${GITHUB_REPOSITORY}/${PR}"
             BRANCH=$(gh api -X GET repos/${GITHUB_REPOSITORY}/${PR} | jq -r '.head.ref')
           }
