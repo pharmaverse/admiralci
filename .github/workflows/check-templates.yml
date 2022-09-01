@@ -47,19 +47,30 @@ jobs:
       - name: Normalize inputs
         id: normalizer
         run: |
-          BRANCH_NAME=${{ steps.branch-name.outputs.head_ref_branch }}
-          if [ "$BRANCH_NAME" == "" ]
+          function remove_substring() {
+              echo "${1//$2}"
+          }
+          BRANCH=${{ steps.branch-name.outputs.head_ref_branch }}
+          if [ "${BRANCH}" == "" ]
           then {
-            BRANCH_NAME=$(git name-rev HEAD | awk -F '/' '{print $NF}' | sed 's/~.*//')
+            BRANCH=$(git name-rev HEAD | awk '{print $NF}')
           }
           fi
-          echo "GITHUB_REF is $GITHUB_REF"
-          echo "BRANCH_NAME is $(git name-rev HEAD)"
+          if [ ${BRANCH} =~ "remotes/pull/*" ]
+          then {
+            PR=$(remove_substring "$BRANCH" "/merge")
+            PR=$(remove_substring "$BRANCH" "remotes/")
+            BRANCH=$(gh api -X GET repos/${GITHUB_REPOSITORY}/${PR} | jq -r '.head.ref')
+          }
+          fi
+          echo "BRANCH is $BRANCH"
           _R_VERSION="${{ inputs.r-version }}"
           R_VERSION=${_R_VERSION:-"3.6"}
           echo "::set-output name=R_VERSION::$R_VERSION"
-          echo "::set-output name=BRANCH_NAME::$BRANCH_NAME"
+          echo "::set-output name=BRANCH_NAME::$BRANCH"
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v1
