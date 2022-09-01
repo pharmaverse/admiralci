@@ -60,6 +60,7 @@ jobs:
           then {
             PR=$(remove_substring "$BRANCH" "/merge")
             PR=$(remove_substring "$PR" "remotes/")
+            PR=$(echo $PR | sed 's/pull/pulls/')
             echo "Accessing repos/${GITHUB_REPOSITORY}/${PR}"
             BRANCH=$(gh api -X GET repos/${GITHUB_REPOSITORY}/${PR} | jq -r '.head.ref')
           }
