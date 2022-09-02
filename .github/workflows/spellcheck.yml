@@ -71,10 +71,9 @@ jobs:
         uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true
+          enable-check: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-          SD_ENABLE_CHECK: false
-          SD_GIT_REF: ${{ steps.branch-name.outputs.base_ref_branch }}
       ##################### END boilerplate steps #####################
 
       - name: Run Spellcheck

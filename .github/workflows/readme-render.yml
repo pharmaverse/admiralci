@@ -60,17 +60,16 @@ jobs:
         uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true
+          enable-check: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-          SD_ENABLE_CHECK: false
-          SD_GIT_REF: ${{ steps.branch-name.outputs.base_ref_branch }}
       ##################### END boilerplate steps #####################
 
       - name: Render README to markdown
         run: rmarkdown::render("README.Rmd", output_format = "md_document")
         shell: Rscript {0}
         env:
-          BRANCH_NAME: "${{ steps.branch-name.outputs.base_ref_branch }}"
+          BRANCH_NAME: "${{ steps.branch-name.outputs.current_branch }}"
 
       - name: Install Markdown formatter
         run: npm install -g @quilicicf/markdown-formatter
