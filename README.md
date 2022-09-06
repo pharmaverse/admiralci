@@ -132,7 +132,7 @@ documentation for the package.
 [![R CMD
 Check](https://github.com/pharmaverse/admiralci/actions/workflows/r-cmd-check.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/r-cmd-check.yml)
 
-This workflow performs `R CND check` for the package. Failed workflows
+This workflow performs `R CMD check` for the package. Failed workflows
 are typically indicative of problems encountered during the check, and
 therefore an indication that the package does not meet quality
 standards.
