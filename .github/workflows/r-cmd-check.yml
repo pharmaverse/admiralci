@@ -1,6 +1,12 @@
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      error-on:
+        description: Input for the 'error_on' parameter in rcmdcheck::rcmdcheck()
+        required: false
+        default: note
+        type: string
   push:
     branches:
       - main
@@ -83,9 +89,13 @@ jobs:
         run: |
           if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
           options(crayon.enabled = TRUE)
+          check_error_on <- "${{ inputs.error-on }}"
+          if (check_error_on == "") {
+            check_error_on <- "note"
+          }
           rcmdcheck::rcmdcheck(
             args = c("--no-manual", "--as-cran"),
-            error_on = "note",
+            error_on = check_error_on,
             check_dir = "check"
           )
         shell: Rscript {0}
