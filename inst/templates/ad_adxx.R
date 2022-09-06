@@ -6,4 +6,4 @@
 library(admiralci)
 
 # Add your template ADaM script code
-ADXX <- "Hello ADaM!"
+adxx <- "Hello ADaM!"
