@@ -80,12 +80,12 @@ jobs:
         with:
           github-token: ${{ secrets.WALKOWIF_TOKEN }}
           script: |
-            let result = await github.rest.pulls.list({
+            const result = await github.rest.pulls.list({
               owner: "${{ matrix.repos }}".split("/")[0],
               repo: "${{ matrix.repos }}".split("/")[1],
             })
             // core.info(JSON.stringify(result, null, 4));
-            for (let pr in JSON.stringify(result, null, 4).data) {
+            for (const pr in result.data) {
               console.log(pr)
             }
             const result2 = await github.rest.pulls.create({
