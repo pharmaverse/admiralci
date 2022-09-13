@@ -28,7 +28,8 @@ jobs:
           # - pharmaverse/admiraltemplate
           # - pharmaverse/admiralophtha
           # - pharmaverse/admiral
-          - pharmaverse/admiral.test
+          # - pharmaverse/admiral.test
+          - walkowif-test-org/repo-to-copy
 
     steps:
       - name: Checkout repo
@@ -69,11 +70,11 @@ jobs:
           git config --local user.name "GitHub Actions"
           git commit -m "Update renv.lock" || true
 
-      - name: Push badges
+      - name: Push updated renv.lock
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.WALKOWIF_TOKEN }}
           branch: automated-renv-lock-propagation
           directory: repo
           repository: ${{ matrix.repos }}
