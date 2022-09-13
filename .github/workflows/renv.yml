@@ -85,7 +85,7 @@ jobs:
               repo: "${{ matrix.repos }}".split("/")[1],
             })
             // core.info(JSON.stringify(result, null, 4));
-            for (let pr in result.data) {
+            for (let pr in JSON.stringify(result).data) {
               core.info(pr.title)
               core.info(pr.head.ref)
             }
