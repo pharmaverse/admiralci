@@ -23,12 +23,12 @@ jobs:
     strategy:
       matrix:
         repos:
-          - admiralonco
-          - admiraldev
-          - admiraltemplate
-          - admiraloptha
-          - admiral
-          - admiral.test
+          - pharmaverse/admiralonco
+          - pharmaverse/admiraldev
+          - pharmaverse/admiraltemplate
+          - pharmaverse/admiraloptha
+          - pharmaverse/admiral
+          - pharmaverse/admiral.test
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -48,3 +48,15 @@ jobs:
         run: |
           echo "${{ matrix.repos }}"
           cat renv.lock.test
+
+      - name: Checkout extension repo
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ matrix.repos }}
+          path: './repo'
+
+      - name: Run script
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        run: |
+          cd repo && git status
