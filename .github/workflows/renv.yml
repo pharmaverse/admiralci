@@ -85,9 +85,8 @@ jobs:
               repo: "${{ matrix.repos }}".split("/")[1],
             })
             // core.info(JSON.stringify(result, null, 4));
-            for (let pr in JSON.stringify(result).data) {
-              core.info(pr.title)
-              core.info(pr.head.ref)
+            for (let pr in JSON.stringify(result, null, 4).data) {
+              console.log(pr)
             }
             const result2 = await github.rest.pulls.create({
               title: 'Propagate renv.lock',
