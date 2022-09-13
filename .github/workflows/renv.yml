@@ -69,5 +69,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
           git commit -m "Update renv.lock" || true
-          git remote set-url origin https://actions:${{ secrets.WALKOWIF_TOKEN }}@github.com/${{ matrix.repos }}
+          git remote set-url origin https://${{ secrets.WALKOWIF_TOKEN }}@github.com/${{ matrix.repos }}
           git push origin automated-renv-lock-propagation
