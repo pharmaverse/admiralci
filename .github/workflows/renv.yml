@@ -23,12 +23,14 @@ jobs:
     strategy:
       matrix:
         repos:
-          - pharmaverse/admiralonco
-          - pharmaverse/admiraldev
-          - pharmaverse/admiraltemplate
-          - pharmaverse/admiraloptha
-          - pharmaverse/admiral
-          - pharmaverse/admiral.test
+          # - pharmaverse/admiralonco
+          # - pharmaverse/admiraldev
+          # - pharmaverse/admiraltemplate
+          # - pharmaverse/admiralophtha
+          # - pharmaverse/admiral
+          # - pharmaverse/admiral.test
+          - walkowif-test-org/repo-to-copy
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -60,3 +62,11 @@ jobs:
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         run: |
           cd repo && git status
+          git checkout automated-renv-lock-propagation || git checkout -b automated-renv-lock-propagation
+          cp ../renv.lock.test .
+          git add renv.lock.test
+          git diff --cached
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Actions"
+          git commit -m "Update renv.lock" || true
+          git push origin automated-renv-lock-propagation || echo "No changes to commit"
