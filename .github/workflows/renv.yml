@@ -47,3 +47,4 @@ jobs:
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         run: |
           echo "${{ matrix.repos }}"
+          cat renv.lock.test
