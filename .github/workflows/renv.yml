@@ -85,7 +85,7 @@ jobs:
               repo: "${{ matrix.repos }}".split("/")[1],
             })
             // core.info(JSON.stringify(result, null, 4));
-            for (const pr in result.data) {
+            for (const pr in result) {
               console.log(pr)
             }
             const result2 = await github.rest.pulls.create({
