@@ -1,0 +1,46 @@
+---
+name: Propagate renv.lock
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    branches:
+      - main
+      - devel
+      - pre-release
+
+jobs:
+  renv:
+    name: Propagate renv.lock
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        repos:
+          - admiralonco
+          - admiraldev
+          - admiraltemplate
+          - admiraloptha
+          - admiral
+          - admiral.test
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check if renv.lock changed
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v29.0.4
+        with:
+          # later change to 'renv.lock'
+          files: |
+            renv.lock.test
+
+      - name: Test
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        run: |
+          echo "${{ matrix.repos }}"
