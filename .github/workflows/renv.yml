@@ -28,8 +28,7 @@ jobs:
           # - pharmaverse/admiraltemplate
           # - pharmaverse/admiralophtha
           # - pharmaverse/admiral
-          # - pharmaverse/admiral.test
-          - walkowif-test-org/repo-to-copy
+          - pharmaverse/admiral.test
 
     steps:
       - name: Checkout repo
@@ -69,4 +68,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
           git commit -m "Update renv.lock" || true
+          git remote set-url --push origin https://action:$GITHUB_PAT@github.com/${{ matrix.repos }}
           git push origin automated-renv-lock-propagation || echo "No changes to commit"
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
