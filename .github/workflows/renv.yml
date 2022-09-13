@@ -66,6 +66,7 @@ jobs:
         run: |
           cd repo && git status
           git checkout automated-renv-lock-propagation || git checkout -b automated-renv-lock-propagation
+          git pull origin automated-renv-lock-propagation || true
           cp ../renv.lock.test .
           git add renv.lock.test
           git diff --cached
@@ -79,6 +80,10 @@ jobs:
         with:
           github-token: ${{ secrets.WALKOWIF_TOKEN }}
           script: |
+            core.info(github.rest.pulls.list({
+              owner: "${{ matrix.repos }}".split("/")[0],
+              repo: "${{ matrix.repos }}".split("/")[1],
+            }))
             const result = await github.rest.pulls.create({
               title: 'Propagate renv.lock',
               owner: "${{ matrix.repos }}".split("/")[0],
