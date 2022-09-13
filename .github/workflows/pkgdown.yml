@@ -12,6 +12,12 @@ on:
         default: false
         required: false
         type: boolean
+      multiversion-docs-landing-page:
+        description: 'Ref to use for the multiversion docs landing page'
+        default: main
+        required: false
+        type: string
+
   push:
     branches:
       - main
@@ -48,7 +54,10 @@ jobs:
         run: |
           _R_VERSION="${{ inputs.r-version }}"
           R_VERSION=${_R_VERSION:-"3.6"}
+          _DOCS_LANDING_PAGE="${{ inputs.multiversion-docs-landing-page }}"
+          DOCS_LANDING_PAGE=${_DOCS_LANDING_PAGE:-"main"}
           echo "::set-output name=R_VERSION::$R_VERSION"
+          echo "::set-output name=DOCS_LANDING_PAGE::$DOCS_LANDING_PAGE"
         shell: bash
 
       - name: Setup R
@@ -117,4 +126,4 @@ jobs:
         uses: insightsengineering/r-pkgdown-multiversion@v2
         with:
           path: ${{ github.event.repository.name }}
-          default-landing-page: "main"
+          default-landing-page: "${{ steps.normalizer.outputs.DOCS_LANDING_PAGE }}"
