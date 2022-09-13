@@ -87,8 +87,8 @@ jobs:
             // core.info(JSON.stringify(result, null, 4));
             console.log(result);
             console.log(result.data);
-            console.log(result).data[0];
-            console.log(result).data[0].title;
+            console.log(result.data[0]);
+            console.log(result.data[0].title);
             for (const pr of result.data) {
               console.log(pr);
               console.log(pr.title);
