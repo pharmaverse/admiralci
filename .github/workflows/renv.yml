@@ -2,16 +2,19 @@
 name: Propagate renv.lock
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - synchronize
+  #     - reopened
+  #     - ready_for_review
+  #   branches:
+  #     - main
+  #     - devel
+  #     - pre-release
+  push:
     branches:
-      - main
-      - devel
-      - pre-release
+      - 2_use_common_renv_lock
 
 jobs:
   renv:
