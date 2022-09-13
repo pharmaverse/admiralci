@@ -69,12 +69,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
           git commit -m "Update renv.lock" || true
-
-      - name: Push updated renv.lock
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.WALKOWIF_TOKEN }}
-          branch: automated-renv-lock-propagation
-          directory: repo
-          repository: ${{ matrix.repos }}
+          git remote set-url origin https://actions:${{ secrets.WALKOWIF_TOKEN }}@github.com/${{ matrix.repos }}
+          git push origin automated-renv-lock-propagation
