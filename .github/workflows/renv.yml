@@ -85,7 +85,7 @@ jobs:
               repo: "${{ matrix.repos }}".split("/")[1],
             })
             core.info(result)
-            const result = await github.rest.pulls.create({
+            const result2 = await github.rest.pulls.create({
               title: 'Propagate renv.lock',
               owner: "${{ matrix.repos }}".split("/")[0],
               repo: "${{ matrix.repos }}".split("/")[1],
