@@ -68,9 +68,11 @@ jobs:
         if: steps.prepare.outputs.renv_changed == 'true'
         run: |
           cd repo && git status
-          git config pull.ff only
-          git checkout automated-renv-lock-propagation || git checkout -b automated-renv-lock-propagation
+          # Update local branch if remote branch already exists
+          git fetch origin automated-renv-lock-propagation || true
           git pull origin automated-renv-lock-propagation || true
+          # Switch to the branch or create if doesn't exist
+          git checkout automated-renv-lock-propagation || git checkout -b automated-renv-lock-propagation
           cp ../renv.lock.test .
           git add renv.lock.test
           git diff --cached
