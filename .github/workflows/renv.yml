@@ -51,7 +51,7 @@ jobs:
       - name: Setup
         id: setup
         run: |
-          REPOS=${{ inputs.repositories }}
+          REPOS=${{ github.events.inputs.repositories }}
           REPOS="${REPOS//'%'/%25}"
           REPOS="${REPOS//$'\n'/%0A}"
           REPOS="${REPOS//$'\r'/%0D}"
