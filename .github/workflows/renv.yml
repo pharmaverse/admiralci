@@ -89,6 +89,8 @@ jobs:
               repo: "${{ matrix.repos }}".split("/")[1],
             })
             let create_new_pr = true;
+            console.log("PR list = ");
+            console.log(JSON.stringify(result, null, 4));
             for (const pr of result.data) {
               if (pr.head.ref === "automated-renv-lock-propagation") {
                 console.log("PR with head ref " + pr.head.ref + " already exists");
