@@ -24,22 +24,22 @@ env:
   BRANCH_NAME: automated-renv-lock-propagation
 
 jobs:
-  validate:
-    name: Validate renv.lock
-    runs-on: ubuntu-20.04
-    container:
-      image: ghcr.io/insightsengineering/rstudio_4.2.1_bioc_3.15:latest
-    steps:
-      - name: Validate renv.lock
-        run: |
-          renv::init()
-          renv::diagnostics(project = NULL)
-        shell: Rscript {0}
+  # validate:
+  #   name: Validate renv.lock
+  #   runs-on: ubuntu-20.04
+  #   container:
+  #     image: ghcr.io/insightsengineering/rstudio_4.2.1_bioc_3.15:latest
+  #   steps:
+  #     - name: Validate renv.lock
+  #       run: |
+  #         renv::init()
+  #         renv::diagnostics(project = NULL)
+  #       shell: Rscript {0}
 
   renv:
     name: Propagate renv.lock
     runs-on: ubuntu-20.04
-    needs: validate
+    # needs: validate
     strategy:
       matrix:
         repos:
