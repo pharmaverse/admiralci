@@ -52,10 +52,17 @@ jobs:
       - name: Normalize inputs
         id: normalizer
         run: |
-          _R_VERSION="${{ inputs.r-version }}"
-          R_VERSION=${_R_VERSION:-"3.6"}
-          _DOCS_LANDING_PAGE="${{ inputs.multiversion-docs-landing-page }}"
-          DOCS_LANDING_PAGE=${_DOCS_LANDING_PAGE:-"main"}
+          function normalize() {
+            local var=$1
+            if [ "$var" == "" ]
+            then {
+              var=$2
+            }
+            fi
+            echo ${var}
+          }
+          R_VERSION=$(normalize ${{ inputs.r-version }} 3.6)
+          DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
           echo "::set-output name=R_VERSION::$R_VERSION"
           echo "::set-output name=DOCS_LANDING_PAGE::$DOCS_LANDING_PAGE"
         shell: bash
