@@ -77,7 +77,7 @@ jobs:
           repository: ${{ matrix.repos }}
           path: './repo'
           # TODO change to proper token
-          # This token should have permissions to the extension repository.
+          # This token should have permissions to all extension repositories.
           token: ${{ secrets.WALKOWIF_TOKEN }}
 
       - name: Update renv.lock in extension repo
@@ -102,7 +102,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           # TODO change to proper token
-          # This token should have permissions to the extension repository.
+          # This token should have permissions to all extension repositories.
           github-token: ${{ secrets.WALKOWIF_TOKEN }}
           script: |
             // Look for any open PRs
