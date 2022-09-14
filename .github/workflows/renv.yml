@@ -15,9 +15,9 @@ on:
         description: |
           List of repositories to propagate file to.
         required: true
-        default: >
-          [walkowif-test-org/repo-to-copy,
-          walkowif-test-org/gh-to-gh]
+        default: |
+          walkowif-test-org/repo-to-copy
+          walkowif-test-org/gh-to-gh
         type: string
   # pull_request:
   #   types:
@@ -36,13 +36,26 @@ on:
 # TODO find and replace:
 # 'renv.lock.test' -> 'renv.lock'
 
+
+
 jobs:
+  setup-matrix:
+    name: Setup matrix
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Setup
+        id: setup
+        run: |
+          MATRIX_PARAMS='["walkowif-test-org/repo-to-copy", "walkowif-test-org/gh-to-gh"]'
+          echo ::set-output name=matrix-combinations::{\"repos\": $MATRIX_PARAMS}
+    outputs:
+      matrix-combinations: ${{ steps.setup.outputs.matrix-combinations }}
+
   renv:
     name: Propagate renv.lock
     runs-on: ubuntu-20.04
     strategy:
-      matrix:
-        repos: ${{ inputs.repositories }}
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix-combinations) }}
           # - pharmaverse/admiralonco
           # - pharmaverse/admiraldev
           # - pharmaverse/admiraltemplate
