@@ -3,27 +3,6 @@ name: Propagate renv.lock
 
 on:
   workflow_dispatch:
-    inputs:
-      file-to-propagate:
-        description: |
-          Name of the file that should be propagated
-          to input.repositories
-        required: true
-        default: renv.lock
-        type: string
-      repositories:
-        description: |
-          List of repositories to propagate file to.
-        required: true
-        default: |
-          {
-            "repos":
-            [
-              "walkowif-test-org/repo-to-copy",
-              "walkowif-test-org/gh-to-gh"
-            ]
-          }
-        type: string
   # pull_request:
   #   types:
   #     - opened
@@ -41,35 +20,22 @@ on:
 # TODO find and replace:
 # 'renv.lock.test' -> 'renv.lock'
 
-
-
 jobs:
-  setup-matrix:
-    name: Setup matrix
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Setup
-        id: setup
-        run: |
-          REPOS=${{ github.events.inputs.repositories }}
-          REPOS="${REPOS//'%'/%25}"
-          REPOS="${REPOS//$'\n'/%0A}"
-          REPOS="${REPOS//$'\r'/%0D}"
-          echo ::set-output name=matrix-combinations::$REPOS
-    outputs:
-      matrix-combinations: ${{ steps.setup.outputs.matrix-combinations }}
-
   renv:
     name: Propagate renv.lock
     runs-on: ubuntu-20.04
     strategy:
-      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix-combinations) }}
+      matrix:
+        repos:
           # - pharmaverse/admiralonco
           # - pharmaverse/admiraldev
           # - pharmaverse/admiraltemplate
           # - pharmaverse/admiralophtha
           # - pharmaverse/admiral
           # - pharmaverse/admiral.test
+          - walkowif-test-org/repo-to-copy
+          - walkowif-test-org/gh-to-gh
+
 
 
     steps:
@@ -82,13 +48,13 @@ jobs:
         id: changed-files-specific
         uses: tj-actions/changed-files@v29.0.4
         with:
-          files: ${{ inputs.file-to-propagate }}
+          files: renv.lock.test
 
       - name: Prepare to renv propagation
         id: prepare
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         run: |
-          echo "Propagating ${{ inputs.file-to-propagate }} to ${{ matrix.repos }} repository"
+          echo "Propagating renv.lock.test to ${{ matrix.repos }} repository"
           cat renv.lock.test
           echo "::set-output name=renv_changed::true"
 
