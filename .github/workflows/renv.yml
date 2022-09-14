@@ -68,6 +68,7 @@ jobs:
         if: steps.prepare.outputs.renv_changed == 'true'
         run: |
           cd repo && git status
+          git config pull.ff only
           git checkout automated-renv-lock-propagation || git checkout -b automated-renv-lock-propagation
           git pull origin automated-renv-lock-propagation || true
           cp ../renv.lock.test .
@@ -87,6 +88,7 @@ jobs:
             const result = await github.rest.pulls.list({
               owner: "${{ matrix.repos }}".split("/")[0],
               repo: "${{ matrix.repos }}".split("/")[1],
+              state: "open"
             })
             let create_new_pr = true;
             console.log("PR list = ");
