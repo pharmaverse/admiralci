@@ -2,6 +2,7 @@
 name: Propagate renv.lock
 
 on:
+  # TODO uncomment
   # pull_request:
   #   types:
   #     - opened
@@ -12,6 +13,7 @@ on:
   #     - main
   #     - devel
   #     - pre-release
+  # TODO remove
   push:
     branches:
       - 2_use_common_renv_lock
@@ -20,25 +22,26 @@ on:
 # 'renv.lock.test' -> 'renv.lock'
 
 jobs:
-  # validate:
-  #   name: Validate renv.lock
-  #   runs-on: ubuntu-20.04
-  #   container:
-  #     image: ghcr.io/insightsengineering/rstudio_4.2.1_bioc_3.15:latest
-  #   steps:
-  #     - name: Validate renv.lock
-  #       run: |
-  #         renv::init()
-  #         renv::diagnostics(project = NULL)
-  #       shell: Rscript {0}
+  validate:
+    name: Validate renv.lock
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/insightsengineering/rstudio_4.2.1_bioc_3.15:latest
+    steps:
+      - name: Validate renv.lock
+        run: |
+          renv::init()
+          renv::diagnostics(project = NULL)
+        shell: Rscript {0}
 
   renv:
     name: Propagate renv.lock
     runs-on: ubuntu-20.04
-    # needs: validate
+    needs: validate
     strategy:
       matrix:
         repos:
+          # TODO uncomment repository names once bot gains access to them.
           # - pharmaverse/admiralonco
           # - pharmaverse/admiraldev
           # - pharmaverse/admiraltemplate
@@ -73,6 +76,8 @@ jobs:
         with:
           repository: ${{ matrix.repos }}
           path: './repo'
+          # TODO change to proper token
+          # This token should have permissions to the extension repository.
           token: ${{ secrets.WALKOWIF_TOKEN }}
 
       - name: Update renv.lock in extension repo
@@ -92,11 +97,12 @@ jobs:
           git commit -m "Update renv.lock" || true
           git push origin automated-renv-lock-propagation || echo "No changes to commit"
 
-      - name: Create Pull Request
+      - name: Create Pull Request in extension repo
         if: steps.prepare.outputs.renv_changed == 'true'
         uses: actions/github-script@v6
         with:
           # TODO change to proper token
+          # This token should have permissions to the extension repository.
           github-token: ${{ secrets.WALKOWIF_TOKEN }}
           script: |
             // Look for any open PRs
