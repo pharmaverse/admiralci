@@ -47,22 +47,24 @@ jobs:
           files: |
             renv.lock.test
 
-      - name: Test
+      - name: Prepare to renv propagation
+        id: prepare
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         run: |
-          echo "${{ matrix.repos }}"
+          echo "Propagating new renv.lock to ${{ matrix.repos }} repository"
           cat renv.lock.test
+          echo "::set-output name=renv_changed::true"
 
       - name: Checkout extension repo
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        if: steps.prepare.outputs.renv_changed == 'true'
         uses: actions/checkout@v3
         with:
           repository: ${{ matrix.repos }}
           path: './repo'
           token: ${{ secrets.WALKOWIF_TOKEN }}
 
-      - name: Update
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
+      - name: Update renv.lock in extension repo
+        if: steps.prepare.outputs.renv_changed == 'true'
         run: |
           cd repo && git status
           git checkout automated-renv-lock-propagation || git checkout -b automated-renv-lock-propagation
@@ -76,6 +78,7 @@ jobs:
           git push origin automated-renv-lock-propagation || echo "No changes to commit"
 
       - name: Create Pull Request
+        if: steps.prepare.outputs.renv_changed == 'true'
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.WALKOWIF_TOKEN }}
@@ -86,13 +89,13 @@ jobs:
             })
             let create_new_pr = true;
             for (const pr of result.data) {
-              console.log("PR title = " + pr.title);
-              console.log("PR head ref = " + pr.head.ref);
               if (pr.head.ref === "automated-renv-lock-propagation") {
+                console.log("PR with head ref " + pr.head.ref + " already exists");
                 create_new_pr = false;
               }
             }
             if (create_new_pr) {
+              console.log("Creating a new PR");
               const result2 = await github.rest.pulls.create({
                 title: 'Propagate renv.lock',
                 owner: "${{ matrix.repos }}".split("/")[0],
