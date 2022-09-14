@@ -51,7 +51,7 @@ jobs:
       - name: Setup
         id: setup
         run: |
-          echo ::set-output name=matrix-combinations:: ${{ github.event.input.repositories }}
+          echo ::set-output name=matrix-combinations:: ${{ inputs.repositories }}
     outputs:
       matrix-combinations: ${{ steps.setup.outputs.matrix-combinations }}
 
