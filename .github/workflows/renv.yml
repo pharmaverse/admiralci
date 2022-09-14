@@ -2,7 +2,7 @@
 name: Propagate renv.lock
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       file-to-propagate:
         description: |
