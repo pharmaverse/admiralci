@@ -28,6 +28,7 @@ jobs:
     steps:
       - name: Validate renv.lock
         run: |
+          renv:init()
           renv::diagnostics(project = NULL)
         shell: Rscript {0}
 
