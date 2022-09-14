@@ -118,7 +118,7 @@ jobs:
   multi-version-docs:
     name: Multi-version docs
     needs: pkgdown
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: >
       inputs.skip-multiversion-docs != 'true' &&
         !contains(github.event.commits[0].message, '[skip docs]')
@@ -128,6 +128,22 @@ jobs:
         with:
           path: ${{ github.event.repository.name }}
           ref: "gh-pages"
+
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          function normalize() {
+            local var=$1
+            if [ "$var" == "" ]
+            then {
+              var=$2
+            }
+            fi
+            echo ${var}
+          }
+          DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
+          echo "::set-output name=DOCS_LANDING_PAGE::$DOCS_LANDING_PAGE"
+        shell: bash
 
       - name: Create and publish docs
         uses: insightsengineering/r-pkgdown-multiversion@v2
