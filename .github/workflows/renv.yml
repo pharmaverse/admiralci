@@ -44,12 +44,22 @@ on:
 
 
 jobs:
+  setup-matrix:
+    name: Setup matrix
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Setup
+        id: setup
+        run: |
+          echo ::set-output name=matrix-combinations:: ${{ input.repositories }}
+    outputs:
+      matrix-combinations: ${{ steps.setup.outputs.matrix-combinations }}
 
   renv:
     name: Propagate renv.lock
     runs-on: ubuntu-20.04
     strategy:
-      matrix: ${{ fromJson(input.repositories) }}
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix-combinations) }}
           # - pharmaverse/admiralonco
           # - pharmaverse/admiraldev
           # - pharmaverse/admiraltemplate
