@@ -2,6 +2,23 @@
 name: Propagate renv.lock
 
 on:
+  workflow_call:
+    inputs:
+      file-to-propagate:
+        description: |
+          Name of the file that should be propagated
+          to input.repositories
+        required: true
+        default: renv.lock
+        type: string
+      repositories:
+        description: |
+          List of repositories to propagate file to.
+        required: true
+        default: >
+          [walkowif-test-org/repo-to-copy,
+          walkowif-test-org/gh-to-gh]
+        type: string
   # pull_request:
   #   types:
   #     - opened
@@ -25,15 +42,14 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        repos:
+        repos: ${{ inputs.repositories }}
           # - pharmaverse/admiralonco
           # - pharmaverse/admiraldev
           # - pharmaverse/admiraltemplate
           # - pharmaverse/admiralophtha
           # - pharmaverse/admiral
           # - pharmaverse/admiral.test
-          - walkowif-test-org/repo-to-copy
-          - walkowif-test-org/gh-to-gh
+
 
     steps:
       - name: Checkout repo
@@ -45,14 +61,13 @@ jobs:
         id: changed-files-specific
         uses: tj-actions/changed-files@v29.0.4
         with:
-          files: |
-            renv.lock.test
+          files: ${{ inputs.file-to-propagate }}
 
       - name: Prepare to renv propagation
         id: prepare
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         run: |
-          echo "Propagating new renv.lock to ${{ matrix.repos }} repository"
+          echo "Propagating ${{ inputs.file-to-propagate }} to ${{ matrix.repos }} repository"
           cat renv.lock.test
           echo "::set-output name=renv_changed::true"
 
@@ -93,8 +108,6 @@ jobs:
               state: "open"
             })
             let create_new_pr = true;
-            console.log("PR list = ");
-            console.log(JSON.stringify(result, null, 4));
             for (const pr of result.data) {
               if (pr.head.ref === "automated-renv-lock-propagation") {
                 console.log("PR with head ref " + pr.head.ref + " already exists");
