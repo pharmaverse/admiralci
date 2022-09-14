@@ -70,9 +70,9 @@ jobs:
           cd repo && git status
           # Update local branch if remote branch already exists
           git fetch origin automated-renv-lock-propagation || true
+          # Switch to the branch or create if doesn't exist
           git checkout automated-renv-lock-propagation || git checkout -b automated-renv-lock-propagation
           git pull origin automated-renv-lock-propagation || true
-          # Switch to the branch or create if doesn't exist
           cp ../renv.lock.test .
           git add renv.lock.test
           git diff --cached
