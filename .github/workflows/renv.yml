@@ -33,6 +33,7 @@ jobs:
           # - pharmaverse/admiral
           # - pharmaverse/admiral.test
           - walkowif-test-org/repo-to-copy
+          - walkowif-test-org/gh-to-gh
 
     steps:
       - name: Checkout repo
