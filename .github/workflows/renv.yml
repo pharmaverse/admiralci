@@ -20,6 +20,16 @@ on:
 # 'renv.lock.test' -> 'renv.lock'
 
 jobs:
+  validate:
+    name: Validate renv.lock
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/insightsengineering/rstudio_4.2.1_bioc_3.15:latest
+    steps:
+      - name: Validate renv.lock
+        run: |
+          renv::diagnostics(project = NULL)
+
   renv:
     name: Propagate renv.lock
     runs-on: ubuntu-20.04
@@ -53,12 +63,6 @@ jobs:
         run: |
           echo "Propagating renv.lock.test to ${{ matrix.repos }} repository"
           echo "::set-output name=renv_changed::true"
-
-      - name: Validate renv.lock
-        container:
-          image: ghcr.io/insightsengineering/rstudio_4.2.1_bioc_3.15:latest
-        run: |
-          renv::diagnostics(project = NULL)
 
       - name: Checkout extension repo
         if: steps.prepare.outputs.renv_changed == 'true'
