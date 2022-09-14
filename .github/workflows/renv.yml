@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Validate renv.lock
         run: |
-          renv:init()
+          renv::init()
           renv::diagnostics(project = NULL)
         shell: Rscript {0}
 
@@ -98,6 +98,7 @@ jobs:
           # TODO change to proper token
           github-token: ${{ secrets.WALKOWIF_TOKEN }}
           script: |
+            // Look for any open PRs
             const result = await github.rest.pulls.list({
               owner: "${{ matrix.repos }}".split("/")[0],
               repo: "${{ matrix.repos }}".split("/")[1],
@@ -105,11 +106,15 @@ jobs:
             })
             let create_new_pr = true;
             for (const pr of result.data) {
+              // Look for distinguished PR branch name
               if (pr.head.ref === "automated-renv-lock-propagation") {
                 console.log("PR with head ref " + pr.head.ref + " already exists");
                 create_new_pr = false;
+                break;
               }
             }
+            // If no PR with distinguished branch name has been found
+            // create a new PR to track changes to renv.lock.
             if (create_new_pr) {
               console.log("Creating a new PR");
               const result2 = await github.rest.pulls.create({
