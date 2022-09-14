@@ -46,8 +46,7 @@ jobs:
       - name: Setup
         id: setup
         run: |
-          MATRIX_PARAMS='["walkowif-test-org/repo-to-copy", "walkowif-test-org/gh-to-gh"]'
-          echo ::set-output name=matrix-combinations::{\"repos\": $MATRIX_PARAMS}
+          echo ::set-output name=matrix-combinations::{\"repos\": [\"walkowif-test-org/repo-to-copy\", \"walkowif-test-org/gh-to-gh\"]}
     outputs:
       matrix-combinations: ${{ steps.setup.outputs.matrix-combinations }}
 
