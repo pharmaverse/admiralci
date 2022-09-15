@@ -25,24 +25,11 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      # TODO comment
-      - name: List files
-        run: |
-          ls -la
       - name: Validate renv.lock
         run: |
           renv::init()
           renv::diagnostics(project = NULL)
         shell: Rscript {0}
-      - name: Validate renv.lock as JSON
-        run: |
-          if jq -e . >/dev/null 2>&1 <<<"$(cat renv.lock)"; then
-              echo "Parsed renv.lock as JSON successfully"
-          else
-              echo "Failed to parse renv.lock as JSON"
-              exit 1
-          fi
-        shell: bash
 
 
   renv:
