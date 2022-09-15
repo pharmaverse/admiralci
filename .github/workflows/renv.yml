@@ -30,7 +30,7 @@ jobs:
         shell: Rscript {0}
       - name: Validate renv.lock as JSON
         run: |
-          if jq -e . >/dev/null 2>&1 <<<"$(cat renv.lock.test)"; then
+          if jq -e . >/dev/null 2>&1 <<<"$(cat renv.lock)"; then
               echo "Parsed renv.lock as JSON successfully"
           else
               echo "Failed to parse renv.lock as JSON"
