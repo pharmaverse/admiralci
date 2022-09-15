@@ -37,9 +37,9 @@ jobs:
         run: |
           if jq -e . >/dev/null 2>&1 <<<"$(cat renv.lock.test)"; then
               echo "Parsed renv.lock as JSON successfully"
-              exit 1
           else
               echo "Failed to parse renv.lock as JSON"
+              exit 1
           fi
         shell: bash
 
