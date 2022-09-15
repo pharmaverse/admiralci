@@ -38,6 +38,7 @@ jobs:
     needs: validate
     strategy:
       matrix:
+        # Run all steps in this job for the following repositories.
         repos:
           # TODO uncomment repository names once bot gains access to them.
           # - pharmaverse/admiralonco
@@ -81,19 +82,21 @@ jobs:
       - name: Update renv.lock in extension repo
         if: steps.prepare.outputs.renv_changed == 'true'
         run: |
+          BRANCH_NAME="automated-renv-lock-propagation"
           cd repo && git status
           # Update local branch if remote branch already exists
-          git fetch origin automated-renv-lock-propagation || true
+          git fetch origin $BRANCH_NAME || true
           # Switch to the branch or create if doesn't exist
-          git checkout automated-renv-lock-propagation || git checkout -b automated-renv-lock-propagation
-          git pull origin automated-renv-lock-propagation || true
+          git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME
+          git pull origin $BRANCH_NAME || true
+          # Update renv.lock file with the latest version from central repo
           cp ../renv.lock.test .
           git add renv.lock.test
           git diff --cached
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
           git commit -m "Update renv.lock" || true
-          git push origin automated-renv-lock-propagation || echo "No changes to commit"
+          git push origin $BRANCH_NAME || echo "No changes to commit"
 
       - name: Create Pull Request in extension repo
         if: steps.prepare.outputs.renv_changed == 'true'
