@@ -41,6 +41,7 @@ jobs:
           else
               echo "Failed to parse renv.lock as JSON"
           fi
+        shell: bash
 
 
   renv:
