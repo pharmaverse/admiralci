@@ -23,6 +23,12 @@ jobs:
     container:
       image: ghcr.io/insightsengineering/rstudio_4.2.1_bioc_3.15:latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      # TODO comment
+      - name: List files
+        run: |
+          ls -la
       - name: Validate renv.lock
         run: |
           renv::init()
