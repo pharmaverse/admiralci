@@ -2,21 +2,16 @@
 name: Propagate renv.lock
 
 on:
-  # TODO uncomment
-  # pull_request:
-  #   types:
-  #     - opened
-  #     - synchronize
-  #     - reopened
-  #     - ready_for_review
-  #   branches:
-  #     - main
-  #     - devel
-  #     - pre-release
-  # TODO remove
-  push:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
     branches:
-      - 2_use_common_renv_lock
+      - main
+      - devel
+      - pre-release
 
 # TODO find and replace:
 # 'renv.lock.test' -> 'renv.lock'
