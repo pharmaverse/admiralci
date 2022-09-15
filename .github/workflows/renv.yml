@@ -33,6 +33,15 @@ jobs:
           renv::init()
           renv::diagnostics(project = NULL)
         shell: Rscript {0}
+      - name: Validate renv.lock as JSON
+        run: |
+          if jq -e . >/dev/null 2>&1 <<<"$(cat renv.lock.test)"; then
+              echo "Parsed renv.lock as JSON successfully"
+              exit 1
+          else
+              echo "Failed to parse renv.lock as JSON"
+          fi
+
 
   renv:
     name: Propagate renv.lock
