@@ -27,7 +27,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Validate renv.lock
         run: |
-          renv::init()
           renv::diagnostics(project = NULL)
         shell: Rscript {0}
 
@@ -90,13 +89,22 @@ jobs:
           git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME
           git pull origin $BRANCH_NAME || true
           # Update renv.lock file with the latest version from central repo
-          cp ../renv.lock.test .
-          git add renv.lock.test
-          git diff --cached
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Actions"
-          git commit -m "Update renv.lock" || true
-          git push origin $BRANCH_NAME || echo "No changes to commit"
+          # cp ../renv.lock.test .
+          # git add renv.lock.test
+          # git diff --cached
+          # git config --local user.email "action@github.com"
+          # git config --local user.name "GitHub Actions"
+          # git commit -m "Update renv.lock" || true
+          # git push origin $BRANCH_NAME || echo "No changes to commit"
+
+      - name: Commit and push changes
+        if: steps.prepare.outputs.renv_changed == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update renv.lock"
+          file_pattern: renv.lock.test
+          commit_user_name: "GitHub Actions"
+          commit_user_email: action@github.com
 
       - name: Create Pull Request in extension repo
         if: steps.prepare.outputs.renv_changed == 'true'
