@@ -92,12 +92,6 @@ jobs:
           git pull origin $BRANCH_NAME || true
           # Update renv.lock file with the latest version from central repo
           cp ../renv.lock.test .
-          # git add renv.lock.test
-          # git diff --cached
-          # git config --local user.email "action@github.com"
-          # git config --local user.name "GitHub Actions"
-          # git commit -m "Update renv.lock" || true
-          # git push origin $BRANCH_NAME || echo "No changes to commit"
 
       - name: Commit and push changes
         if: steps.prepare.outputs.renv_changed == 'true'
