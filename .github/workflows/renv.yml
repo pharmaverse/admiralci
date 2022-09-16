@@ -81,14 +81,15 @@ jobs:
       - name: Update renv.lock in extension repo
         if: steps.prepare.outputs.renv_changed == 'true'
         run: |
-          # BRANCH_NAME="automated-renv-lock-propagation"
-          cd repo
-          # && git status
-          # # Update local branch if remote branch already exists
-          # git fetch origin $BRANCH_NAME || true
-          # # Switch to the branch or create if doesn't exist
-          # git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME
-          # git pull origin $BRANCH_NAME || true
+          BRANCH_NAME="automated-renv-lock-propagation"
+          cd repo && git status
+          # Update local branch if remote branch already exists
+          git fetch origin $BRANCH_NAME || true
+          # Switch to the branch or create if doesn't exist
+          git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME
+          # Required to pull the branch because git-auto-commit-action
+          # doesn't have support for automatic pulling
+          git pull origin $BRANCH_NAME || true
           # Update renv.lock file with the latest version from central repo
           cp ../renv.lock.test .
           # git add renv.lock.test
