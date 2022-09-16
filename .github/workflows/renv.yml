@@ -102,7 +102,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Update renv.lock"
-          file_pattern: renv.lock.test
+          file_pattern: repo/renv.lock.test
           commit_user_name: "GitHub Actions"
           commit_user_email: action@github.com
 
