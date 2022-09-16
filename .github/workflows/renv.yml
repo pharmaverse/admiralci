@@ -89,7 +89,7 @@ jobs:
           git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME
           git pull origin $BRANCH_NAME || true
           # Update renv.lock file with the latest version from central repo
-          # cp ../renv.lock.test .
+          cp ../renv.lock.test .
           # git add renv.lock.test
           # git diff --cached
           # git config --local user.email "action@github.com"
