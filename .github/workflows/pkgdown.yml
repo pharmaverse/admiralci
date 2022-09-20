@@ -120,7 +120,7 @@ jobs:
     needs: pkgdown
     runs-on: ubuntu-latest
     if: >
-      inputs.skip-multiversion-docs != 'true' &&
+      !inputs.skip-multiversion-docs &&
         !contains(github.event.commits[0].message, '[skip docs]')
     steps:
       - name: Checkout repo
