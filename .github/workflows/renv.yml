@@ -13,9 +13,6 @@ on:
       - devel
       - pre-release
 
-# TODO find and replace:
-# 'renv.lock.test' -> 'renv.lock'
-
 jobs:
   validate:
     name: Validate renv.lock
@@ -39,12 +36,11 @@ jobs:
       matrix:
         # Run all steps in this job for the following repositories.
         repos:
-          # TODO uncomment repository names once bot gains access to them.
-          # - pharmaverse/admiralonco
-          # - pharmaverse/admiraldev
-          # - pharmaverse/admiraltemplate
-          # - pharmaverse/admiralophtha
-          # - pharmaverse/admiral
+          - pharmaverse/admiralonco
+          - pharmaverse/admiraldev
+          - pharmaverse/admiraltemplate
+          - pharmaverse/admiralophtha
+          - pharmaverse/admiral
           - pharmaverse/admiral.test
 
     steps:
@@ -57,13 +53,13 @@ jobs:
         id: changed-files-specific
         uses: tj-actions/changed-files@v29.0.4
         with:
-          files: renv.lock.test
+          files: renv.lock
 
       - name: Prepare to renv propagation
         id: prepare
         if: steps.changed-files-specific.outputs.any_changed == 'true'
         run: |
-          echo "Propagating renv.lock.test to ${{ matrix.repos }} repository"
+          echo "Propagating renv.lock to ${{ matrix.repos }} repository"
           echo "::set-output name=renv_changed::true"
 
       - name: Checkout extension repo
@@ -72,8 +68,6 @@ jobs:
         with:
           repository: ${{ matrix.repos }}
           path: './repo'
-          # TODO change to proper token
-          # This token should have permissions to all extension repositories.
           token: ${{ secrets.PHARMAVERSE_BOT }}
 
       - name: Update renv.lock in extension repo
@@ -89,14 +83,14 @@ jobs:
           # doesn't have support for automatic pulling
           git pull origin $BRANCH_NAME || true
           # Update renv.lock file with the latest version from central repo
-          cp ../renv.lock.test .
+          cp ../renv.lock .
 
       - name: Commit and push changes
         if: steps.prepare.outputs.renv_changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Update renv.lock"
-          file_pattern: renv.lock.test
+          file_pattern: renv.lock
           repository: repo
           commit_user_name: "GitHub Actions"
           commit_user_email: action@github.com
@@ -107,8 +101,6 @@ jobs:
         if: steps.prepare.outputs.renv_changed == 'true'
         uses: actions/github-script@v6
         with:
-          # TODO change to proper token
-          # This token should have permissions to all extension repositories.
           github-token: ${{ secrets.PHARMAVERSE_BOT }}
           script: |
             // Look for any open PRs
