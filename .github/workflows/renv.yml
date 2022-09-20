@@ -45,9 +45,7 @@ jobs:
           # - pharmaverse/admiraltemplate
           # - pharmaverse/admiralophtha
           # - pharmaverse/admiral
-          # - pharmaverse/admiral.test
-          - walkowif-test-org/repo-to-copy
-          - walkowif-test-org/gh-to-gh
+          - pharmaverse/admiral.test
 
     steps:
       - name: Checkout repo
@@ -76,7 +74,7 @@ jobs:
           path: './repo'
           # TODO change to proper token
           # This token should have permissions to all extension repositories.
-          token: ${{ secrets.WALKOWIF_TOKEN }}
+          token: ${{ secrets.PHARMAVERSE_BOT }}
 
       - name: Update renv.lock in extension repo
         if: steps.prepare.outputs.renv_changed == 'true'
@@ -111,7 +109,7 @@ jobs:
         with:
           # TODO change to proper token
           # This token should have permissions to all extension repositories.
-          github-token: ${{ secrets.WALKOWIF_TOKEN }}
+          github-token: ${{ secrets.PHARMAVERSE_BOT }}
           script: |
             // Look for any open PRs
             const result = await github.rest.pulls.list({
