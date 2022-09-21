@@ -66,8 +66,12 @@ jobs:
           }
           fi
           echo "BRANCH is $BRANCH"
-          _R_VERSION="${{ inputs.r-version }}"
-          R_VERSION=${_R_VERSION:-"3.6"}
+          R_VERSION="${{ inputs.r-version }}"
+          if [ "$R_VERSION" == "" ]
+          then {
+            R_VERSION="3.6"
+          }
+          fi
           echo "::set-output name=R_VERSION::$R_VERSION"
           echo "::set-output name=SD_GIT_REF::$BRANCH"
         shell: bash
