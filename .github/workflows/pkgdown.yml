@@ -12,6 +12,12 @@ on:
         default: false
         required: false
         type: boolean
+      multiversion-docs-landing-page:
+        description: 'Ref to use for the multiversion docs landing page'
+        default: main
+        required: false
+        type: string
+
   push:
     branches:
       - main
@@ -46,9 +52,19 @@ jobs:
       - name: Normalize inputs
         id: normalizer
         run: |
-          _R_VERSION="${{ inputs.r-version }}"
-          R_VERSION=${_R_VERSION:-"3.6"}
+          function normalize() {
+            local var=$1
+            if [ "$var" == "" ]
+            then {
+              var=$2
+            }
+            fi
+            echo ${var}
+          }
+          R_VERSION=$(normalize ${{ inputs.r-version }} 3.6)
+          DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
           echo "::set-output name=R_VERSION::$R_VERSION"
+          echo "::set-output name=DOCS_LANDING_PAGE::$DOCS_LANDING_PAGE"
         shell: bash
 
       - name: Setup R
@@ -102,9 +118,9 @@ jobs:
   multi-version-docs:
     name: Multi-version docs
     needs: pkgdown
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: >
-      inputs.skip-multiversion-docs != 'true' &&
+      !inputs.skip-multiversion-docs &&
         !contains(github.event.commits[0].message, '[skip docs]')
     steps:
       - name: Checkout repo
@@ -113,8 +129,24 @@ jobs:
           path: ${{ github.event.repository.name }}
           ref: "gh-pages"
 
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          function normalize() {
+            local var=$1
+            if [ "$var" == "" ]
+            then {
+              var=$2
+            }
+            fi
+            echo ${var}
+          }
+          DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
+          echo "::set-output name=DOCS_LANDING_PAGE::$DOCS_LANDING_PAGE"
+        shell: bash
+
       - name: Create and publish docs
         uses: insightsengineering/r-pkgdown-multiversion@v2
         with:
           path: ${{ github.event.repository.name }}
-          default-landing-page: "main"
+          default-landing-page: "${{ steps.normalizer.outputs.DOCS_LANDING_PAGE }}"

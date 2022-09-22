@@ -66,7 +66,10 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Render README to markdown
-        run: rmarkdown::render("README.Rmd", output_format = "md_document")
+        run: |
+          if (file.exists("README.Rmd")) {
+            rmarkdown::render("README.Rmd", output_format = "md_document")
+          }
         shell: Rscript {0}
         env:
           BRANCH_NAME: "${{ steps.branch-name.outputs.current_branch }}"
