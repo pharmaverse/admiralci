@@ -90,7 +90,6 @@ jobs:
           repository: extension-repo
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
-          commit_author: pharmaverse-bot
           branch: ${{ env.PR_BRANCH_NAME }}
           create_branch: true
 
