@@ -83,11 +83,10 @@ jobs:
           perl -p -i -e "s/R_VERSION: .*/R_VERSION: \"${R_VERSION}\"/" .github/workflows/*
 
       - name: Commit and push changes
-        if: steps.prepare.outputs.renv_changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: renv.lock update from ${{ github.repository }}
-          file_pattern: renv.lock
+          commit_message: renv update from ${{ github.repository }}
+          file_pattern: 'renv.lock renv/*'
           repository: extension-repo
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
@@ -96,7 +95,6 @@ jobs:
           create_branch: true
 
       - name: Create Pull Request in ${{ matrix.repos }}
-        if: steps.prepare.outputs.renv_changed == 'true'
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.PHARMAVERSE_BOT }}
