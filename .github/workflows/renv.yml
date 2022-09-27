@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - renv.lock
+      - renv/**
 
 jobs:
   integrity:
@@ -74,6 +75,8 @@ jobs:
           git pull origin $PR_BRANCH_NAME || true
           # Update renv.lock file with the latest version from central repo
           cp ../renv.lock .
+          # Also update the renv directory
+          rm -rf renv && cp -r ../renv .
           # Also update the R_VERSION setting in workflows to match
           # what's available in the renv.lock file
           R_VERSION=$(cat ../renv.lock | jq -r '.R.Version')
