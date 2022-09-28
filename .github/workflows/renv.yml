@@ -64,7 +64,7 @@ jobs:
       - name: Checkout ${{ matrix.repos.name }}
         uses: actions/checkout@v3
         with:
-          repository: ${{ matrix.repos.name }}
+          repository: ${{ github.repository_owner }}/${{ matrix.repos.name }}
           path: ./extension-repo
           token: ${{ secrets.PHARMAVERSE_BOT }}
 
