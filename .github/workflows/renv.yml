@@ -1,118 +1,120 @@
 ---
+# This is a workflow that is specific to admiralci
+# It's not inteded to be used by other projects
 name: Propagate renv.lock
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
     branches:
       - main
-      - devel
-      - pre-release
+    paths:
+      - renv.lock
+      - renv/**
 
 jobs:
-  validate:
-    name: Validate renv.lock
-    runs-on: ubuntu-20.04
-    container:
-      image: ghcr.io/insightsengineering/rstudio_4.2.1_bioc_3.15:latest
+  integrity:
+    name: renv.lock integrity check
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Validate renv.lock
+
+      - name: Get R version from renv.lock file
+        id: r-version
         run: |
-          renv::diagnostics(project = NULL)
+          R_VERSION=$(cat renv.lock | jq -r '.R.Version')
+          echo "::set-output name=R_VERSION::$R_VERSION"
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ steps.r-version.outputs.R_VERSION }}
+ 
+      - name: Run renv.lock diagnostics
+        run: renv::diagnostics(project = NULL)
         shell: Rscript {0}
 
-
-  renv:
+  propagation:
     name: Propagate renv.lock
-    runs-on: ubuntu-20.04
-    needs: validate
+    runs-on: ubuntu-latest
+    needs: integrity
+    env:
+      PR_BRANCH_NAME: automated-renv-lock-propagation
     strategy:
       matrix:
         # Run all steps in this job for the following repositories.
         repos:
-          - pharmaverse/admiralonco
-          - pharmaverse/admiraldev
-          - pharmaverse/admiraltemplate
-          - pharmaverse/admiralophtha
-          - pharmaverse/admiral
-          - pharmaverse/admiral.test
+          - name: admiralonco
+            target-branch: devel
+          - name: admiraldev
+            target-branch: devel
+          - name: admiraltemplate
+            target-branch: main
+          - name: admiralophtha
+            target-branch: devel
+          - name: admiral
+            target-branch: devel
+          - name: admiral.test
+            target-branch: devel
 
     steps:
-      - name: Checkout repo
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+
+      - name: Checkout ${{ matrix.repos.name }}
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-
-      - name: Check if renv.lock changed
-        id: changed-files-specific
-        uses: tj-actions/changed-files@v29.0.4
-        with:
-          files: renv.lock
-
-      - name: Prepare to renv propagation
-        id: prepare
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
-        run: |
-          echo "Propagating renv.lock to ${{ matrix.repos }} repository"
-          echo "::set-output name=renv_changed::true"
-
-      - name: Checkout extension repo
-        if: steps.prepare.outputs.renv_changed == 'true'
-        uses: actions/checkout@v3
-        with:
-          repository: ${{ matrix.repos }}
-          path: './repo'
+          repository: ${{ github.repository_owner }}/${{ matrix.repos.name }}
+          path: ./extension-repo
           token: ${{ secrets.PHARMAVERSE_BOT }}
 
-      - name: Update renv.lock in extension repo
-        if: steps.prepare.outputs.renv_changed == 'true'
+      - name: Update renv.lock in ${{ matrix.repos.name }}
         run: |
-          BRANCH_NAME="automated-renv-lock-propagation"
-          cd repo && git status
+          cd extension-repo && git status
           # Update local branch if remote branch already exists
-          git fetch origin $BRANCH_NAME || true
+          git fetch origin $PR_BRANCH_NAME || true
           # Switch to the branch or create if doesn't exist
-          git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME
-          # Required to pull the branch because git-auto-commit-action
+          git checkout $PR_BRANCH_NAME || git checkout -b $PR_BRANCH_NAME
+          # Required to pull the branch because stefanzweifel/git-auto-commit-action
           # doesn't have support for automatic pulling
-          git pull origin $BRANCH_NAME || true
+          git pull origin $PR_BRANCH_NAME || true
           # Update renv.lock file with the latest version from central repo
           cp ../renv.lock .
+          # Also update the renv directory
+          rm -rf renv && cp -r ../renv .
+          # Also update the R_VERSION setting in workflows to match
+          # what's available in the renv.lock file
+          R_VERSION=$(cat ../renv.lock | jq -r '.R.Version')
+          perl -p -i -e "s/R_VERSION: .*/R_VERSION: \"${R_VERSION}\"/" .github/workflows/*
 
       - name: Commit and push changes
-        if: steps.prepare.outputs.renv_changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Update renv.lock"
-          file_pattern: renv.lock
-          repository: repo
-          commit_user_name: "GitHub Actions"
-          commit_user_email: action@github.com
-          branch: automated-renv-lock-propagation
+          commit_message: renv update from ${{ github.repository }}
+          file_pattern: 'renv.lock renv/*'
+          repository: extension-repo
+          commit_user_name: pharmaverse-bot
+          commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
+          branch: ${{ env.PR_BRANCH_NAME }}
           create_branch: true
 
-      - name: Create Pull Request in extension repo
-        if: steps.prepare.outputs.renv_changed == 'true'
+      - name: Create Pull Request in ${{ matrix.repos.name }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.PHARMAVERSE_BOT }}
           script: |
             // Look for any open PRs
+            const repo_owner = "${{ github.repository_owner }}";
+            const repo_name = "${{ matrix.repos.name }}";
             const result = await github.rest.pulls.list({
-              owner: "${{ matrix.repos }}".split("/")[0],
-              repo: "${{ matrix.repos }}".split("/")[1],
+              owner: repo_owner,
+              repo: repo_name,
               state: "open"
             })
             let create_new_pr = true;
             for (const pr of result.data) {
-              // Look for distinguished PR branch name
-              if (pr.head.ref === "automated-renv-lock-propagation") {
+              // Look for distinct PR branch name
+              if (pr.head.ref === "${{ env.PR_BRANCH_NAME }}") {
                 console.log("PR with head ref " + pr.head.ref + " already exists");
                 create_new_pr = false;
                 break;
@@ -123,13 +125,15 @@ jobs:
             if (create_new_pr) {
               console.log("Creating a new PR");
               const result2 = await github.rest.pulls.create({
-                title: 'Propagate renv.lock',
-                owner: "${{ matrix.repos }}".split("/")[0],
-                repo: "${{ matrix.repos }}".split("/")[1],
-                head: 'automated-renv-lock-propagation',
-                base: 'main',
-                body: ['This PR has been automatically generated by ',
-                       'renv.lock propagation workflow.\n\nPlease review ',
-                       'the changes.'].join('')
+                title: 'Propagate renv.lock from ${{ github.repository }}',
+                owner: repo_owner,
+                repo: repo_name,
+                head: '${{ env.PR_BRANCH_NAME }}',
+                base: '${{ matrix.repos.target-branch }}',
+                body: [
+                  'This PR has been automatically generated by ',
+                  'renv.lock propagation workflow from ${{ github.repository }}.',
+                  '\n\nPlease review the changes.'
+                ].join('')
               });
             }
