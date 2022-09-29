@@ -62,7 +62,7 @@ jobs:
             status_types <- "${{ inputs.status-types }}"
             statuses <- unlist(strsplit(status_types, split = ","))
             cran_status <- function(x) {
-              cat(x, file="cran-status.md", append=TRUE)
+              cat(x, file="cran-status.md", append=TRUE, sep="\n")
             }
             if (any(checks$Status %in% statuses)) {
               cran_status(sprintf(
@@ -70,10 +70,10 @@ jobs:
                 pkg,
                 status_types
               ))
-              cran_status("\nSee table for summary of checks:\n")
+              cran_status("\nSee the table below for a summary of the checks run by CRAN:\n\n")
               cran_status(knitr::kable(checks))
               cran_status(sprintf(
-                "\nAll details and logs are available here: %s", url
+                "\n\nAll details and logs are available here: %s", url
               ))
               stop("❌ One or more CRAN checks resulted in an invalid status ❌")
             }
