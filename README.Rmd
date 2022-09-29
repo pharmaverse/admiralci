@@ -122,7 +122,7 @@ Failed workflows are indicative of unstyled code.
 
 This workflow allows you to monitor the current status of checks on CRAN, if your package has been published on CRAN. Given that CRAN has its own systems on which it runs checks and it might not be possible to emulate all of their checks using GitHub Actions or CI/CD, it's just more efficient to let their systems run tests and be notified via a GitHub issue if an error is encountered.
 
-Usually CRAN sends out email notifications if errors are encountered during their checks but only individual package owners are notified and a stringent deadline of 2 weeks is given to remediate the errors on CRAN. To mititage the risk of the package being kicked off CRAN, this workflow provides transparency and visibility to all project collaborators by creating a GitHub issue so that the errors can be remediated before the deadline has passed.
+Usually CRAN sends out email notifications if errors are encountered during their checks but only individual package owners are notified and a stringent deadline of 2 weeks is given to remediate the errors on CRAN. To mitigate the risk of the package being kicked off CRAN, this workflow provides transparency and visibility to all project collaborators by creating a GitHub issue so that the errors can be remediated before the deadline has passed.
 
 ## How to use these workflows?
 
