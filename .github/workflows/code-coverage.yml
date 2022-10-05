@@ -45,8 +45,16 @@ jobs:
         id: branch-name
         uses: tj-actions/branch-names@v5.4
 
+      - name: Checkout repo (PR) 🛎
+        uses: actions/checkout@v3
+        if: github.event_name == 'pull_request'
+        with:
+          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
       - name: Checkout repository
         uses: actions/checkout@v3
+        if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
@@ -158,6 +166,7 @@ jobs:
         with:
           name: coverage-report
           path: "coverage-report.html"
+        continue-on-error: true
 
       - name: Add Coverage PR Comment
         if: steps.check_coverage_reports.outputs.files_exists == 'true' && github.event_name == 'pull_request'
@@ -165,6 +174,7 @@ jobs:
         with:
           header: code-coverage
           path: code-coverage-results.md
+        continue-on-error: true
 
   badge:
     name: Generate badge for coverage
@@ -174,44 +184,45 @@ jobs:
       inputs.skip-coverage-badges != 'true' ||
         !contains(github.event.commits[0].message, '[skip coverage]')
     steps:
-    - name: Checkout the badges branch in repo
-      uses: actions/checkout@v3
-      with:
-        ref: badges
-        path: badges
-    # Use the output from the `coverage` step
-    - name: Generate the badge SVG image
-      uses: emibcn/badge-action@v1
-      id: badge
-      with:
-        label: 'Test Coverage'
-        status: "${{ needs.coverage.outputs.coverage-percent }}%"
-        color: ${{
-          needs.coverage.outputs.coverage-percent > 90 && 'green'              ||
-          needs.coverage.outputs.coverage-percent > 80 && 'yellow,green'       ||
-          needs.coverage.outputs.coverage-percent > 70 && 'yellow'             ||
-          needs.coverage.outputs.coverage-percent > 60 && 'orange,yellow'      ||
-          needs.coverage.outputs.coverage-percent > 50 && 'orange'             ||
-          needs.coverage.outputs.coverage-percent > 40 && 'red,orange'         ||
-          needs.coverage.outputs.coverage-percent > 30 && 'red,red,orange'     ||
-          needs.coverage.outputs.coverage-percent > 20 && 'red,red,red,orange' ||
-          'red' }}
-        path: badges/test-coverage.svg
+      - name: Checkout the badges branch in repo
+        uses: actions/checkout@v3
+        with:
+          ref: badges
+          path: badges
 
-    - name: Commit badge
-      working-directory: ./badges
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Actions"
-        BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-        mkdir -p "${BRANCH}"
-        mv test-coverage.svg "${BRANCH}"
-        git add "${BRANCH}/test-coverage.svg"
-        git commit -m "Add/Update badge" || true
+      # Use the output from the `coverage` step
+      - name: Generate the badge SVG image
+        uses: emibcn/badge-action@v1
+        id: badge
+        with:
+          label: 'Test Coverage'
+          status: "${{ needs.coverage.outputs.coverage-percent }}%"
+          color: ${{
+            needs.coverage.outputs.coverage-percent > 90 && 'green'              ||
+            needs.coverage.outputs.coverage-percent > 80 && 'yellow,green'       ||
+            needs.coverage.outputs.coverage-percent > 70 && 'yellow'             ||
+            needs.coverage.outputs.coverage-percent > 60 && 'orange,yellow'      ||
+            needs.coverage.outputs.coverage-percent > 50 && 'orange'             ||
+            needs.coverage.outputs.coverage-percent > 40 && 'red,orange'         ||
+            needs.coverage.outputs.coverage-percent > 30 && 'red,red,orange'     ||
+            needs.coverage.outputs.coverage-percent > 20 && 'red,red,red,orange' ||
+            'red' }}
+          path: badges/test-coverage.svg
 
-    - name: Push badges
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: badges
-        directory: badges
+      - name: Commit badge
+        working-directory: ./badges
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Actions"
+          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          mkdir -p "${BRANCH}"
+          mv test-coverage.svg "${BRANCH}"
+          git add "${BRANCH}/test-coverage.svg"
+          git commit -m "Add/Update badge" || true
+
+      - name: Push badges
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: badges
+          directory: badges
