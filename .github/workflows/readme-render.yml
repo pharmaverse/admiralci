@@ -16,6 +16,12 @@ on:
         default: '3.6'
         required: false
         type: string
+      skip-md-formatting:
+        description: 'Skip markdown auto-formatting'
+        default: false
+        required: false
+        type: boolean
+
 
 jobs:
   render:
@@ -37,8 +43,12 @@ jobs:
       - name: Normalize inputs
         id: normalizer
         run: |
-          _R_VERSION="${{ inputs.r-version }}"
-          R_VERSION=${_R_VERSION:-"3.6"}
+          R_VERSION="${{ inputs.r-version }}"
+          if [ "$R_VERSION" == "" ]
+          then {
+            R_VERSION="3.6"
+          }
+          fi
           echo "::set-output name=R_VERSION::$R_VERSION"
         shell: bash
 
@@ -75,12 +85,17 @@ jobs:
           BRANCH_NAME: "${{ steps.branch-name.outputs.current_branch }}"
 
       - name: Install Markdown formatter
+        if: ${{ !inputs.skip-md-formatting }}
         run: npm install -g @quilicicf/markdown-formatter
         shell: bash
 
       - name: Commit and push formatted README.md
         run: |
-          markdown-format -r -f README.md
+          if [ "${{ inputs.skip-md-formatting }}" != "true" ]
+          then {
+            markdown-format -r -f README.md
+          }
+          fi
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
           BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}

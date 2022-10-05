@@ -48,8 +48,12 @@ jobs:
       - name: Normalize inputs
         id: normalizer
         run: |
-          _R_VERSION="${{ inputs.r-version }}"
-          R_VERSION=${_R_VERSION:-"3.6"}
+          R_VERSION="${{ inputs.r-version }}"
+          if [ "$R_VERSION" == "" ]
+          then {
+            R_VERSION="3.6"
+          }
+          fi
           echo "::set-output name=R_VERSION::$R_VERSION"
         shell: bash
 

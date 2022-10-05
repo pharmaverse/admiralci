@@ -60,6 +60,10 @@ jobs:
     if: github.event_name == 'push'
     with:
       r-version: $R_VERSION
+      # This workflow autoformats the README.md file after
+      # it has been rendered. If you want to skip that,
+      # set the following value to 'true'
+      skip-md-formatting: false
   validation:
     name: Validation
     uses: pharmaverse/admiralci/.github/workflows/r-pkg-validation.yml@main
