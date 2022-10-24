@@ -93,7 +93,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: renv update from ${{ github.repository }}
-          file_pattern: 'renv.lock renv/*'
+          file_pattern: 'renv.lock renv/* .github/workflows/*'
           repository: extension-repo
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
