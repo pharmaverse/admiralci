@@ -6,8 +6,7 @@
 \alias{admiralci-package}
 \title{admiralci: ADaM in R Asset Library - CI/CD Workflows}
 \description{
-A set of common CI/CD workflows originally designed and developed for
-    Admiral R package hosted in the Pharmaverse GitHub organization.
+A set of common CI/CD workflows originally designed and developed for Admiral R package hosted in the Pharmaverse GitHub organization.
 }
 \seealso{
 Useful links:
