@@ -1,6 +1,7 @@
 ---
 # This is a workflow that is specific to admiralci
 # It's not inteded to be used by other projects
+
 name: Propagate renv.lock
 
 on:
