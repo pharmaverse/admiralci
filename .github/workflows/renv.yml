@@ -73,8 +73,8 @@ jobs:
       - name: Update renv.lock in ${{ matrix.repos.name }}
         run: |
           cd extension-repo && git status
-          # If it'll be required to create PR_BRANCH_NAME, it has to branched off
-          # from the target branch so switch to target branch first
+          # If it'll be required to create PR_BRANCH_NAME, it has to be branched off
+          # from the target branch so we switch to target branch first
           git fetch origin ${{ matrix.repos.target-branch }}
           git checkout ${{ matrix.repos.target-branch }}
           # Update local branch if remote branch already exists
