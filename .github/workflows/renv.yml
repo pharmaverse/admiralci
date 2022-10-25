@@ -41,21 +41,21 @@ jobs:
     runs-on: ubuntu-latest
     needs: integrity
     env:
-      PR_BRANCH_NAME: automated-renv-lock-propagation
+      PR_BRANCH_NAME: automated-renv-lock-propagation-2
     strategy:
       matrix:
         # Run all steps in this job for the following repositories.
         repos:
-          - name: admiralonco
-            target-branch: devel
-          - name: admiraldev
-            target-branch: devel
-          - name: admiraltemplate
-            target-branch: main
-          - name: admiralophtha
-            target-branch: devel
-          - name: admiral
-            target-branch: devel
+          # - name: admiralonco
+          #   target-branch: devel
+          # - name: admiraldev
+          #   target-branch: devel
+          # - name: admiraltemplate
+          #   target-branch: main
+          # - name: admiralophtha
+          #   target-branch: devel
+          # - name: admiral
+          #   target-branch: devel
           - name: admiral.test
             target-branch: devel
 
@@ -73,6 +73,9 @@ jobs:
       - name: Update renv.lock in ${{ matrix.repos.name }}
         run: |
           cd extension-repo && git status
+          # Switch to target branch, since the new branch will be branched off from it
+          git fetch origin ${{ matrix.repos.target-branch }}
+          git checkout ${{ matrix.repos.target-branch }}
           # Update local branch if remote branch already exists
           git fetch origin $PR_BRANCH_NAME || true
           # Switch to the branch or create if doesn't exist
