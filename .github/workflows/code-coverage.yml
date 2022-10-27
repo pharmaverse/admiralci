@@ -4,7 +4,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.0.5'
+        default: '4.0'
         required: false
         type: string
       skip-coverage-badges:
@@ -64,7 +64,7 @@ jobs:
           R_VERSION="${{ inputs.r-version }}"
           if [ "$R_VERSION" == "" ]
           then {
-            R_VERSION="4.0.5"
+            R_VERSION="4.0"
           }
           fi
           echo "::set-output name=R_VERSION::$R_VERSION"
