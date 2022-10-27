@@ -123,5 +123,12 @@ jobs:
         shell: Rscript {0}
 
       - name: Git diff
-        run: git diff
+        run: |
+          echo "#########################################"
+          echo "Below are the new contents of activate.R"
+          echo "#########################################"
+          cat renv/activate.R
+          echo "#########################################"
+          echo "End of activate.R contents"
+          echo "#########################################"
         shell: bash
