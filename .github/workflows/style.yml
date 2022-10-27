@@ -117,24 +117,6 @@ jobs:
               "styler::style_file(", capture.output(dput(problems)), ")\n"
             ))
             cat("────────────────────────────────────────\n")
-            # TODO uncomment
-            # quit(status = length(problems))
+            quit(status = length(problems))
           }
-          # TODO remove
-          styler::style_file(changed_r_files)
         shell: Rscript {0}
-
-      - name: Git diff
-        run: |
-          echo "#########################################"
-          echo "git diff"
-          echo "#########################################"
-          git diff
-          echo "#########################################"
-          echo "Below are the new contents of activate.R"
-          echo "#########################################"
-          cat renv/activate.R
-          echo "#########################################"
-          echo "End of activate.R contents"
-          echo "#########################################"
-        shell: bash
