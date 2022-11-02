@@ -51,10 +51,6 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Print activate.R
-        run: cat -E renv/activate.R
-        shell: bash
-
       - name: Normalize inputs
         id: normalizer
         run: |
