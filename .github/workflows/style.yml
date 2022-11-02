@@ -51,6 +51,10 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
+      - name: Print activate.R
+        run: cat -E renv/activate.R
+        shell: bash
+
       - name: Normalize inputs
         id: normalizer
         run: |
@@ -94,6 +98,10 @@ jobs:
 
       - name: Run styler
         run: |
+          cat("\n────────────────────────────────────────\n")
+          cat("Old contents of renv/activate.R")
+          system("cat -E renv/activate.R")
+          cat("\n────────────────────────────────────────\n")
           changed_files <- unlist(strsplit(
             "${{ steps.changed-files.outputs.all }}",
             split=","
@@ -120,11 +128,10 @@ jobs:
             cat("⚠️ Here is the complete git diff for the files that changed:\n")
             system("git diff")
             cat("────────────────────────────────────────\n")
-            cat("Styler package version")
             cat(paste("ℹ️ Version of styler used in this workflow:", packageVersion("styler")))
             cat("\n────────────────────────────────────────\n")
             cat("New contents of renv/activate.R")
-            system("cat renv/activate.R")
+            system("cat -E renv/activate.R")
             cat("────────────────────────────────────────\n")
             quit(status = length(problems))
           }
