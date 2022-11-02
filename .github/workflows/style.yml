@@ -116,8 +116,14 @@ jobs:
             cat(paste0(
               "styler::style_file(", capture.output(dput(problems)), ")\n"
             ))
+            cat("────────────────────────────────────────\n")
             cat("⚠️ Here is the complete git diff for the files that changed:\n")
             system("git diff")
+            cat("────────────────────────────────────────\n")
+            cat("Styler package version")
+            packageVersion("styler")
+            cat("New contents of renv/activate.R")
+            system("cat renv/activate.R")
             cat("────────────────────────────────────────\n")
             quit(status = length(problems))
           }
