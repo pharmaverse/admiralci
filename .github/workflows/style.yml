@@ -95,7 +95,7 @@ jobs:
         uses: Ana06/get-changed-files@v2.1.0
         with:
           format: csv
-          filter: '!renv/*'
+          filter: '!renv/*.R'
 
       - name: Run styler
         run: |
