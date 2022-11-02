@@ -121,7 +121,7 @@ jobs:
             system("git diff")
             cat("────────────────────────────────────────\n")
             cat("Styler package version")
-            packageVersion("styler")
+            cat(paste("ℹ️ Version of styler used in this workflow:", packageVersion("styler")))
             cat("\n────────────────────────────────────────\n")
             cat("New contents of renv/activate.R")
             system("cat renv/activate.R")
