@@ -116,6 +116,8 @@ jobs:
             cat(paste0(
               "styler::style_file(", capture.output(dput(problems)), ")\n"
             ))
+            cat("⚠️ Here is the complete git diff for the files that changed:\n")
+            system("git diff")
             cat("────────────────────────────────────────\n")
             quit(status = length(problems))
           }
