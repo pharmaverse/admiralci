@@ -95,13 +95,10 @@ jobs:
         uses: Ana06/get-changed-files@v2.1.0
         with:
           format: csv
+          filter: '!renv/*'
 
       - name: Run styler
         run: |
-          cat("\n────────────────────────────────────────\n")
-          cat("Old contents of renv/activate.R")
-          system("cat -E renv/activate.R")
-          cat("\n────────────────────────────────────────\n")
           changed_files <- unlist(strsplit(
             "${{ steps.changed-files.outputs.all }}",
             split=","
@@ -129,10 +126,6 @@ jobs:
             system("git diff")
             cat("────────────────────────────────────────\n")
             cat(paste("ℹ️ Version of styler used in this workflow:", packageVersion("styler")))
-            cat("\n────────────────────────────────────────\n")
-            cat("New contents of renv/activate.R")
-            system("cat -E renv/activate.R")
-            cat("────────────────────────────────────────\n")
             quit(status = length(problems))
           }
         shell: Rscript {0}
