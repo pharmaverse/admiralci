@@ -122,6 +122,7 @@ jobs:
             cat("────────────────────────────────────────\n")
             cat("Styler package version")
             packageVersion("styler")
+            cat("\n────────────────────────────────────────\n")
             cat("New contents of renv/activate.R")
             system("cat renv/activate.R")
             cat("────────────────────────────────────────\n")
