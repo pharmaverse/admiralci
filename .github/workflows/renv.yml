@@ -1,6 +1,7 @@
 ---
 # This is a workflow that is specific to admiralci
 # It's not inteded to be used by other projects
+
 name: Propagate renv.lock
 
 on:
@@ -22,16 +23,18 @@ jobs:
       - name: Get R version from renv.lock file
         id: r-version
         run: |
-          R_VERSION=$(cat renv.lock | jq -r '.R.Version')
+          R_VERSION=$(cat renv.lock | jq -r '.R.Version' | grep -oE '^[0-9]+\.[0-9]+')
           echo "::set-output name=R_VERSION::$R_VERSION"
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ steps.r-version.outputs.R_VERSION }}
- 
+
       - name: Run renv.lock diagnostics
-        run: renv::diagnostics(project = NULL)
+        run: |
+          install.packages("renv")
+          renv::diagnostics(project = NULL)
         shell: Rscript {0}
 
   propagation:
@@ -46,16 +49,43 @@ jobs:
         repos:
           - name: admiralonco
             target-branch: devel
+            reviewers: |-
+              rossfarrugia
+              bundfussr
+              cicdguy
           - name: admiraldev
             target-branch: devel
+            reviewers: |-
+              bms63
+              thomas-neitmann
+              cicdguy
           - name: admiraltemplate
             target-branch: main
+            reviewers: |-
+              bms63
+              rossfarrugia
+              cicdguy
+              bundfussr
           - name: admiralophtha
             target-branch: devel
+            reviewers: |-
+              rossfarrugia
+              cicdguy
           - name: admiral
             target-branch: devel
+            reviewers: |-
+              rossfarrugia
+              cicdguy
+              thomas-neitmann
+              bms63
+              bundfussr
           - name: admiral.test
             target-branch: devel
+            reviewers: |-
+              thomas-neitmann
+              rossfarrugia
+              bms63
+              bundfussr
 
     steps:
       - name: Checkout this repo
@@ -71,31 +101,35 @@ jobs:
       - name: Update renv.lock in ${{ matrix.repos.name }}
         run: |
           cd extension-repo && git status
+          # If it'll be required to create PR_BRANCH_NAME, it has to be branched off
+          # from the target branch so we switch to target branch first
+          git fetch origin ${{ matrix.repos.target-branch }}
+          git checkout ${{ matrix.repos.target-branch }}
           # Update local branch if remote branch already exists
-          git fetch origin $PR_BRANCH_NAME || true
+          git fetch origin $PR_BRANCH_NAME@${{ matrix.repos.target-branch }} || true
           # Switch to the branch or create if doesn't exist
-          git checkout $PR_BRANCH_NAME || git checkout -b $PR_BRANCH_NAME
+          git checkout $PR_BRANCH_NAME@${{ matrix.repos.target-branch }} || git checkout -b $PR_BRANCH_NAME@${{ matrix.repos.target-branch }}
           # Required to pull the branch because stefanzweifel/git-auto-commit-action
           # doesn't have support for automatic pulling
-          git pull origin $PR_BRANCH_NAME || true
+          git pull origin $PR_BRANCH_NAME@${{ matrix.repos.target-branch }} || true
           # Update renv.lock file with the latest version from central repo
           cp ../renv.lock .
           # Also update the renv directory
           rm -rf renv && cp -r ../renv .
           # Also update the R_VERSION setting in workflows to match
-          # what's available in the renv.lock file
-          R_VERSION=$(cat ../renv.lock | jq -r '.R.Version')
+          # what's available in the renv.lock file, but skip R patch version
+          R_VERSION=$(cat ../renv.lock | jq -r '.R.Version' | grep -oE '^[0-9]+\.[0-9]+')
           perl -p -i -e "s/r-version: .*/r-version: \"${R_VERSION}\"/" .github/workflows/*
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: renv update from ${{ github.repository }}
-          file_pattern: 'renv.lock renv/*'
+          file_pattern: 'renv.lock renv/* .github/workflows/*'
           repository: extension-repo
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
-          branch: ${{ env.PR_BRANCH_NAME }}
+          branch: ${{ env.PR_BRANCH_NAME }}@${{ matrix.repos.target-branch }}
           create_branch: true
 
       - name: Create Pull Request in ${{ matrix.repos.name }}
@@ -114,7 +148,7 @@ jobs:
             let create_new_pr = true;
             for (const pr of result.data) {
               // Look for distinct PR branch name
-              if (pr.head.ref === "${{ env.PR_BRANCH_NAME }}") {
+              if (pr.head.ref === "${{ env.PR_BRANCH_NAME }}@${{ matrix.repos.target-branch }}") {
                 console.log("PR with head ref " + pr.head.ref + " already exists");
                 create_new_pr = false;
                 break;
@@ -128,12 +162,21 @@ jobs:
                 title: 'Propagate renv.lock from ${{ github.repository }}',
                 owner: repo_owner,
                 repo: repo_name,
-                head: '${{ env.PR_BRANCH_NAME }}',
+                head: '${{ env.PR_BRANCH_NAME }}@${{ matrix.repos.target-branch }}',
                 base: '${{ matrix.repos.target-branch }}',
                 body: [
                   'This PR has been automatically generated by ',
                   'renv.lock propagation workflow from ${{ github.repository }}.',
                   '\n\nPlease review the changes.'
                 ].join('')
+              });
+              // Assign reviewers to the PR
+              const reviewer_list = `${{ matrix.repos.reviewers }}`.split("\n");
+              console.log(reviewer_list);
+              const result3 = await github.rest.pulls.requestReviewers({
+                owner: repo_owner,
+                repo: repo_name,
+                pull_number: result2.data.number,
+                reviewers: reviewer_list
               });
             }

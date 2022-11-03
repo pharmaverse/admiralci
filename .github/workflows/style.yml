@@ -7,7 +7,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '3.6'
+        default: '4.0'
         required: false
         type: string
   push:
@@ -57,7 +57,7 @@ jobs:
           R_VERSION="${{ inputs.r-version }}"
           if [ "$R_VERSION" == "" ]
           then {
-            R_VERSION="3.6"
+            R_VERSION="4.0"
           }
           fi
           echo "::set-output name=R_VERSION::$R_VERSION"
@@ -118,6 +118,10 @@ jobs:
               "styler::style_file(", capture.output(dput(problems)), ")\n"
             ))
             cat("────────────────────────────────────────\n")
+            cat("⚠️ Here is the complete git diff for the files that changed:\n")
+            system("git diff")
+            cat("────────────────────────────────────────\n")
+            cat(paste("ℹ️ Version of styler used in this workflow:", packageVersion("styler")))
             quit(status = length(problems))
           }
         shell: Rscript {0}
