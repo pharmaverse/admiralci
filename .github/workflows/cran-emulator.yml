@@ -84,7 +84,9 @@ jobs:
         run: apt-get update -y || dnf update -y
 
       - name: Install pre-requisites
-        run: apt-get install -y git || dnf install -y git-all
+        run: |
+          apt-get install -y git sudo || \
+          dnf install -y git-all sudo
 
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -94,6 +96,10 @@ jobs:
           rm -rf renv* .Rprofile
           if [[ ${{ matrix.system }} == *devel ]]; then {
             echo "/opt/R-devel/bin" >> $GITHUB_PATH
+          }
+          fi
+          if [[ ${{ matrix.system }} == *patched ]]; then {
+            echo "/opt/R-patched/bin" >> $GITHUB_PATH
           }
           fi
         shell: bash
