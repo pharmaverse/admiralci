@@ -1,0 +1,109 @@
+name: CRAN Emulator
+
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_call:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+
+concurrency:
+  group: cran-systems-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.system }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        system:
+          - rhub/debian-clang-devel
+          - rhub/debian-gcc-devel
+          - rhub/fedora-clang-devel
+          - rhub/fedora-gcc-devel
+          - rhub/debian-gcc-patched
+          - rhub/debian-gcc-release
+
+    container:
+      image: ${{ matrix.system }}
+      # All options: https://docs.docker.com/engine/reference/commandline/create/#options
+      options: --user root
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # Specs from https://www.stats.ox.ac.uk/pub/bdr/Rconfig/r-devel-linux-x86_64-fedora-clang
+      _R_CHECK_INSTALL_DEPENDS_: true
+      _R_CHECK_SUGGESTS_ONLY_: true
+      _R_CHECK_NO_RECOMMENDED_: true
+      _R_CHECK_DOC_SIZES2_: true
+      _R_CHECK_DEPRECATED_DEFUNCT_: true
+      _R_CHECK_SCREEN_DEVICE_: warn
+      _R_CHECK_REPLACING_IMPORTS_: true
+      _R_CHECK_TOPLEVEL_FILES_: true
+      _R_CHECK_DOT_FIRSTLIB_: true
+      _R_CHECK_RD_LINE_WIDTHS_: true
+      _R_CHECK_S3_METHODS_NOT_REGISTERED_: true
+      _R_CHECK_OVERWRITE_REGISTERED_S3_METHODS_: true
+      _R_CHECK_CODE_USAGE_WITH_ONLY_BASE_ATTACHED_: true
+      _R_CHECK_NATIVE_ROUTINE_REGISTRATION_: true
+      _R_CHECK_FF_CALLS_: registration
+      _R_CHECK_PRAGMAS_: true
+      _R_CHECK_COMPILATION_FLAGS_: true
+      _R_CHECK_R_DEPENDS_: true
+      _R_CHECK_PACKAGES_USED_IN_TESTS_USE_SUBDIRS_: true
+      _R_CHECK_SHLIB_OPENMP_FLAGS_: true
+      _R_CHECK_CODE_ASSIGN_TO_GLOBALENV_: true
+      _R_CHECK_CODE_DATA_INTO_GLOBALENV_: true
+      _R_CHECK_PKG_SIZES_: true
+      _R_CHECK_LIMIT_CORES_: true
+      _R_S3_METHOD_LOOKUP_BASEENV_AFTER_GLOBALENV_: true
+      _R_CHECK_AUTOCONF_: true
+      _R_CHECK_THINGS_IN_CHECK_DIR_: true
+      _R_CHECK_THINGS_IN_TEMP_DIR_: true
+      _R_CHECK_THINGS_IN_TEMP_DIR_EXCLUDE_: "^ompi"
+      _R_CHECK_BASHISMS_: true
+      _R_CHECK_ORPHANED_: true
+      _R_CHECK_DEPENDS_ONLY_DATA_: true
+      _R_CHECK_XREFS_PKGS_ARE_DECLARED_: true
+      _R_CHECK_MATRIX_DATA_: true
+      _R_CHECK_RD_VALIDATE_RD2HTML_: true
+      _R_CHECK_RD_MATH_RENDERING_: true
+      _R_CHECK_FORCE_SUGGESTS_: false
+
+    steps:
+      - name: Update image
+        run: apt-get update -y || dnf update -y
+
+      - name: Install pre-requisites
+        uses: apt-get install -y git || dnf install -y git-all
+
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup R path and yeet renv
+        run: |
+          rm -rf renv* .Rprofile
+          if [[ ${{ matrix.system }} == *devel ]]; then {
+            echo "/opt/R-devel/bin" >> $GITHUB_PATH
+          }
+          fi
+        shell: bash
+
+      - name: Install dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+
+      - name: Run R CMD check
+        uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--no-manual", "--as-cran")'
+          error-on: '"error"'
+          check-dir: '"check"'
