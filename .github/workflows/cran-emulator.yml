@@ -85,8 +85,8 @@ jobs:
 
       - name: Install pre-requisites
         run: |
-          apt-get install -y git || \
-          dnf install -y git-all
+          apt-get install -y git libssl-dev libxml2-dev || \
+          dnf install -y git-all openssl-devel libxml2-devel
 
       - name: Checkout Repo
         uses: actions/checkout@v3
