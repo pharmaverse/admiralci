@@ -15,7 +15,7 @@ on:
 jobs:
   r-pkg-validation:
     name: Generate
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     # Set Github token permissions
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -80,6 +80,8 @@ jobs:
       - name: Build report
         uses: insightsengineering/thevalidatoR@v1
         id: validation
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload report to release
         if: success()
