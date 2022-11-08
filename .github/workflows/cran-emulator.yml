@@ -85,31 +85,40 @@ jobs:
 
       - name: Install pre-requisites
         run: |
-          apt-get install -y git sudo || \
-          dnf install -y git-all sudo
+          apt-get install -y git || \
+          dnf install -y git-all
 
       - name: Checkout Repo
         uses: actions/checkout@v3
 
       - name: Setup R path and yeet renv
+        id: r-paths
         run: |
           rm -rf renv* .Rprofile
           if [[ ${{ matrix.system }} == *devel ]]; then {
-            echo "/opt/R-devel/bin" >> $GITHUB_PATH
+            echo "Rscript=/opt/R-devel/bin/Rscript" >> $GITHUB_OUTPUT
+            echo "R=/opt/R-devel/bin/R" >> $GITHUB_OUTPUT
           }
           fi
           if [[ ${{ matrix.system }} == *patched ]]; then {
-            echo "/opt/R-patched/bin" >> $GITHUB_PATH
+            echo "Rscript=/opt/R-patched/bin/Rscript" >> $GITHUB_OUTPUT
+            echo "R=/opt/R-patched/bin/R" >> $GITHUB_OUTPUT
           }
           fi
         shell: bash
 
-      - name: Install dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
+      - name: Install devtools
+        run: install.packages("devtools", repos = "https://cloud.r-project.org")
+        shell: ${{ steps.r-paths.outputs.Rscript }}
 
-      - name: Run R CMD check
-        uses: r-lib/actions/check-r-package@v2
-        with:
-          args: 'c("--no-manual", "--as-cran")'
-          error-on: '"error"'
-          check-dir: '"check"'
+      - name: Install package dependencies
+        run: devtools::install_dev_deps()
+        shell: ${{ steps.r-paths.outputs.Rscript }}
+
+      - name: Build package
+        run: ${{ steps.r-paths.outputs.Rscript }} CMD build .
+        shell: bash
+
+      - name: Test package
+        run: ${{ steps.r-paths.outputs.Rscript }} CMD check *.tar.gz
+        shell: bash
