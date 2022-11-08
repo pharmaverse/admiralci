@@ -96,29 +96,29 @@ jobs:
         run: |
           rm -rf renv* .Rprofile
           if [[ ${{ matrix.system }} == *devel ]]; then {
-            echo "Rscript=/opt/R-devel/bin/Rscript" >> $GITHUB_OUTPUT
-            echo "R=/opt/R-devel/bin/R" >> $GITHUB_OUTPUT
+            ln -s /opt/R-devel/bin/Rscript /bin/Rscript
+            ln -s /opt/R-devel/bin/R /bin/R
           }
           fi
           if [[ ${{ matrix.system }} == *patched ]]; then {
-            echo "Rscript=/opt/R-patched/bin/Rscript" >> $GITHUB_OUTPUT
-            echo "R=/opt/R-patched/bin/R" >> $GITHUB_OUTPUT
+            ln -s /opt/R-patched/bin/Rscript /bin/Rscript
+            ln -s /opt/R-patched/bin/R /bin/R
           }
           fi
         shell: bash
 
       - name: Install devtools
         run: install.packages("devtools", repos = "https://cloud.r-project.org")
-        shell: ${{ steps.r-paths.outputs.Rscript }}
+        shell: Rscript {0}
 
       - name: Install package dependencies
         run: devtools::install_dev_deps()
-        shell: ${{ steps.r-paths.outputs.Rscript }}
+        shell: Rscript {0}
 
       - name: Build package
-        run: ${{ steps.r-paths.outputs.Rscript }} CMD build .
+        run: R CMD build .
         shell: bash
 
       - name: Test package
-        run: ${{ steps.r-paths.outputs.Rscript }} CMD check *.tar.gz
+        run: R CMD check *.tar.gz
         shell: bash
