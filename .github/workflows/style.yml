@@ -92,6 +92,7 @@ jobs:
         with:
           format: csv
           filter: |
+            *
             !renv/*.R
 
       - name: Run styler
