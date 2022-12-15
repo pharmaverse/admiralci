@@ -67,7 +67,7 @@ jobs:
             R_VERSION="4.0"
           }
           fi
-          echo "::set-output name=R_VERSION::$R_VERSION"
+          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Setup R
@@ -143,7 +143,7 @@ jobs:
 
       - name: Set coverage percentage as output
         id: set-coverage-percentage
-        run: echo "::set-output name=coverage-percentage::$(cat coverage.txt)"
+        run: echo "coverage-percentage=$(cat coverage.txt)" >> $GITHUB_OUTPUT
         if: steps.check_coverage_reports.outputs.files_exists == 'true'
 
       - name: Generate Coverage Summary Report

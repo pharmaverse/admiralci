@@ -71,8 +71,8 @@ jobs:
           }
           R_VERSION=$(normalize ${{ inputs.r-version }} 4.0)
           DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
-          echo "::set-output name=R_VERSION::$R_VERSION"
-          echo "::set-output name=DOCS_LANDING_PAGE::$DOCS_LANDING_PAGE"
+          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
+          echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Setup R
@@ -150,7 +150,7 @@ jobs:
             echo ${var}
           }
           DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
-          echo "::set-output name=DOCS_LANDING_PAGE::$DOCS_LANDING_PAGE"
+          echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Create and publish docs

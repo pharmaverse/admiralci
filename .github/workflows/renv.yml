@@ -24,7 +24,7 @@ jobs:
         id: r-version
         run: |
           R_VERSION=$(cat renv.lock | jq -r '.R.Version' | grep -oE '^[0-9]+\.[0-9]+')
-          echo "::set-output name=R_VERSION::$R_VERSION"
+          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
