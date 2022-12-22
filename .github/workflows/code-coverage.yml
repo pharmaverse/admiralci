@@ -12,6 +12,10 @@ on:
         default: false
         required: false
         type: boolean
+      function-exclusions:
+        description: 'A vector of regular expressions matching function names to exclude. Example print\\\. to match print methods.'
+        default: NULL
+        required: false
   push:
     branches:
       - main
@@ -104,10 +108,12 @@ jobs:
         run: |
           tryCatch(
             expr = {
+                function_exclusions <- "${{ inputs.function-exclusions }}"
                 x <- covr::package_coverage(
                   path=".",
                   clean = FALSE,
-                  quiet = FALSE
+                  quiet = FALSE,
+                  function_exclusions = function_exclusions
                 )
                 print(x)
                 covr::to_cobertura(x, filename = "coverage.xml")
