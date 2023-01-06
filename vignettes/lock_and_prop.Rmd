@@ -66,7 +66,7 @@ The process is implemented manually and will be done at either a minor or major 
 
 
 ```{r, echo = FALSE}
-knitr::include_graphics("prop.png", dpi = 144)
+knitr::include_graphics("./prop.png", dpi = 144)
 ```
 
 
