@@ -1,9 +1,9 @@
 ---
-title: "renv::Lock Files Updates and Propagation"
+title: "renv::Lock File Updates and Propagation"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{renv::Lock Files and Propagation}
+  %\VignetteIndexEntry{renv::Lock File Updates and Propagation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,49 +19,56 @@ knitr::opts_chunk$set(
 
 This article will go over the following:
 
-* The process for requesting an update to the Lock Files (`renv.lock`) for `{admiral}` and related admiral extensions
-* How `admiralci` uses the Propagation Process to update `renv.lock` files across the family of admiral packages .
+* The process for requesting an update to the Lock Files, i.e. `renv.lock`, for the `{admiral}` family of packages.
+* How `{admiralci}` uses a propagation process to update `renv.lock` files across the family of `{admiral}` packages .
 
 ## Updates to Lock Files 
 
-The intention of the `renv.lock` files is to create a harmonized development environment across our many different companies and collaborators.  The core teams feels that if everyone is working with the same version of R and the same version of R packages then communication around development issues will be much easier.  
+The intention of the `renv.lock` file is to create a harmonized development environment across our many different companies and collaborators.  The core team feels that if everyone is working with the same version of R and the same versions of R packages then communication around development issues will be much easier.  Unfortunately, this adoption of a `renv.lock` file also creates a few barriers for our development process.  First, if we **lock** in a version of R and R packages then we can not quickly adopt the latest and greatest of updates from new releases.  Second, how does a team decide to update a certain package or version of R and who gets to make that final call? Finally, when do we make updates to the lock file. Hopefully, the below will provide some guidance around these issues.  However, these process might change over time and admiral developers are encouraged to stay up to date with the latest processes and participate in the discussion.
 
-Unfortunately, this adoption of a `renv.lock` file also creates a few barriers.  First, if we **lock** in a version of R and R packages then we can not quickly adopt the latest and greatest of updates for new releases when made available.  Second, when do we decide to update a package or version of R and who decides?  
+**Note:** Through GitHub Actions we continuously test admiral's integration with the latest 3 snapshots of dependent R packages on CRAN that are closest in date to latest 3 versions of R.  Please see [GitHub Actions/Workflows]( https://pharmaverse.github.io/admiraldev/devel/articles/pr_review_guidance.html#github-actionsworkflows) on the `{admiraldev}` site for more information on this process.
 
 ### R Package Updates and Lock Files
 
-Package Updates are
+As you gathered, package updates to the `renv.lock` file are permissible and needed as our family grows and dependent packages and R versions change.  
 
+Most of the scenarios for updates can be slotted into the following:
 
-Common Scenarios for Updating Packages:
+1. A new function in a dependent package, e.g. `{dplyr}` is available and could be utilized in a new admiral function.
+1. A new package is available with new functions that could greatly simplify our code base or add in additional functionality.
+1. A breaking bug is discovered in a dependent package that breaks backward compatibility for that package with admiral.
+1. Other?
 
-1. A new function in package, e.g. dplyr is available and could be utilized in a new admiral function
-2. A breaking bug is discovered in a dependent package that breaks backward compatibility 
-3. 
-
-
-
-**Note:** Through GitHub Actions we continuously test admiral's integration with the latest 3 snapshots of R packages that are closest in date to 3 version of R we use in in our Actions. 
+The first step for requesting an update for a R package in the `renv.lock` file is to raise it in our [slack channel](https://app.slack.com/client/T028PB489D3/C028SJ83KM1).  The next step is to make an issue for it in your relevant admiral repository and tag relevant admiral leads.  This will create discussion around why this update is needed. The admiral leads will then make the final decision (**almost always in the affirmative**) and we can move this to the attention of the `{admiralci}` leads.  Once all leads are aware of this needed update, then the lock file can be updated in the respective admiral repository.  Other admiral family repositories can choose to also include this update in their lock files.  However, if this update is not made then the propagation process will automatically update it for all admiral family packages at a later time (discussed below).
 
 
 ### R Version Updates and Lock Files
 
-Currently, the the family of admiral packages operate 3 R versions back from the latest release.  For example, if the latest release of R is `4.2`, then our `renv.lock` files will use `4.0.5`.  We use `4.0.5` as this has the latest patches available for `4.0`.  We will use the Propagation Process to update the latest version of R when a new release becomes available.
+Currently, the family of admiral packages operate 3 R versions back from the latest R version release.  For example, if the latest release of R is `4.2`, then our `renv.lock` files will use `4.0.5`.  We use `4.0.5` as this has the latest patches available for `4.0`.  We will use the propagation process to update the latest version of R when a new release becomes available.
 
-**Note:** Through GitHub Actions we continuously test admiral's integration with the latest three version of R and closest snapshot of R packages to the R version release date.  
+**Note:** Through GitHub Actions we continuously test admiral's integration with the latest three version of R and closest snapshot of R packages to the R version release date.  For example, while we use version `4.0.5` in development we are continuously testing R version `4.1` and `4.2` for compatibility with `admiral`.  
 
 
 ## Propagation Process
 
-Through GitHub Actions we have developed the ability to **propogate** updated versions of R and R packages throughout the family of admiral.  This ensures that developers working on `admiral.test` and `admiralonco` have the same common environment as those working on `admiraldev` and `admiralvaccines`.  
+Through GitHub Actions we have developed the ability to **propagate** updated lock files with our preferred versions of R and R packages throughout the family of admiral packages.  This ensures that developers working on `admiral.test` and `admiralonco` have the same common environment as those working on `admiraldev` and `admiralvaccines`. 
 
 
-The file that does the propagation process is called [`renv.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/renv.yml) located in the `.github/workflows` folder of the ``{admiralci}` repo.
+The file that does the propagation process is called [`renv.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/renv.yml) located in the `.github/workflows` folder of the `{admiralci}` repo.
+
+The process is implemented manually and will be done at either a minor or major release of R or a major or minor release of admiral. The propagation occurs in the following steps:
+
+1. A Pull Request will be created in all admiral family repos as seen below with the tile **Propagare renv.lock from pharmaverse/admiralci** title.  
+1. A `pharmaverse-bot` is the author of the Pull Request as seen in `[2]` in the image below.  
+1. The bot assign relevant reviewers to the Pull Requests. The reviewers tend to be admins or core contributors to the repo and can be adjusted if needed.  
+
+**Note:** In `[1]` you will see that one reviewer has a special shield symbol next to their name.  This person is a codeowner of the `common.yml` and is alerted whenever a change is made to this file.  You can read more about codeowners on [About Code Owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) in GitHub Documentation
+
 
 ```{r, echo = FALSE}
 knitr::include_graphics("prop.png", dpi = 144)
 ```
 
 
-
+We are keen on continuously evaluating this process as we balance our software development and stability needs.  Please don't hesitate to raise concerns or questions around this process, but at this point in time we have determined this is our best course to maintain a consistent development environment across multiple repository, companies and collabotrations.  
 
