@@ -1,0 +1,67 @@
+---
+title: "renv::Lock Files Updates and Propagation"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{renv::Lock Files and Propagation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This article will go over the following:
+
+* The process for requesting an update to the Lock Files (`renv.lock`) for `{admiral}` and related admiral extensions
+* How `admiralci` uses the Propagation Process to update `renv.lock` files across the family of admiral packages .
+
+## Updates to Lock Files 
+
+The intention of the `renv.lock` files is to create a harmonized development environment across our many different companies and collaborators.  The core teams feels that if everyone is working with the same version of R and the same version of R packages then communication around development issues will be much easier.  
+
+Unfortunately, this adoption of a `renv.lock` file also creates a few barriers.  First, if we **lock** in a version of R and R packages then we can not quickly adopt the latest and greatest of updates for new releases when made available.  Second, when do we decide to update a package or version of R and who decides?  
+
+### R Package Updates and Lock Files
+
+Package Updates are
+
+
+Common Scenarios for Updating Packages:
+
+1. A new function in package, e.g. dplyr is available and could be utilized in a new admiral function
+2. A breaking bug is discovered in a dependent package that breaks backward compatibility 
+3. 
+
+
+
+**Note:** Through GitHub Actions we continuously test admiral's integration with the latest 3 snapshots of R packages that are closest in date to 3 version of R we use in in our Actions. 
+
+
+### R Version Updates and Lock Files
+
+Currently, the the family of admiral packages operate 3 R versions back from the latest release.  For example, if the latest release of R is `4.2`, then our `renv.lock` files will use `4.0.5`.  We use `4.0.5` as this has the latest patches available for `4.0`.  We will use the Propagation Process to update the latest version of R when a new release becomes available.
+
+**Note:** Through GitHub Actions we continuously test admiral's integration with the latest three version of R and closest snapshot of R packages to the R version release date.  
+
+
+## Propagation Process
+
+Through GitHub Actions we have developed the ability to **propogate** updated versions of R and R packages throughout the family of admiral.  This ensures that developers working on `admiral.test` and `admiralonco` have the same common environment as those working on `admiraldev` and `admiralvaccines`.  
+
+
+The file that does the propagation process is called [`renv.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/renv.yml) located in the `.github/workflows` folder of the ``{admiralci}` repo.
+
+```{r, echo = FALSE}
+knitr::include_graphics("prop.png", dpi = 144)
+```
+
+
+
+
