@@ -80,8 +80,8 @@ jobs:
             R_VERSION="4.0"
           }
           fi
-          echo "::set-output name=R_VERSION::$R_VERSION"
-          echo "::set-output name=SD_GIT_REF::$BRANCH"
+          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
+          echo "SD_GIT_REF=$BRANCH" >> $GITHUB_OUTPUT
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

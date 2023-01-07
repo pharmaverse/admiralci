@@ -60,7 +60,7 @@ jobs:
             R_VERSION="4.0"
           }
           fi
-          echo "::set-output name=R_VERSION::$R_VERSION"
+          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Setup R
@@ -106,6 +106,7 @@ jobs:
               ext %in% c("R", "Rmd", "Rnw", "Rmarkdown", "qmd")
           }
           changed_r_files <- Filter(is_r_file, changed_files)
+          changed_r_files <- Filter(file.exists, changed_r_files)
           detect <- styler::style_file(changed_r_files, dry = "on")
           if (TRUE %in% detect$changed) {
             problems <- subset(detect$file, detect$changed == T)
