@@ -131,6 +131,7 @@ jobs:
               write(raw_file, "injected_file.R", append = TRUE)
               cmd <- sprintf("Rscript --vanilla %s", "injected_file.R")
               system(cmd)
+              file.remove("injected_file.R")
             })
             if (any(exit_codes == 1L)) {
               failed_scripts <- basename(templates)[which(exit_codes == 1L)]
