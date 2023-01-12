@@ -34,6 +34,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       ##################### BEGIN boilerplate steps #####################
+      ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
         id: branch-name
         uses: tj-actions/branch-names@v5.4
@@ -51,6 +52,40 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
+
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          function remove_substring() {
+              echo "${1//$2}"
+          }
+          BRANCH=${{ steps.branch-name.outputs.head_ref_branch }}
+          if [ "${BRANCH}" == "" ]
+          then {
+            BRANCH=$(git name-rev HEAD | awk '{print $NF}')
+          }
+          fi
+          if [[ $BRANCH == remotes/pull/* ]]
+          then {
+            PR=$(remove_substring "$BRANCH" "/merge")
+            PR=$(remove_substring "$PR" "remotes/")
+            PR=$(echo $PR | sed 's/pull/pulls/')
+            echo "Accessing repos/${GITHUB_REPOSITORY}/${PR}"
+            BRANCH=$(gh api -X GET repos/${GITHUB_REPOSITORY}/${PR} | jq -r '.head.ref')
+          }
+          fi
+          echo "BRANCH is $BRANCH"
+          R_VERSION="${{ inputs.r-version }}"
+          if [ "$R_VERSION" == "" ]
+          then {
+            R_VERSION="4.0"
+          }
+          fi
+          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
+          echo "SD_GIT_REF=$BRANCH" >> $GITHUB_OUTPUT
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
