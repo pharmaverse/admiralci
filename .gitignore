@@ -5,6 +5,7 @@
 # Related R files
 .RData
 *.Rout
+bashtest.sh
 
 # User-specific files
 .Ruserdata

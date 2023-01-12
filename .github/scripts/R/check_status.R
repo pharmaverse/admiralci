@@ -15,6 +15,11 @@ library(digest)
 #opt_parser = OptionParser(option_list=option_list);
 #opt = parse_args(opt_parser);
 
+stop_quietly <- function() {
+  opt <- options(show.error.messages = FALSE)
+  on.exit(options(opt))
+  stop()
+}
 
 parseErrors <- function(url) {
     return(
@@ -34,6 +39,12 @@ if (!httr::http_error(url)) {
 
     # filter errors and get their details links (and convert it to md5 unique code)
     errors <- filter(checks, Status  == 'ERROR')
+
+    # If errors table is empty: just get out ! 
+    if (dim(errors)[1] == 0){
+        stop_quietly()
+    }
+
     errors$CheckLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
     '-00check.html') 
     errors$InstallLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 

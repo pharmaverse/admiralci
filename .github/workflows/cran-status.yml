@@ -73,7 +73,7 @@ jobs:
               git add .
               git commit -m "add new cran status ${GITHUB_OUTPUT}"
               git push
-              exit(1)
+              exit 1
             fi
           fi
         
