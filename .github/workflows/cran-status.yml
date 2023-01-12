@@ -14,12 +14,12 @@ on:
         default: ''
         required: false
         type: string
-      status-types:
+      statuses:
         description: |
           Create an issue if one or more of the following
           statuses are reported on the check report.
           This is a comma-separated string of statuses.
-          Allowed statuses are 'NOTE', 'WARNING', and 'ERROR'
+          Allowed statuses are 'NOTE', 'WARN', and 'ERROR'
         default: 'ERROR'
         required: false
         type: string
@@ -30,6 +30,8 @@ on:
         default: '.'
         required: false
         type: string
+
+permissions: write-all
 
 concurrency:
   group: cran-status-${{ github.event.pull_request.number || github.ref }}
@@ -42,30 +44,100 @@ jobs:
     container:
       image: rocker/tidyverse:latest
     steps:
+
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Create orphan branch
+        id: create_orphan
+        run: |
+          find_orphan=$(git branch | grep cran_status) # BIG WARNING HERE : unique name to not grep other branches
+          git config --global --add safe.directory ${PWD}
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          # Try to create a new orphan branch if it does not already exist
+          if [ -z "${find_orphan}" ]; then 
+            git checkout --orphan cran_status || true
+            git add .
+            git commit -m "initial commit" || true
+            orphan_exists='false'
+          else
+            orphan_exists='true'
+          fi
+          echo "orphan_exists=$orphan_exists" >> $GITHUB_OUTPUT 
+
+      - name: Push orphan branch
+        if: ${{ steps.create_orphan.outputs.orphan_exists == 'false' }}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.REPO_GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
+          branch: cran_status
+          force: true
+
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with: 
+          set-safe-directory: true 
+          ref: cran_status
 
       - name: Get Date
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - name: Check Status
-        run: |
-          # TODO : create "cran-status.json"
-          # RQ: contains only mapping package:md5 code -- see R script 
-        
-        shell: Rscript {0}
-        working-directory: ${{ inputs.path }}
+      - name: Compute CRAN Status md5 hashes
+        uses: .github/actions/cran-status-extract
+        with: 
+          statuses: "${{ inputs.statuses }}"
 
       - name: Update cran_status branch
-        run: # TODO: create branch orphan cran_status if not exists
-        # checkout on cran_status and compare md5 avewithc last cran >> if difference : save this last state 
-        # and also adjust variable cran_errors_differences true or false
+        id: cran_errors_status
+        run: |
+          new_errors=false
+          cran_status_path="${{ inputs.path }}/cran_errors.csv"
+          if [  -e ./cran_errors.csv ]; then
+            current_status_content=$(cat "./cran_errors.csv")
+            mkdir -p cran_status
+            # read previous cran status from this branch (ls sort files by alphabetic number)
+            last_status_file=$(tail -n 1 ./cran_status)
+            if [ -z "./cran_status/${last_status_file}" ]; then
+              # case first writing on the orphan branch
+              last_status_content="FIRST WRITING"
+            else
+              last_status_content=$(cat "./cran_status/$last_status_file")
+            fi
+            # check if the status is a new error:
+            if [ "$current_status_content" != "$last_status_content" ]; then
+              echo "New errors on the cran status found"
+              new_errors=true
+              cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
+            else 
+              echo "New errors on the cran status found, but identical to previous ones"
+            fi
+          fi 
+          echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
 
       - name: Report Status
-        if: failure() and $cran_errors_differences
+        if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
         uses: peter-evans/create-issue-from-file@v4
         with:
-          title: "URGENT! Failed CRAN Checks. Last published infos: commit_id=$GITHUB_SHA, cran_published_date=$PUBLISHED_DATE"
+          title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
           content-filepath: ./${{ inputs.path }}/cran-status.md
           assignees: ${{ inputs.issue-assignees }}
+
+      - name: Clean Repo and add changes
+        if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
+        run: |
+          rm ./cran_errors.csv 2> /dev/null
+          rm ./cran-status.md 2> /dev/null
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+          git add "./cran_status/${{ steps.today.outputs.date }}.csv"
+
+          
+      - name: Commit and push to orphan branch
+        if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: update cran status "${{ steps.today.outputs.date }}"
+          branch: cran_status
+          create_branch: false
