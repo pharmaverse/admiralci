@@ -126,12 +126,8 @@ jobs:
           )
           if (length(templates) > 0) {
             exit_codes <- purrr::map_chr(templates, function(file) {
-              write("options(warn = 2)", file="injected_file.R", append = TRUE)
-              raw_file <- readLines(file)
-              write(raw_file, "injected_file.R", append = TRUE)
-              cmd <- sprintf("Rscript --vanilla %s", "injected_file.R")
+              cmd <- sprintf("Rscript --vanilla %s", file)
               system(cmd)
-              file.remove("injected_file.R")
             })
             if (any(exit_codes == 1L)) {
               failed_scripts <- basename(templates)[which(exit_codes == 1L)]
