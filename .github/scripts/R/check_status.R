@@ -34,16 +34,24 @@ if (!httr::http_error(url)) {
 
     # filter errors and get their details links (and convert it to md5 unique code)
     errors <- filter(checks, Status  == 'ERROR')
-    errors$Links <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
-    '-00install.html') # TODO: see dinakar if we should go through each detail URI (check, install steps etc)
-    errors$Details <- lapply(errors$Links, FUN=parseErrors)
-    errors$Id <- lapply(errors$Details, digest)
+    errors$CheckLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
+    '-00check.html') 
+    errors$InstallLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
+    '-00install.html')
+    errors$BuildLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
+    '-00build.html')
+    errors$CheckDetails <- lapply(errors$CheckLinks, FUN=parseErrors)
+    errors$InstallDetails <- lapply(errors$InstallLinks, FUN=parseErrors)
+    errors$BuildDetails <- lapply(errors$BuildLinks, FUN=parseErrors)
+    errors$CheckId <- lapply(errors$CheckDetails, digest)
+    errors$InstallId <- lapply(errors$InstallDetails, digest)
+    errors$BuildId <- lapply(errors$BuildDetails, digest)
 
     # Alphanumeric order on Flavor (for cran status comparison)
     errors <- errors[order(errors$Flavor),] 
 
     # Save into CSV: 
-    errors %>% select(Flavor, Id) %>% write.csv('cran_errors.csv',row.names=FALSE)
+    errors %>% select(Flavor, CheckId, InstallId, BuildId) %>% write.csv('cran_errors.csv',row.names=FALSE)
             
     status_types <- "${{ inputs.status-types }}"
     statuses <- unlist(strsplit(status_types, split = ","))
