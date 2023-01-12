@@ -71,4 +71,6 @@ if (!httr::http_error(url)) {
         ))
         print("❌ One or more CRAN checks resulted in an invalid status ❌")
         }
+} else {
+    print(paste('ERROR ACCESSING URL=', url))
 }

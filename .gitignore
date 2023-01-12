@@ -2,8 +2,9 @@
 .Rhistory
 .Rapp.history
 
-# Session Data files
+# Related R files
 .RData
+*.Rout
 
 # User-specific files
 .Ruserdata
