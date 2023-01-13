@@ -5,19 +5,24 @@ library(stringr)
 library(digest)
 
 # check if needed : package name and working dir path as input arguments :
-#library("optparse")
-#option_list = list(
-#  make_option(c("-w", "--working_dir_path"), type="character", default=NULL, 
-#              help="working dir", metavar="character"),
-#    make_option(c("-p", "--package_name"), type="character", default=NULL, 
-#              help="Current package name", metavar="character")
-#); 
-#opt_parser = OptionParser(option_list=option_list);
-#opt = parse_args(opt_parser);
+library("optparse")
+option_list <- list(
+  make_option(c("-s", "--status_types"), type = "character", default = "ERRORS,WARNING",
+            help = "status types (comma separated list, for exemple ERRORS,WARNING,NOTE",
+            metavar = "character")
+)
+
+#make_option(c("-w", "--working_dir_path"), type="character", default=NULL, 
+#            help="working dir", metavar="character"),
+#make_option(c("-p", "--package_name"), type="character", default=NULL, 
+#            help="Current package name", metavar="character")
+
+opt_parser <- OptionParser(option_list = option_list)
+opt <- parse_args(opt_parser)
 
 stop_quietly <- function() {
-  opt <- options(show.error.messages = FALSE)
-  on.exit(options(opt))
+  opts <- options(show.error.messages = FALSE)
+  on.exit(options(opts))
   stop()
 }
 
@@ -31,14 +36,18 @@ pkg <- paste(desc::desc_get(keys="Package"))
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
 if (!httr::http_error(url)) {
 
+    # Get input status
+    status_types <- opt$status_types
+    statuses <- unlist(strsplit(status_types, split = ","))
+
     # Parse html table into dataframe
     checks <- url %>%
     read_html() %>%
     html_element("table") %>%
     html_table()
 
-    # filter errors and get their details links (and convert it to md5 unique code)
-    errors <- filter(checks, Status  == 'ERROR')
+    # filter statuses and get their details links (and convert it to md5 unique code)
+    errors <- filter(checks, Status %in% statuses)
 
     # If errors table is empty: just get out ! 
     if (dim(errors)[1] == 0){
@@ -64,8 +73,6 @@ if (!httr::http_error(url)) {
     # Save into CSV: 
     errors %>% select(Flavor, CheckId, InstallId, BuildId) %>% write.csv('cran_errors.csv',row.names=FALSE)
             
-    status_types <- "${{ inputs.status-types }}"
-    statuses <- unlist(strsplit(status_types, split = ","))
     cran_status <- function(x) {
         cat(x, file="cran-status.md", append=TRUE, sep="\n")
     }
