@@ -50,7 +50,9 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Check Status
-        run: Rscript ./.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
+        run: | 
+          echo $PWD
+          Rscript ./.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
         working-directory: ${{ inputs.path }}
 
       - name: Update cran_status branch
