@@ -57,6 +57,7 @@ jobs:
           if test -f ./cran_errors.csv; then
             cat ./cran_errors.csv > $current_status_content
             echo $current_status_content
+          fi
           rm -rf ./admiralci 
         # TODO: find way to call external scripts from admiral workflow..
         working-directory: ${{ inputs.path }}
