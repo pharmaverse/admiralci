@@ -52,6 +52,8 @@ jobs:
       - name: Check Status
         run: | 
           echo $PWD
+          echo "github action path:"
+          echo ${{github.action_path}}
           Rscript ./.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
         working-directory: ${{ inputs.path }}
 
