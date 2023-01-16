@@ -51,10 +51,9 @@ jobs:
 
       - name: Check Status
         run: | 
-          echo $PWD
-          echo "github action path:"
-          echo ${{github.action_path}}
-          Rscript ./.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
+          git clone https://github.com/dgrassellyb/admiral.git
+          Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
+        # TODO: find way to call external scripts from admiral workflow..
         working-directory: ${{ inputs.path }}
 
       - name: Update cran_status branch
