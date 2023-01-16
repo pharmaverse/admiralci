@@ -33,8 +33,11 @@ parseErrors <- function(url) {
     )
 }   
 
+print("Trace1")
+
 pkg <- paste(desc::desc_get(keys="Package"))
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
+print("Trace2")
 if (!httr::http_error(url)) {
 
     # Get input status
