@@ -64,6 +64,7 @@ if (!httr::http_error(url)) {
 
     # If errors table is empty: just get out ! 
     if (dim(errors)[1] == 0){
+        print("Trace7")
         stop_quietly(
             sprintf("None of this status found in the CRAN table. (status=%s)", status_types)
             )
