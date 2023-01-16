@@ -48,8 +48,8 @@ jobs:
       - name: Get Date
         id: today
         run: |
-        echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-        echo $GITHUB_OUTPUT
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
 
       - name: Check Status
         run: | 
