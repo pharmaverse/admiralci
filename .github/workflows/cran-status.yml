@@ -51,7 +51,7 @@ jobs:
 
       - name: Check Status
         run: | 
-          git clone https://github.com/dgrassellyb/admiral.git
+          git clone https://github.com/dgrassellyb/admiralci.git
           Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
         # TODO: find way to call external scripts from admiral workflow..
         working-directory: ${{ inputs.path }}
