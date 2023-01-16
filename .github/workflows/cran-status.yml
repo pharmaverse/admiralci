@@ -85,7 +85,7 @@ jobs:
               echo $current_status_content
               # save this new status to this current branch
               echo "trying to write ./cran_status/${GITHUB_OUTPUT}.csv"
-              ls ./cran_status/
+              ls
               echo $current_status_content > "./cran_status/${GITHUB_OUTPUT}.csv"
               ls ./cran_status/
               git add .
