@@ -27,20 +27,14 @@ parse_errors <- function(url) {
     )
 }
 
-print("Trace1")
-
-pkg <- paste(desc::desc_get(keys="Package"))
+pkg <- paste(desc::desc_get(keys = "Package"))
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
-print("Trace2")
-if (!httr::http_error(url)) {
 
-    print("Trace3")
+if (!httr::http_error(url)) {
 
     # Get input status
     status_types <- opt$status_types
     statuses <- unlist(strsplit(status_types, split = ","))
-
-    print("Trace4")
 
     # Parse html table into dataframe
     checks <- url %>%
@@ -48,13 +42,8 @@ if (!httr::http_error(url)) {
     html_element("table") %>%
     html_table()
 
-    print("Trace5")
-    print(checks)
-
     # filter statuses and get their details links (and convert it to md5 unique code)
     errors <- filter(checks, Status %in% statuses)
-
-    print("Trace6")
 
     # If errors table is empty: just get out !
     if (dim(errors)[1] == 0) {
@@ -76,7 +65,7 @@ if (!httr::http_error(url)) {
         errors$BuildId <- lapply(errors$BuildDetails, digest)
 
         # Alphanumeric order on Flavor (for cran status comparison)
-        errors <- errors[order(errors$Flavor),] 
+        errors <- errors[order(errors$Flavor),]
 
         # Save into CSV:
         errors %>% select(Flavor, CheckId, InstallId, BuildId) %>% write.csv(
