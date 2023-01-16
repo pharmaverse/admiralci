@@ -64,6 +64,8 @@ if (!httr::http_error(url)) {
         stop_quietly()
     }
 
+    print("Trace6")
+
     errors$CheckLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
     '-00check.html') 
     errors$InstallLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
