@@ -62,6 +62,7 @@ jobs:
           cran_status_path=./${{ inputs.path }}/cran_errors.csv
           if test -f "$cran_status_path"; then
             echo "read cran status file"
+            echo "$cran_status_path"
             # if cran_status exists (ie if there are errors) => read cran status file
             cat "$cran_status_path" > $current_status_content
             echo $current_status_content
