@@ -57,7 +57,7 @@ jobs:
           if [ -e ./cran_errors.csv ]; then
             echo "read cran status"
             ls
-            current_status_content=$(cat "./cran_errors.csv")
+            export current_status_content=$(cat "./cran_errors.csv")
             echo "echo current_status_content"
             echo $current_status_content
           fi
