@@ -53,13 +53,10 @@ jobs:
         run: | 
           git clone https://github.com/dgrassellyb/admiralci.git -b fix/cran_status_issues_duplicates
           Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
-          echo "read cran status file"
-          cran_status_path="${{ inputs.path }}/cran_errors.csv" 
-          echo "$cran_status_path"
-          echo "${{ inputs.path }}"
-          ls "${{ inputs.path }}"
-          cat "$cran_status_path" > $current_status_content
-          echo $current_status_content
+          current_status_content="NOCRAN"
+          if test -f ./cran_errors.csv; then
+            cat ./cran_errors.csv > $current_status_content
+            echo $current_status_content
           rm -rf ./admiralci 
         # TODO: find way to call external scripts from admiral workflow..
         working-directory: ${{ inputs.path }}
@@ -67,11 +64,7 @@ jobs:
       - name: Update cran_status branch
         run: |
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
-          if test -f "$cran_status_path"; then
-            echo "read cran status file"
-            echo "$cran_status_path"
-            # if cran_status exists (ie if there are errors) => read cran status file
-            cat "$cran_status_path" > $current_status_content
+          if [ "$current_status_content" != "NOCRAN" ]; then
             echo $current_status_content
             # then checkout to cran_status branch.
             git checkout --orphan cran_status 2&>1 $checkout_output
