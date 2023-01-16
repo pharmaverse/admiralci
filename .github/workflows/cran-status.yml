@@ -53,14 +53,6 @@ jobs:
         run: | 
           git clone https://github.com/dgrassellyb/admiralci.git -b fix/cran_status_issues_duplicates
           Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
-          current_status_content="NOCRAN"
-          if [ -e ./cran_errors.csv ]; then
-            echo "read cran status"
-            ls
-            export current_status_content=$(cat "./cran_errors.csv")
-            echo "echo current_status_content"
-            echo $current_status_content
-          fi
           rm -rf ./admiralci 
         # TODO: find way to call external scripts from admiral workflow..
         working-directory: ${{ inputs.path }}
@@ -77,7 +69,6 @@ jobs:
             echo "$checkout_output"
             echo "try mkdir command"
             mkdir -p cran_status
-            ls
             echo "end mkdir command"
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
@@ -93,6 +84,8 @@ jobs:
               echo $last_status_content
               echo $current_status_content
               # save this new status to this current branch
+              echo "trying to write ./cran_status/${GITHUB_OUTPUT}.csv"
+              ls ./cran_status/
               echo $current_status_content > "./cran_status/${GITHUB_OUTPUT}.csv"
               ls ./cran_status/
               git add .
