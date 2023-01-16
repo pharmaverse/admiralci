@@ -8,8 +8,8 @@ library(digest)
 # check if needed : package name and working dir path as input arguments :
 library(optparse)
 option_list <- list(
-  make_option(c("-s", "--status_types"), type = "character", default = "ERRORS,WARNING",
-            help = "status types (comma separated list, for exemple ERRORS,WARNING,NOTE",
+  make_option(c("-s", "--status_types"), type = "character", default = "ERROR,WARN",
+            help = "status types (comma separated list, for exemple ERROR,WARN,NOTE",
             metavar = "character")
 )
 
@@ -52,25 +52,35 @@ if (!httr::http_error(url)) {
             sprintf("None of this status found in the CRAN table. (status=%s)", status_types)
             )
     } else {
+        # Build each step links
         errors$CheckLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
         errors$Flavor, "/", pkg, "-00check.html")
         errors$InstallLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
         errors$Flavor, "/", pkg, "-00install.html")
         errors$BuildLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
         errors$Flavor, "/", pkg, "-00build.html")
+
+        # Get details as text for each step
         errors$CheckDetails <- lapply(errors$CheckLinks, FUN = parse_errors)
         errors$InstallDetails <- lapply(errors$InstallLinks, FUN = parse_errors)
         errors$BuildDetails <- lapply(errors$BuildLinks, FUN = parse_errors)
+
+        # Create md5 codes for each step
         errors$CheckId <- lapply(errors$CheckDetails, digest)
         errors$InstallId <- lapply(errors$InstallDetails, digest)
         errors$BuildId <- lapply(errors$BuildDetails, digest)
+
+        # Unlist results
+        errors$CheckId <- unlist(errors$CheckId)
+        errors$InstallId <- unlist(errors$InstallId)
+        errors$BuildId <- unlist(errors$BuildId)
 
         # Alphanumeric order on Flavor (for cran status comparison)
         errors <- errors[order(errors$Flavor),]
 
         # Save into CSV:
-        errors %>% select(Flavor, CheckId, InstallId, BuildId) %>% write.csv(
-            "cran_errors.csv", row.names = FALSE)
+        errors %>% select(Flavor, CheckId, InstallId, BuildId) %>% 
+        write.csv("cran_errors.csv", row.names = FALSE)
         cran_status <- function(x) {
             cat(x, file = "cran-status.md", append = TRUE, sep = "\n")
         }
