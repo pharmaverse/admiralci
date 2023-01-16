@@ -1,4 +1,5 @@
-# RQ: faire juste un json avec mapping fichiers => md5 (que pour les erreurs)
+# Install packages (find another way to install it on the docker container..?)
+install.packages("optparse")
 library(dplyr)
 library(rvest)
 library(stringr)
