@@ -55,6 +55,8 @@ jobs:
           Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
           current_status_content="NOCRAN"
           if [ -e ./cran_errors.csv ]; then
+            echo "read cran status"
+            ls
             cat ./cran_errors.csv > $current_status_content
             echo $current_status_content
           fi
