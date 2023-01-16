@@ -52,8 +52,8 @@ jobs:
       - name: Check Status
         run: | 
           git clone https://github.com/dgrassellyb/admiralci.git -b fix/cran_status_issues_duplicates
-          ls
           Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
+          rm -rf ./admiralci 
         # TODO: find way to call external scripts from admiral workflow..
         working-directory: ${{ inputs.path }}
 

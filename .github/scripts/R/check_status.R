@@ -5,7 +5,7 @@ library(stringr)
 library(digest)
 
 # check if needed : package name and working dir path as input arguments :
-library("optparse")
+library(optparse)
 option_list <- list(
   make_option(c("-s", "--status_types"), type = "character", default = "ERRORS,WARNING",
             help = "status types (comma separated list, for exemple ERRORS,WARNING,NOTE",
