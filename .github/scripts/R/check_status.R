@@ -55,17 +55,19 @@ if (!httr::http_error(url)) {
     html_table()
 
     print("Trace5")
+    print(checks)
 
     # filter statuses and get their details links (and convert it to md5 unique code)
     errors <- filter(checks, Status %in% statuses)
+
+    print("Trace6")
 
     # If errors table is empty: just get out ! 
     if (dim(errors)[1] == 0){
         stop_quietly()
     }
 
-    print("Trace6")
-
+    
     errors$CheckLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
     '-00check.html') 
     errors$InstallLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
