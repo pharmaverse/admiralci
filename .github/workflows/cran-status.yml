@@ -68,10 +68,13 @@ jobs:
       - name: Update cran_status branch
         run: |
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
-          if [ "$current_status_content" != "NOCRAN" ]; then
+          if [  -e ./cran_errors.csv ]; then
+            current_status_content=$(cat "./cran_errors.csv")
             echo $current_status_content
             # then checkout to cran_status branch.
             git checkout --orphan cran_status 2&>1 $checkout_output
+            echo "checkout_output"
+            echo "$checkout_output"
             echo "try mkdir command"
             mkdir -p cran_status
             ls
