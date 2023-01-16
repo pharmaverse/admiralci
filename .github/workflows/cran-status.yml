@@ -79,10 +79,10 @@ jobs:
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
             if [ -z "$last_status_file" ]; then
-              last_status_content=$(cat "./cran_status/$last_status_file")
-            else
               # case first writing on the orphan branch
               last_status_content="FIRST WRITING"
+            else
+              last_status_content=$(cat "./cran_status/$last_status_file")
             fi
             # check if the status is a new error:
             if [ "$current_status_content" != "$last_status_content" ]; then
