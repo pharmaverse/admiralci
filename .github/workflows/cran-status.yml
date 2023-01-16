@@ -57,8 +57,8 @@ jobs:
           if [ -e ./cran_errors.csv ]; then
             echo "read cran status"
             ls
-            cat "./cran_errors.csv"
             current_status_content=$(cat "./cran_errors.csv")
+            echo "echo current_status_content"
             echo $current_status_content
           fi
           rm -rf ./admiralci 
@@ -78,9 +78,14 @@ jobs:
             echo "end mkdir command"
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
-            last_status_content=$(cat "./cran_status/$last_status_file")
+            if [ -z "$last_status_file" ]; then
+              last_status_content=$(cat "./cran_status/$last_status_file")
+            else
+              # case first writing on the orphan branch
+              last_status_content="FIRST WRITING"
+            fi
             # check if the status is a new error:
-            if [ "$current_status_content" = "$last_status_content" ]; then
+            if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
               # save this new status to this current branch
               echo $current_status_content > "./cran_status/${GITHUB_OUTPUT}.csv"
