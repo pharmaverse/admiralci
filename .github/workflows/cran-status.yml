@@ -59,7 +59,7 @@ jobs:
 
       - name: Update cran_status branch
         run: |
-          cran_status_path=./${{ inputs.path }}/cran_errors.csv
+          cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if test -f "$cran_status_path"; then
             echo "read cran status file"
             echo "$cran_status_path"
