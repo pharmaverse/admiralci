@@ -21,17 +21,17 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-stop_quietly <- function() {
+stop_quietly <- function(error_msg) {
   opts <- options(show.error.messages = FALSE)
   on.exit(options(opts))
-  stop()
+  stop(error_msg)
 }
 
 parseErrors <- function(url) {
     return(
         tryCatch(url %>%  read_html() %>% html_text(), error=function(e) "URL Not Found")
     )
-}   
+}
 
 print("Trace1")
 
@@ -64,7 +64,9 @@ if (!httr::http_error(url)) {
 
     # If errors table is empty: just get out ! 
     if (dim(errors)[1] == 0){
-        stop_quietly()
+        stop_quietly(
+            sprintf("None of this status found in the CRAN table. (status=%s)", status_types)
+            )
     }
 
     
