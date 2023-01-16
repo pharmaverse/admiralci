@@ -53,6 +53,10 @@ jobs:
         run: | 
           git clone https://github.com/dgrassellyb/admiralci.git -b fix/cran_status_issues_duplicates
           Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
+          echo "read cran status file"
+          cran_status_path="${{ inputs.path }}/cran_errors.csv" 
+          cat "$cran_status_path" > $current_status_content
+          echo $current_status_content
           rm -rf ./admiralci 
         # TODO: find way to call external scripts from admiral workflow..
         working-directory: ${{ inputs.path }}
