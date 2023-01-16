@@ -13,23 +13,17 @@ option_list <- list(
             metavar = "character")
 )
 
-#make_option(c("-w", "--working_dir_path"), type="character", default=NULL, 
+#make_option(c("-w", "--working_dir_path"), type="character", default=NULL,
 #            help="working dir", metavar="character"),
-#make_option(c("-p", "--package_name"), type="character", default=NULL, 
+#make_option(c("-p", "--package_name"), type="character", default=NULL,
 #            help="Current package name", metavar="character")
 
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-stop_quietly <- function(error_msg) {
-  opts <- options(show.error.messages = FALSE)
-  on.exit(options(opts))
-  stop(error_msg)
-}
-
-parseErrors <- function(url) {
+parse_errors <- function(url) {
     return(
-        tryCatch(url %>%  read_html() %>% html_text(), error=function(e) "URL Not Found")
+        tryCatch(url %>%  read_html() %>% html_text(), error = function(e) "URL Not Found")
     )
 }
 
@@ -62,50 +56,50 @@ if (!httr::http_error(url)) {
 
     print("Trace6")
 
-    # If errors table is empty: just get out ! 
-    if (dim(errors)[1] == 0){
-        print("Trace7")
-        stop_quietly(
+    # If errors table is empty: just get out !
+    if (dim(errors)[1] == 0) {
+        print(
             sprintf("None of this status found in the CRAN table. (status=%s)", status_types)
             )
-    }
+    } else {
+        errors$CheckLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
+        errors$Flavor, "/", pkg, "-00check.html")
+        errors$InstallLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
+        errors$Flavor, "/", pkg, "-00install.html")
+        errors$BuildLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
+        errors$Flavor, "/", pkg, "-00build.html")
+        errors$CheckDetails <- lapply(errors$CheckLinks, FUN = parse_errors)
+        errors$InstallDetails <- lapply(errors$InstallLinks, FUN = parse_errors)
+        errors$BuildDetails <- lapply(errors$BuildLinks, FUN = parse_errors)
+        errors$CheckId <- lapply(errors$CheckDetails, digest)
+        errors$InstallId <- lapply(errors$InstallDetails, digest)
+        errors$BuildId <- lapply(errors$BuildDetails, digest)
 
-    
-    errors$CheckLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
-    '-00check.html') 
-    errors$InstallLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
-    '-00install.html')
-    errors$BuildLinks <- str_c('https://www.r-project.org/nosvn/R.check/', errors$Flavor, '/', pkg, 
-    '-00build.html')
-    errors$CheckDetails <- lapply(errors$CheckLinks, FUN=parseErrors)
-    errors$InstallDetails <- lapply(errors$InstallLinks, FUN=parseErrors)
-    errors$BuildDetails <- lapply(errors$BuildLinks, FUN=parseErrors)
-    errors$CheckId <- lapply(errors$CheckDetails, digest)
-    errors$InstallId <- lapply(errors$InstallDetails, digest)
-    errors$BuildId <- lapply(errors$BuildDetails, digest)
+        # Alphanumeric order on Flavor (for cran status comparison)
+        errors <- errors[order(errors$Flavor),] 
 
-    # Alphanumeric order on Flavor (for cran status comparison)
-    errors <- errors[order(errors$Flavor),] 
-
-    # Save into CSV: 
-    errors %>% select(Flavor, CheckId, InstallId, BuildId) %>% write.csv('cran_errors.csv',row.names=FALSE)
-            
-    cran_status <- function(x) {
-        cat(x, file="cran-status.md", append=TRUE, sep="\n")
-    }
-    if (any(checks$Status %in% statuses)) {
-        cran_status(sprintf(
-        "CRAN checks for %s resulted in one or more (%s)s:\n\n",
-        pkg,
-        status_types
-        ))
-        cran_status("\nSee the table below for a summary of the checks run by CRAN:\n\n")
-        cran_status(knitr::kable(checks))
-        cran_status(sprintf(
-            "\n\nAll details and logs are available here: %s", url
-        ))
-        print("❌ One or more CRAN checks resulted in an invalid status ❌")
+        # Save into CSV:
+        errors %>% select(Flavor, CheckId, InstallId, BuildId) %>% write.csv(
+            "cran_errors.csv", row.names = FALSE)
+        cran_status <- function(x) {
+            cat(x, file = "cran-status.md", append = TRUE, sep = "\n")
         }
+        if (any(checks$Status %in% statuses)) {
+            cran_status(sprintf(
+            "CRAN checks for %s resulted in one or more (%s)s:\n\n",
+            pkg,
+            status_types
+            ))
+            cran_status("\nSee the table below for a summary of the checks run by CRAN:\n\n")
+            cran_status(knitr::kable(checks))
+            cran_status(sprintf(
+                "\n\nAll details and logs are available here: %s", url
+            ))
+            print("❌ One or more CRAN checks resulted in an invalid status ❌")
+            }
+    }
 } else {
-    print(paste('ERROR ACCESSING URL=', url))
+    print(paste("ERROR ACCESSING URL=", url))
 }
+
+# Questions Dinakar: R: way to exit without errors ? access external workflow repo files ?
