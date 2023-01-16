@@ -40,15 +40,21 @@ url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pk
 print("Trace2")
 if (!httr::http_error(url)) {
 
+    print("Trace3")
+
     # Get input status
     status_types <- opt$status_types
     statuses <- unlist(strsplit(status_types, split = ","))
+
+    print("Trace4")
 
     # Parse html table into dataframe
     checks <- url %>%
     read_html() %>%
     html_element("table") %>%
     html_table()
+
+    print("Trace5")
 
     # filter statuses and get their details links (and convert it to md5 unique code)
     errors <- filter(checks, Status %in% statuses)
