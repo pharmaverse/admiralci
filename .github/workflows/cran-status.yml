@@ -47,9 +47,7 @@ jobs:
 
       - name: Get Date
         id: today
-        run: |
-          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-          echo $GITHUB_OUTPUT
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Check Status
         run: | 
@@ -86,12 +84,12 @@ jobs:
               echo $last_status_content
               echo $current_status_content
               # save this new status to this current branch
-              echo "trying to write ./cran_status/${GITHUB_OUTPUT}.csv"
+              echo "trying to write ./cran_status/${{ steps.today.outputs.date }}.csv"
               ls
-              echo $current_status_content > "./cran_status/${GITHUB_OUTPUT}.csv"
+              echo $current_status_content > "./cran_status/${{ steps.today.outputs.date }}.csv"
               ls ./cran_status/
               git add .
-              git commit -m "add new cran status ${GITHUB_OUTPUT}"
+              git commit -m "add new cran status ${{ steps.today.outputs.date }}"
               git push
               exit 1
             fi
