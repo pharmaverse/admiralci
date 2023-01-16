@@ -56,7 +56,7 @@ jobs:
           echo "read cran status file"
           cran_status_path="${{ inputs.path }}/cran_errors.csv" 
           echo "$cran_status_path"
-          ls "${{ inputs.path }}
+          ls "${{ inputs.path }}"
           cat "$cran_status_path" > $current_status_content
           echo $current_status_content
           rm -rf ./admiralci 
