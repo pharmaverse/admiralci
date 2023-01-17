@@ -41,9 +41,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: rocker/tidyverse:latest
-    permissions:
-          id-token: write
-          repository-projects: write
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -61,6 +58,8 @@ jobs:
         working-directory: ${{ inputs.path }}
 
       - name: Update cran_status branch
+        with:
+          repo-token: ${{ secrets.ACCESS_TOKEN_WRITE_REPO }}
         run: |
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
@@ -97,6 +96,7 @@ jobs:
               exit 1
             fi
           fi
+
         
 
       - name: Report Status
