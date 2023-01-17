@@ -53,20 +53,14 @@ jobs:
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - name: "checkout script"
-        uses: actions/checkout@v3
+      - name: Compute Cran Status md5 codes
+        uses: dgrassellyb/admiralci/.github/workflows/cran-status-hash/cran-status-hash-code.yml@fix/cran_status_issues_duplicates
         with: 
-          repository: dgrassellyb/admiralci
-          ref: fix/cran_status_issues_duplicates
-          set-safe-directory: true 
-          path: "${{ inputs.path }}/admiralci"
-          token: ${{ secrets.ACCESS_TOKEN_WRITE_REPO }}
-
-
-      - name: Check Status
-        run: | 
-          Rscript "${{ inputs.path }}/admiralci/.github/scripts/R/check_status.R" --status_types "${{ inputs.status-types }}"
-        working-directory: ${{ inputs.path }}
+          status-types: "${{ inputs.status-types }}"
+      #- name: Check Status
+      #  run: | 
+      #    Rscript "${{ inputs.path }}/admiralci/.github/scripts/R/check_status.R" --status_types "${{ inputs.status-types }}"
+      #  working-directory: ${{ inputs.path }}
 
       - name: Update cran_status branch
         run: |
@@ -89,6 +83,7 @@ jobs:
               ls ./cran_status/
             fi
           fi 
+
       - name: Report Status
         if: failure()
         uses: peter-evans/create-issue-from-file@v4
@@ -101,6 +96,7 @@ jobs:
         run: |
           rm ./cran_errors.csv
           rm ./cran-status.md
+
       - name: Commit and push to orphan branch
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
