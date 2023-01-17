@@ -94,9 +94,6 @@ jobs:
               exit 1
             fi
           fi
-        with:
-          repo-token: ${{ secrets.ACCESS_TOKEN_WRITE_REPO }}
-        
 
       - name: Report Status
         if: failure()
