@@ -31,6 +31,8 @@ on:
         required: false
         type: string
 
+permissions: write-all
+
 concurrency:
   group: cran-status-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -54,7 +56,7 @@ jobs:
           git clone https://github.com/dgrassellyb/admiralci.git -b fix/cran_status_issues_duplicates
           Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
           rm -rf ./admiralci 
-        # TODO: find way to call external scripts from admiral workflow..
+        # TODO: change the git clone with the good branch
         working-directory: ${{ inputs.path }}
 
       - name: Update cran_status branch
