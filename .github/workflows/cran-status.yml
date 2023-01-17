@@ -58,8 +58,10 @@ jobs:
         working-directory: ${{ inputs.path }}
 
       - name: Update cran_status branch
+        permissions:
+          id-token: read|write
+          repository-projects: read|write
         run: |
-          git config --global --add safe.directory /__w/admiral/admiral
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
             current_status_content=$(cat "./cran_errors.csv")
