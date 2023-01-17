@@ -59,10 +59,6 @@ jobs:
 
       - name: Update cran_status branch
         run: |
-          # WARNING: this line above allow for a new user to push, dangerous ? (see with dinakar)
-          git config --global user.email "daphne.grasselly@roche.com"
-          git config --global user.name "Daphné Grasselly"
-          git config --global --add safe.directory /__w/admiral/admiral
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
             current_status_content=$(cat "./cran_errors.csv")
