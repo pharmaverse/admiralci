@@ -61,18 +61,10 @@ jobs:
 
       - name: Update cran_status branch
         run: |
-          git config --global --add safe.directory /__w/admiral/admiral
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
             current_status_content=$(cat "./cran_errors.csv")
-            echo $current_status_content
-            # then checkout to cran_status branch.
-            git checkout --orphan cran_status 2&>1 $checkout_output
-            echo "checkout_output"
-            echo "$checkout_output"
-            echo "try mkdir command"
             mkdir -p cran_status
-            echo "end mkdir command"
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
             if [ -z "$last_status_file" ]; then
@@ -84,19 +76,18 @@ jobs:
             # check if the status is a new error:
             if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
-              echo $last_status_content
-              echo $current_status_content
-              # save this new status to this current branch
-              echo "trying to write ./cran_status/${{ steps.today.outputs.date }}.csv"
-              echo $current_status_content > "./cran_status/${{ steps.today.outputs.date }}.csv"
               ls ./cran_status/
-              git status
-              git add .
-              git commit -m "add new cran status ${{ steps.today.outputs.date }}"
-              git push
-              exit 1
             fi
           fi
+
+      - name: Commit and push chto orphan branch
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: update cran status ${{ steps.today.outputs.date }}"
+          commit_user_name: pharmaverse-bot
+          commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
+          branch: cran_status
+          create_branch: false
 
       - name: Report Status
         if: failure()
