@@ -60,7 +60,7 @@ jobs:
           ref: fix/cran_status_issues_duplicates
           set-safe-directory: true 
           path: "${{ inputs.path }}/admiralci"
-          token: "${{ secrets.ACCESS_TOKEN_WRITE_REPO }}"
+          token: ${{ secrets.ACCESS_TOKEN_WRITE_REPO }}
 
 
       - name: Check Status
