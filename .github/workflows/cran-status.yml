@@ -60,6 +60,7 @@ jobs:
           ref: fix/cran_status_issues_duplicates
           set-safe-directory: true 
           path: "${{ inputs.path }}/admiralci"
+          token: "${{ secrets.ACCESS_TOKEN_WRITE_REPO }}"
 
 
       - name: Check Status
@@ -69,6 +70,7 @@ jobs:
 
       - name: Update cran_status branch
         run: |
+          git config --global --add safe.directory ${{ github.workspace }}
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
             current_status_content=$(cat "./cran_errors.csv")
@@ -103,7 +105,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: update cran status ${{ steps.today.outputs.date }}"
-          commit_user_name: pharmaverse-bot
-          commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
+          commit_user_name: "dgrassellyb"
+          commit_user_email: daphne.grasselly@orange.fr
           branch: cran_status
           create_branch: false
