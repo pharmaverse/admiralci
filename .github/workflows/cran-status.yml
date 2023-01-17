@@ -46,17 +46,25 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with: 
+          set-safe-directory: true 
 
       - name: Get Date
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
+      - name: "checkout script"
+        uses: actions/checkout@v3
+        with: 
+          repository: dgrassellyb/admiralci
+          ref: fix/cran_status_issues_duplicates
+          set-safe-directory: true 
+          path: "${{ inputs.path }}/admiralci"
+
+
       - name: Check Status
         run: | 
-          git clone https://github.com/dgrassellyb/admiralci.git -b fix/cran_status_issues_duplicates
-          Rscript ./admiralci/.github/scripts/R/check_status.R --status_types "${{ inputs.status-types }}"
-          rm -rf ./admiralci 
-        # TODO: change the git clone with the good branch
+          Rscript "${{ inputs.path }}/admiralci/.github/scripts/R/check_status.R" --status_types "${{ inputs.status-types }}"
         working-directory: ${{ inputs.path }}
 
       - name: Update cran_status branch
@@ -78,17 +86,7 @@ jobs:
               echo "New errors on the cran status found"
               ls ./cran_status/
             fi
-          fi
-
-      - name: Commit and push chto orphan branch
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: update cran status ${{ steps.today.outputs.date }}"
-          commit_user_name: pharmaverse-bot
-          commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
-          branch: cran_status
-          create_branch: false
-
+          fi 
       - name: Report Status
         if: failure()
         uses: peter-evans/create-issue-from-file@v4
@@ -96,3 +94,16 @@ jobs:
           title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
           content-filepath: ./${{ inputs.path }}/cran-status.md
           assignees: ${{ inputs.issue-assignees }}
+
+      - name: Clean Repo
+        run: |
+          rm ./cran_errors.csv
+          rm ./cran-status.md
+      - name: Commit and push to orphan branch
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: update cran status ${{ steps.today.outputs.date }}"
+          commit_user_name: pharmaverse-bot
+          commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
+          branch: cran_status
+          create_branch: false
