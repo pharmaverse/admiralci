@@ -55,7 +55,7 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
   cran-hash-codes:
-    uses: dgrassellyb/admiralci/.github/workflows/cran-status-hash/cran-status-hash-code.yml@fix/cran_status_issues_duplicates
+    uses: dgrassellyb/admiralci/.github/workflows/cran-status-hash-code.yml@fix/cran_status_issues_duplicates
     with: 
       status-types: "${{ inputs.status-types }}"
 
