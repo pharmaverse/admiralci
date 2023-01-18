@@ -101,6 +101,19 @@ the [`lintr`](https://lintr.r-lib.org/) R package.
 Any [`.lintr`](.lintr) configurations in the repository will be by this
 workflow.
 
+### [`lint-changed-files.yaml`](./.github/workflows/lint-changed-files.yaml)
+
+[![Lint onchange](https://github.com/pharmaverse/admiralci/actions/workflows/lint-changed-files.yaml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/lint-changed-files.yaml)
+
+Static code analysis is performed by this workflow, which in turn uses
+the [`lintr`](https://lintr.r-lib.org/) R package.
+
+Any [`.lintr`](.lintr) configurations in the repository will be by this
+workflow.
+
+This job compering to the `lintr.yml` checking only the files that was chnage.
+If the `.lintr` or `renv.lock` was modify it checking all files.
+
 ### [`man-pages.yml`](./.github/workflows/man-pages.yml)
 
 [![Man
