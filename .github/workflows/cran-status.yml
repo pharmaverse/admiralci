@@ -38,8 +38,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  cran-status:
-    name: Check Status
+
+  set-date:
+    name: Setup Date
     runs-on: ubuntu-latest
     container:
       image: rocker/tidyverse:latest
@@ -53,10 +54,17 @@ jobs:
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - name: Compute Cran Status md5 codes
-        uses: dgrassellyb/admiralci/.github/workflows/cran-status-hash/cran-status-hash-code.yml@fix/cran_status_issues_duplicates
-        with: 
-          status-types: "${{ inputs.status-types }}"
+  cran-hash-codes:
+    uses: dgrassellyb/admiralci/.github/workflows/cran-status-hash/cran-status-hash-code.yml@fix/cran_status_issues_duplicates
+    with: 
+      status-types: "${{ inputs.status-types }}"
+
+  cran-status:
+    name: Check Status
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/tidyverse:latest
+
       #- name: Check Status
       #  run: | 
       #    Rscript "${{ inputs.path }}/admiralci/.github/scripts/R/check_status.R" --status_types "${{ inputs.status-types }}"
