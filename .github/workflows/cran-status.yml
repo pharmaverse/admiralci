@@ -38,13 +38,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-  set-date:
-    name: Setup Date
+  cran-status:
+    name: Check Status
     runs-on: ubuntu-latest
     container:
       image: rocker/tidyverse:latest
     steps:
+    
       - name: Checkout repo
         uses: actions/checkout@v3
         with: 
@@ -54,17 +54,10 @@ jobs:
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-  cran-hash-codes:
-    uses: dgrassellyb/cran_status_extract/.github/workflows/cran-status-hash-code.yml@main
-    with: 
-      status-types: "${{ inputs.status-types }}"
-
-  cran-status:
-    name: Check Status
-    runs-on: ubuntu-latest
-    container:
-      image: rocker/tidyverse:latest
-    steps:
+      - name: Compute Cran Status md5 codes
+        uses: dgrassellyb/cran_status_extract/.github/workflows/cran-status-hash-code.yml@main
+        with: 
+          status-types: "${{ inputs.status-types }}"
       #- name: Check Status
       #  run: | 
       #    Rscript "${{ inputs.path }}/admiralci/.github/scripts/R/check_status.R" --status_types "${{ inputs.status-types }}"
@@ -104,7 +97,7 @@ jobs:
         run: |
           rm ./cran_errors.csv
           rm ./cran-status.md
-
+          
       - name: Commit and push to orphan branch
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
