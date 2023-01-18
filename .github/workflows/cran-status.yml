@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: rocker/tidyverse:latest
-
+    steps:
       #- name: Check Status
       #  run: | 
       #    Rscript "${{ inputs.path }}/admiralci/.github/scripts/R/check_status.R" --status_types "${{ inputs.status-types }}"
