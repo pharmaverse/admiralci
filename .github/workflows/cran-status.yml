@@ -55,7 +55,7 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Compute Cran Status md5 codes
-        uses: dgrassellyb/cran_status_extract/.github/workflows/cran-status-hash-code.yml@main
+        uses: ./.github/actions/cran-status-extract
         with: 
           status-types: "${{ inputs.status-types }}"
       #- name: Check Status
