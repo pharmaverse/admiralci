@@ -26,9 +26,9 @@ concurrency:
 
 jobs:
   check_templates:
-    name: Verify
-    if: >
-      !contains(github.event.commits[0].message, '[skip check_templates]')
+    #name: Verify
+    #if: >
+    #  !contains(github.event.commits[0].message, '[skip check_templates]')
     runs-on: ubuntu-20.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
