@@ -68,6 +68,7 @@ jobs:
 
       - name: Update cran_status branch
         run: |
+          export new_errors=false
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
             current_status_content=$(cat "./cran_errors.csv")
@@ -84,14 +85,19 @@ jobs:
             # check if the status is a new error:
             if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
+              export new_errors=true
               echo $current_status_content
               echo $last_status_content
               cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
+            else 
+              echo "New errors on the cran status found, but identical to previous ones"
+              echo $current_status_content
+              echo $last_status_content
             fi
           fi 
 
       - name: Report Status
-        if: failure()
+        if: ${{ failure() && new_errors == 'true' }}
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
@@ -99,6 +105,7 @@ jobs:
           assignees: ${{ inputs.issue-assignees }}
 
       - name: Clean Repo and add changes
+        if: ${{ failure() && new_errors == 'true' }}
         run: |
           rm ./cran_errors.csv 2> /dev/null
           rm ./cran-status.md 2> /dev/null
@@ -108,6 +115,7 @@ jobs:
 
           
       - name: Commit and push to orphan branch
+        if: ${{ failure() && new_errors == 'true' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: update cran status "${{ steps.today.outputs.date }}"
