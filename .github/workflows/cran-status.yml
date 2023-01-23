@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@v3
         with: 
           set-safe-directory: true 
-          token: ${{ secrets.ACCESS_TOKEN_WRITE_REPO }}
+          token: ${{ secrets.ACCESS_TOKEN_WRITE_REPO }} 
 
       - name: Get Date
         id: today
@@ -110,7 +110,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: update cran status "${{ steps.today.outputs.date }}"
-          commit_user_name: "dgrassellyb"
-          commit_user_email: daphne.grasselly@orange.fr
           branch: cran_status
           create_branch: false
