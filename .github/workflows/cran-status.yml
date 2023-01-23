@@ -101,8 +101,8 @@ jobs:
 
       - name: Clean Repo and add changes
         run: |
-          rm ./cran_errors.csv
-          rm ./cran-status.md
+          rm ./cran_errors.csv 2> /dev/null
+          rm ./cran-status.md 2> /dev/null
           git config --global --add safe.directory /__w/admiral/admiral
           git add "./cran_status/${{ steps.today.outputs.date }}.csv"
           git status
