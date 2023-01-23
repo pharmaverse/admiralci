@@ -60,13 +60,13 @@ jobs:
           ls ./.github/workflows
 
       - name: Compute Cran Status md5 codes
-        uses: ./.github/actions/cran-status-extract
+        uses: dgrassellyb/admiral/.github/actions/cran-status-extract
         with: 
           status-types: "${{ inputs.status-types }}"
-      #- name: Check Status
-      #  run: | 
-      #    Rscript "${{ inputs.path }}/admiralci/.github/scripts/R/check_status.R" --status_types "${{ inputs.status-types }}"
-      #  working-directory: ${{ inputs.path }}
+
+
+
+      # uses: ./.github/actions/cran-status-extract (local path)
 
       - name: Update cran_status branch
         run: |
