@@ -87,8 +87,7 @@ jobs:
             # check if the status is a new error:
             if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
-              echo $current_status_content > "./cran_status/${{ steps.today.outputs.date }}.csv"
-              ls ./cran_status/
+              cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
             fi
           fi 
 
@@ -100,9 +99,10 @@ jobs:
           content-filepath: ./${{ inputs.path }}/cran-status.md
           assignees: ${{ inputs.issue-assignees }}
 
-      - name: Clean Repo
+      - name: Clean Repo and add changes
         run: |
-          ls
+          rm ./cran_errors.csv
+          rm ./cran-status.md
           git config --global --add safe.directory /__w/admiral/admiral
           git add "./cran_status/${{ steps.today.outputs.date }}.csv"
           git status
