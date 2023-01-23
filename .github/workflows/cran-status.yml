@@ -58,6 +58,7 @@ jobs:
         run: | 
           echo "debug after checkout"
           ls ./.github/workflows
+          printenv
 
       - name: Compute Cran Status md5 codes
         uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates

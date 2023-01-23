@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-Rscript /app/check-status.R --status_types "${INPUT_STATUS_TYPES}"
+printenv 
+
+Rscript /app/check-status.R --status_types $1
 
 # change underscore to dash
