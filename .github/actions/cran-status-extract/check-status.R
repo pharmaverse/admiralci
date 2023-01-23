@@ -22,7 +22,29 @@ parse_errors <- function(url) {
     )
 }
 
+build_md5_codes <- function(pkg, errors, step) {
+    # Build current step links
+    errors[[sprintf("%sLinks", step)]] <-
+    str_c("https://www.r-project.org/nosvn/R.check/",
+    errors$Flavor, "/", pkg, sprintf("-00%s.html", tolower(step)))
+
+
+    # Get details as text for current step
+    errors[[sprintf("%sDetails", step)]] <- lapply(errors[[sprintf("%sLinks", step)]],
+    FUN = parse_errors)
+
+    # Create md5 codes for each step
+    errors[[sprintf("%sId", step)]] <- lapply(errors[[sprintf("%sDetails", step)]],
+    digest)
+
+    # Unlist results
+    errors[[sprintf("%sId", step)]] <- unlist(errors[[sprintf("%sId", step)]])
+
+    return(errors)
+}
+
 pkg <- paste(desc::desc_get(keys = "Package"))
+pkg <- "assignR" # TODO: del this line
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
 
 if (!httr::http_error(url)) {
@@ -46,28 +68,10 @@ if (!httr::http_error(url)) {
             sprintf("None of this status found in the CRAN table. (status=%s)", status_types)
             )
     } else {
-        # Build each step links
-        errors$CheckLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
-        errors$Flavor, "/", pkg, "-00check.html")
-        errors$InstallLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
-        errors$Flavor, "/", pkg, "-00install.html")
-        errors$BuildLinks <- str_c("https://www.r-project.org/nosvn/R.check/",
-        errors$Flavor, "/", pkg, "-00build.html")
-
-        # Get details as text for each step
-        errors$CheckDetails <- lapply(errors$CheckLinks, FUN = parse_errors)
-        errors$InstallDetails <- lapply(errors$InstallLinks, FUN = parse_errors)
-        errors$BuildDetails <- lapply(errors$BuildLinks, FUN = parse_errors)
-
-        # Create md5 codes for each step
-        errors$CheckId <- lapply(errors$CheckDetails, digest)
-        errors$InstallId <- lapply(errors$InstallDetails, digest)
-        errors$BuildId <- lapply(errors$BuildDetails, digest)
-
-        # Unlist results
-        errors$CheckId <- unlist(errors$CheckId)
-        errors$InstallId <- unlist(errors$InstallId)
-        errors$BuildId <- unlist(errors$BuildId)
+        # Build each step md5 code
+        errors <- build_md5_codes(pkg, errors, "Build")
+        errors <- build_md5_codes(pkg, errors, "Check")
+        errors <- build_md5_codes(pkg, errors, "Install")
 
         # Alphanumeric order on Flavor (for cran status comparison)
         errors <- errors[order(errors$Flavor),]
