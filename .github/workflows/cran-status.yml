@@ -54,6 +54,11 @@ jobs:
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
+      - name: debug
+        run: | 
+          echo "debug after checkout"
+          ls
+
       - name: Compute Cran Status md5 codes
         uses: ./.github/actions/cran-status-extract
         with: 
