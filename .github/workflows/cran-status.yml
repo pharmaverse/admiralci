@@ -89,7 +89,7 @@ jobs:
           echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
 
       - name: Report Status
-        if: ${{ failure() && steps.cran_errors_status.outputs.new_errors == 'true' }}
+        if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
@@ -97,7 +97,7 @@ jobs:
           assignees: ${{ inputs.issue-assignees }}
 
       - name: Clean Repo and add changes
-        if: ${{ failure() && steps.cran_errors_status.outputs.new_error == 'true' }}
+        if: ${{ steps.cran_errors_status.outputs.new_error == 'true' }}
         run: |
           rm ./cran_errors.csv 2> /dev/null
           rm ./cran-status.md 2> /dev/null
@@ -107,7 +107,7 @@ jobs:
 
           
       - name: Commit and push to orphan branch
-        if: ${{ failure() && steps.cran_errors_status.outputs.new_error == 'true' }}
+        if: ${{ steps.cran_errors_status.outputs.new_error == 'true' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: update cran status "${{ steps.today.outputs.date }}"
