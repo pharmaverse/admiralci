@@ -85,6 +85,7 @@ jobs:
               echo "New errors on the cran status found, but identical to previous ones"
             fi
           fi 
+          echo "new_errors=$new_errors"
           echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
 
       - name: Report Status
