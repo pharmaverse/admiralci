@@ -74,7 +74,6 @@ jobs:
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
             current_status_content=$(cat "./cran_errors.csv")
-            echo $current_status_content
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
@@ -87,6 +86,8 @@ jobs:
             # check if the status is a new error:
             if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
+              echo $current_status_content
+              echo $last_status_content
               cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
             fi
           fi 
