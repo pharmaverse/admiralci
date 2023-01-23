@@ -57,7 +57,7 @@ jobs:
       - name: debug
         run: | 
           echo "debug after checkout"
-          ls
+          ls ./.github/workflows
 
       - name: Compute Cran Status md5 codes
         uses: ./.github/actions/cran-status-extract
