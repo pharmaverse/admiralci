@@ -60,7 +60,7 @@ jobs:
           ls ./.github/workflows
 
       - name: Compute Cran Status md5 codes
-        uses: dgrassellyb/admiral/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates
+        uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates
         with: 
           status-types: "${{ inputs.status-types }}"
 
