@@ -2,7 +2,7 @@ name: CRAN Status md5 codes
 description: Write CRAN status table as md5 codes
 
 inputs:
-  status-types:
+  status_types:
     description: |
       Create an issue if one or more of the following
       statuses are reported on the check report.
@@ -16,4 +16,4 @@ runs:
   using: 'docker'
   image: './Dockerfile'
   args:
-    - ${{ inputs.status-types }}
+    - ${{ inputs.status_types }}

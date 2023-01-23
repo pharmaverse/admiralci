@@ -14,7 +14,7 @@ on:
         default: ''
         required: false
         type: string
-      status-types:
+      status_types:
         description: |
           Create an issue if one or more of the following
           statuses are reported on the check report.
@@ -63,7 +63,7 @@ jobs:
       - name: Compute Cran Status md5 codes
         uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates
         with: 
-          status-types: "${{ inputs.status-types }}"
+          status_types: "${{ inputs.status_types }}"
 
 
 
