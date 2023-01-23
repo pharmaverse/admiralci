@@ -74,6 +74,7 @@ jobs:
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
             current_status_content=$(cat "./cran_errors.csv")
+            echo $current_status_content
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
@@ -86,7 +87,9 @@ jobs:
             # check if the status is a new error:
             if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
+              echo $current_status_content > "${{ steps.today.outputs.date }}.csv"
               ls ./cran_status/
+
             fi
           fi 
 
@@ -100,9 +103,11 @@ jobs:
 
       - name: Clean Repo
         run: |
+          ls
           rm ./cran_errors.csv
           rm ./cran-status.md
           git config --global --add safe.directory /__w/admiral/admiral
+          git status
 
           
       - name: Commit and push to orphan branch
