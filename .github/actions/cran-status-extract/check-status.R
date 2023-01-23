@@ -13,11 +13,6 @@ option_list <- list(
             metavar = "character")
 )
 
-#make_option(c("-w", "--working_dir_path"), type="character", default=NULL,
-#            help="working dir", metavar="character"),
-#make_option(c("-p", "--package_name"), type="character", default=NULL,
-#            help="Current package name", metavar="character")
-
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
@@ -28,7 +23,6 @@ parse_errors <- function(url) {
 }
 
 pkg <- paste(desc::desc_get(keys = "Package"))
-pkg <- "adace" # TODO: remove it after test
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
 
 if (!httr::http_error(url)) {
@@ -101,5 +95,3 @@ if (!httr::http_error(url)) {
 } else {
     print(paste("ERROR ACCESSING URL=", url))
 }
-
-# Questions Dinakar: R: way to exit without errors ? access external workflow repo files ?
