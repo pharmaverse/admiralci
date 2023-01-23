@@ -7,4 +7,4 @@ COPY check-status.R /app/check-status.R
 COPY entrypoint.sh /app/entrypoint.sh
 
 # Set entrypoint
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
