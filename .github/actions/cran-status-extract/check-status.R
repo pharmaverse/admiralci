@@ -28,7 +28,7 @@ parse_errors <- function(url) {
 }
 
 pkg <- paste(desc::desc_get(keys = "Package"))
-pkg <- "Brundle" # TODO: remove it after test
+pkg <- "adace" # TODO: remove it after test
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
 
 if (!httr::http_error(url)) {

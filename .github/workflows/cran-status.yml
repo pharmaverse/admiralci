@@ -55,12 +55,6 @@ jobs:
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - name: debug
-        run: | 
-          echo "debug after checkout"
-          ls ./.github/workflows
-          printenv
-
       - name: Compute Cran Status md5 codes
         uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates
         with: 
@@ -76,7 +70,6 @@ jobs:
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
-            echo $last_status_file
             if [ -z "./cran_status/${last_status_file}" ]; then
               # case first writing on the orphan branch
               last_status_content="FIRST WRITING"
@@ -87,13 +80,9 @@ jobs:
             if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
               new_errors=true
-              echo $current_status_content
-              echo $last_status_content
               cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
             else 
               echo "New errors on the cran status found, but identical to previous ones"
-              echo $current_status_content
-              echo $last_status_content
             fi
           fi 
           echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
