@@ -77,7 +77,8 @@ jobs:
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
-            if [ -z "$last_status_file" ]; then
+            echo $last_status_file
+            if [ -z "./cran_status/${last_status_file}" ]; then
               # case first writing on the orphan branch
               last_status_content="FIRST WRITING"
             else
