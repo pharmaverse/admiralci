@@ -45,6 +45,9 @@ jobs:
       image: rocker/tidyverse:latest
     steps:
 
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: Create orphan branch
         run: |
           git config --global --add safe.directory ${PWD}
