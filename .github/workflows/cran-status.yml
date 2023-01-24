@@ -67,7 +67,7 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Compute Cran Status md5 codes
-        uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@main
+        uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates # TODO: replace with main
         with: 
           statuses: "${{ inputs.statuses }}"
 
