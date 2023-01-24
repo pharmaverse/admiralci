@@ -44,7 +44,6 @@ build_md5_codes <- function(pkg, errors, step) {
 }
 
 pkg <- paste(desc::desc_get(keys = "Package"))
-pkg <- "assignR" # TODO: del this line
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
 
 if (!httr::http_error(url)) {
