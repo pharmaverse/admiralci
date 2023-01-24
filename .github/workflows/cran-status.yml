@@ -14,7 +14,7 @@ on:
         default: ''
         required: false
         type: string
-      status_types:
+      statuses:
         description: |
           Create an issue if one or more of the following
           statuses are reported on the check report.
@@ -44,7 +44,15 @@ jobs:
     container:
       image: rocker/tidyverse:latest
     steps:
-    
+
+      - name: Create orphan branch
+        run: |
+          git config --global --add safe.directory ${PWD}
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          # Try to create a new orphan branch if it does not already exist
+          git checkout --orphan cran_status || true
+
       - name: Checkout repo
         uses: actions/checkout@v3
         with: 
@@ -56,9 +64,9 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Compute Cran Status md5 codes
-        uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates
+        uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@main
         with: 
-          status_types: "${{ inputs.status_types }}"
+          statuses: "${{ inputs.statuses }}"
 
       - name: Update cran_status branch
         id: cran_errors_status
