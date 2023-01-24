@@ -49,15 +49,30 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create orphan branch
+        id: create_orphan
         run: |
+          find_orphan=$(git branch | grep cran_status) # BIG WARNING HERE : unique name to not grep other branches
           git config --global --add safe.directory ${PWD}
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           # Try to create a new orphan branch if it does not already exist
-          git checkout --orphan cran_status || true
-          git add .
-          git commit -m "initial commit"
-          git push --set-upstream origin cran_status || true
+          if [ -z "${find_orphan}" ]; then 
+            git checkout --orphan cran_status || true
+            git add .
+            git commit -m "initial commit" || true
+            orphan_exists='false'
+          else
+            orphan_exists='true'
+          fi
+          echo "orphan_exists=$orphan_exists" >> $GITHUB_OUTPUT 
+
+      - name: Push orphan branch
+        if: ${{ steps.create_orphan.outputs.orphan_exists == 'false' }}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.REPO_GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
+          branch: cran_status
+          force: true
 
 
       - name: Checkout repo
