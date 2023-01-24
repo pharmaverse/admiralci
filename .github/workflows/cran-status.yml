@@ -55,6 +55,10 @@ jobs:
           git config --global user.name "github-actions[bot]"
           # Try to create a new orphan branch if it does not already exist
           git checkout --orphan cran_status || true
+          git add .
+          git commit -m "initial commit"
+          git push --set-upstream origin cran_status || true
+
 
       - name: Checkout repo
         uses: actions/checkout@v3
