@@ -57,7 +57,7 @@ jobs:
           git config --global user.name "pharmaverse-bot" 
           echo "check if orphan exists"
           git branch
-          find_orphan=$(git branch | grep cran_status) # BIG WARNING HERE : unique name to not grep other branches
+          find_orphan=$(git branch | grep cran_status || true) # BIG WARNING HERE : unique name to not grep other branches
           echo "find_orphan: $find_orphan"
           # Try to create a new orphan branch if it does not already exist
           if [ -z "${find_orphan}" ]; then 
