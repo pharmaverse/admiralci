@@ -74,7 +74,7 @@ jobs:
         if: ${{ steps.create_orphan.outputs.orphan_exists == 'false' }}
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.REPO_GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
+          github_token: ${{ secrets.GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
           branch: cran_status
           force: true
 
