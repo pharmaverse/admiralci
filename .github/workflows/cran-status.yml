@@ -51,15 +51,15 @@ jobs:
       - name: Create orphan branch
         id: create_orphan
         run: |
-          find_orphan=$(git branch | grep cran_status) # BIG WARNING HERE : unique name to not grep other branches
           git config --global --add safe.directory ${PWD}
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
+          find_orphan=$(git branch | grep cran_status) # BIG WARNING HERE : unique name to not grep other branches
           # Try to create a new orphan branch if it does not already exist
           if [ -z "${find_orphan}" ]; then 
-            git checkout --orphan cran_status || true
+            git checkout --orphan cran_status
             git add .
-            git commit -m "initial commit" || true
+            git commit -m "initial commit"
             orphan_exists='false'
           else
             orphan_exists='true'
