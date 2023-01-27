@@ -55,30 +55,29 @@ jobs:
           git config --global --add safe.directory ${PWD}
           git config --global user.email "113703390+pharmaverse-bot@users.noreply.github.com"
           git config --global user.name "pharmaverse-bot"
+          git fetch --all
           cran_status_branch=$(git branch --list cran_status)
-          echo "CRAN STATUS BRANCH: $cran_status_branch"
+          echo "🔴 CRAN STATUS BRANCH: ${cran_status_branch}"
           # Try to create a new orphan branch if it does not already exist
           if [ -z "${cran_status_branch}" ]
           then {
+            echo "🟡  cran_status branch DOES NOT exist!"
             echo "🔴 Checking out orphan branch"
             git checkout --orphan cran_status
             echo "🔴 Checked out orphan branch"
-            echo "# CRAN Status" > README.md
-            echo "🔴 Created README.md"
             mkdir -p /tmp/${{ github.sha }}
             echo "🔴 Listing new tmp dir: $(ls -ltrha /tmp/${{ github.sha }})"
-            cp -r .git README.md /tmp/${{ github.sha }}
-            echo "🔴 Listing new tmp dir, again: $(ls -ltrha /tmp/${{ github.sha }}/*)"
+            cp -r .git /tmp/${{ github.sha }}
+            cd /tmp/${{ github.sha }}
+            echo "# CRAN Status" > README.md
+            echo "🔴 Created README.md"
             git reset
-            rm -rf ..?* .[!.]* *
-            echo "🔴 Listing current dir: $(ls -ltrha)"
-            cp -r /tmp/${{ github.sha }}/.git /tmp/${{ github.sha }}/README.md .
-            echo "🔴 Listing current dir, again: $(ls -ltrha)"
-            git add README.md
+            git add --all -f
             echo "🔴 Git status: $(git status)"
             git commit -m "Initialize orphan cran_status branch"
             orphan_exists='false'
           } else {
+            echo "🟢 cran_status branch exists!"
             orphan_exists='true'
           }
           fi
