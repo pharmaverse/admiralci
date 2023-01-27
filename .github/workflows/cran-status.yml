@@ -51,15 +51,19 @@ jobs:
       - name: Create orphan branch
         id: create_orphan
         run: |
-          find_orphan=$(git branch | grep cran_status) # BIG WARNING HERE : unique name to not grep other branches
           git config --global --add safe.directory ${PWD}
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
+          echo "config username"
+          git config --global user.email "113703390+pharmaverse-bot@users.noreply.github.com"
+          git config --global user.name "pharmaverse-bot" 
+          echo "check if orphan exists"
+          git branch
+          find_orphan=$(git branch --list cran_status)
+          echo "find_orphan: $find_orphan"
           # Try to create a new orphan branch if it does not already exist
           if [ -z "${find_orphan}" ]; then 
-            git checkout --orphan cran_status || true
+            git checkout --orphan cran_status
             git add .
-            git commit -m "initial commit" || true
+            git commit -m "initial commit"
             orphan_exists='false'
           else
             orphan_exists='true'
@@ -70,7 +74,7 @@ jobs:
         if: ${{ steps.create_orphan.outputs.orphan_exists == 'false' }}
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.REPO_GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
+          github_token: ${{ secrets.GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
           branch: cran_status
           force: true
 
@@ -85,8 +89,8 @@ jobs:
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - name: Compute CRAN Status md5 hashes
-        uses: .github/actions/cran-status-extract
+      - name: Compute Cran Status md5 codes
+        uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix-cran-status-duplicates # TODO: replace with main 
         with: 
           statuses: "${{ inputs.statuses }}"
 
@@ -99,7 +103,7 @@ jobs:
             current_status_content=$(cat "./cran_errors.csv")
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
-            last_status_file=$(tail -n 1 ./cran_status)
+            last_status_file=$(ls ./cran_status | tail -n 1)
             if [ -z "./cran_status/${last_status_file}" ]; then
               # case first writing on the orphan branch
               last_status_content="FIRST WRITING"
@@ -130,7 +134,7 @@ jobs:
         run: |
           rm ./cran_errors.csv 2> /dev/null
           rm ./cran-status.md 2> /dev/null
-          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+          git config --global --add safe.directory ${PWD}
           git add "./cran_status/${{ steps.today.outputs.date }}.csv"
 
           
