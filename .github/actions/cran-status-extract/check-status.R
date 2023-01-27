@@ -1,5 +1,4 @@
-# Install packages (find another way to install it on the docker container..?)
-install.packages("optparse")
+if (!require("optparse")) install.packages("optparse", repos = "https://cloud.r-project.org")
 library(dplyr)
 library(rvest)
 library(stringr)
@@ -8,7 +7,7 @@ library(digest)
 # check if needed : package name and working dir path as input arguments :
 library(optparse)
 option_list <- list(
-  make_option(c("-s", "--status_types"),
+  make_option(c("-s", "--statuses"),
     type = "character", default = "ERROR,WARN",
     help = "status types (comma separated list, for exemple ERROR,WARN,NOTE",
     metavar = "character"
@@ -55,7 +54,7 @@ url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pk
 
 if (!httr::http_error(url)) {
   # Get input status
-  status_types <- opt$status_types
+  status_types <- opt$statuses
   statuses <- unlist(strsplit(status_types, split = ","))
 
   # Parse html table into dataframe

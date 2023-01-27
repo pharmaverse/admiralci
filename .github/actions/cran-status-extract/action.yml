@@ -1,5 +1,5 @@
-name: CRAN Status md5 codes
-description: Write CRAN status table as md5 codes
+name: CRAN Status Check
+description: Creates a summary of issues reported on the CRAN status check page for a given R package
 
 inputs:
   statuses:

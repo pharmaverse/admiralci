@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-Rscript /app/check-status.R --status_types "${INPUT_STATUSES}"
+Rscript /app/check-status.R -s "${INPUT_STATUSES}"

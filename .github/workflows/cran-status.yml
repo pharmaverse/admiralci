@@ -85,8 +85,8 @@ jobs:
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - name: Compute Cran Status md5 codes
-        uses: dgrassellyb/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates # TODO: replace with main
+      - name: Compute CRAN Status md5 hashes
+        uses: .github/actions/cran-status-extract
         with: 
           statuses: "${{ inputs.statuses }}"
 
@@ -99,7 +99,7 @@ jobs:
             current_status_content=$(cat "./cran_errors.csv")
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
-            last_status_file=$(ls ./cran_status | tail -n 1)
+            last_status_file=$(tail -n 1 ./cran_status)
             if [ -z "./cran_status/${last_status_file}" ]; then
               # case first writing on the orphan branch
               last_status_content="FIRST WRITING"
@@ -130,7 +130,7 @@ jobs:
         run: |
           rm ./cran_errors.csv 2> /dev/null
           rm ./cran-status.md 2> /dev/null
-          git config --global --add safe.directory /__w/admiral/admiral
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           git add "./cran_status/${{ steps.today.outputs.date }}.csv"
 
           

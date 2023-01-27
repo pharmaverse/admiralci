@@ -1,13 +1,12 @@
-FROM rocker/tidyverse:4.1.2
+FROM rocker/tidyverse:4.2.2
 
 WORKDIR /app
 
 # Copy scripts
-COPY check-status.R /app/check-status.R
-COPY entrypoint.sh /app/entrypoint.sh
+COPY check-status.R entrypoint.sh /app/
 
-RUN chmod 777 /app/check-status.R
-RUN chmod 777 /app/entrypoint.sh
+# Make the scripts executable
+RUN chmod +x /app/*
 
 # Set entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]
