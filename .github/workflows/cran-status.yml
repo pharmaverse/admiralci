@@ -69,6 +69,7 @@ jobs:
             echo "🔴 Listing new tmp dir: $(ls -ltrha /tmp/${{ github.sha }})"
             cp -r .git README.md /tmp/${{ github.sha }}
             echo "🔴 Listing new tmp dir, again: $(ls -ltrha /tmp/${{ github.sha }}/*)"
+            git reset
             rm -rf ..?* .[!.]* *
             echo "🔴 Listing current dir: $(ls -ltrha)"
             cp -r /tmp/${{ github.sha }}/.git /tmp/${{ github.sha }}/README.md .
