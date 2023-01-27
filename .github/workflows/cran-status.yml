@@ -54,12 +54,17 @@ jobs:
           git config --global --add safe.directory ${PWD}
           git config --global user.email "113703390+pharmaverse-bot@users.noreply.github.com"
           git config --global user.name "pharmaverse-bot" 
-          find_orphan=$(git branch --list cran_status)
+          cran_status_branch=$(git branch --list cran_status)
           # Try to create a new orphan branch if it does not already exist
-          if [ -z "${find_orphan}" ]; then 
+          if [ -z "${cran_status_branch}" ]; then 
             git checkout --orphan cran_status
-            git add .
-            git commit -m "initial commit"
+            echo "# CRAN Status" > README.md
+            mkdir -p /tmp/${{ github.sha }}
+            cp -r .git README.md /tmp/${{ github.sha }}
+            rm -rf ..?* .[!.]* *
+            cp -r /tmp/${{ github.sha }}/.git /tmp/${{ github.sha }}/README.md .
+            git add README.md
+            git commit -m "Initialize orphan cran_status branch"
             orphan_exists='false'
           else
             orphan_exists='true'
