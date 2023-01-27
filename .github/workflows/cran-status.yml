@@ -56,6 +56,13 @@ jobs:
           git config --global user.email "113703390+pharmaverse-bot@users.noreply.github.com"
           git config --global user.name "pharmaverse-bot"
           git fetch --all
+          echo "git branch --list"
+          git branch --list
+          echo "git branch"
+          git branch 
+          echo "try grep"
+          git branch | grep -w cran_status
+          echo "end debug cran_status_branch var"
           cran_status_branch=$(git branch --list cran_status)
           echo "🔴 CRAN STATUS BRANCH: ${cran_status_branch}"
           # Try to create a new orphan branch if it does not already exist
