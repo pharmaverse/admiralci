@@ -85,7 +85,7 @@ jobs:
           git branch
 
       - name: Compute Cran Status md5 codes
-        uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix-cran-status-duplicates # TODO: replace with main 
+        uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates # TODO: replace with main 
         with: 
           statuses: "${{ inputs.statuses }}"
 
