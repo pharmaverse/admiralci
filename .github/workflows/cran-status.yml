@@ -55,32 +55,19 @@ jobs:
           git config --global --add safe.directory ${PWD}
           git config --global user.email "113703390+pharmaverse-bot@users.noreply.github.com"
           git config --global user.name "pharmaverse-bot"
-          echo "git config --get remote.origin.url"
-          git config --get remote.origin.url
           git fetch origin cran_status:cran_status || true 
-          echo "git branch --list"
-          git branch --list
-          echo "git branch -a --list cran_status"
-          git branch -a --list cran_status
-          echo "end debug cran_status_branch var"
           cran_status_branch=$(git branch -a --list cran_status)
-          echo "🔴 CRAN STATUS BRANCH: ${cran_status_branch}"
           # Try to create a new orphan branch if it does not already exist
           if [ -z "${cran_status_branch}" ]
           then {
-            echo "🟡  cran_status branch DOES NOT exist!"
-            echo "🔴 Checking out orphan branch"
+            echo "🟡 Create cran_status branch"
             git checkout --orphan cran_status
-            echo "🔴 Checked out orphan branch"
             mkdir -p /tmp/${{ github.sha }}
-            echo "🔴 Listing new tmp dir: $(ls -ltrha /tmp/${{ github.sha }})"
             cp -r .git /tmp/${{ github.sha }}
             cd /tmp/${{ github.sha }}
             echo "# CRAN Status" > README.md
-            echo "🔴 Created README.md"
             git reset
             git add --all -f
-            echo "🔴 Git status: $(git status)"
             git commit -m "Initialize orphan cran_status branch"
             orphan_exists='false'
             git push --set-upstream origin cran_status
@@ -90,14 +77,6 @@ jobs:
           }
           fi
           echo "orphan_exists=$orphan_exists" >> $GITHUB_OUTPUT 
-
-      #- name: Push orphan branch
-      #  if: ${{ steps.create_orphan.outputs.orphan_exists == 'false' }}
-      #  uses: ad-m/github-push-action@master
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
-      #    branch: cran_status
-      #    force: true
 
       - name: Get Date
         id: today
