@@ -89,6 +89,17 @@ jobs:
         with: 
           statuses: "${{ inputs.statuses }}"
 
+      # new problem .. was checking out at another step before and now I am lossing csv file info 
+      - name: Read cran status csv
+        id: cran_csv
+        run: |
+          if [  -e ./cran_errors.csv ]; then
+            current_status_content=$(cat "./cran_errors.csv")
+          else
+            current_status_content="NULL"
+          fi
+          echo "current_status_content=$current_status_content" >> $GITHUB_OUTPUT
+
       - name: Checkout repo
         uses: actions/checkout@v3
         with: 
@@ -98,11 +109,10 @@ jobs:
       - name: Update cran_status branch
         id: cran_errors_status
         run: |
-          ls
           new_errors=false
-          cran_status_path="${{ inputs.path }}/cran_errors.csv"
-          if [  -e ./cran_errors.csv ]; then
-            current_status_content=$(cat "./cran_errors.csv")
+          current_status_content=${{ steps.cran_status.outputs.current_status_content }}
+          echo $current_status_content
+          if [ $current_status_content != "NULL" ]; then
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
@@ -116,7 +126,7 @@ jobs:
             if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
               new_errors=true
-              cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
+              echo  $current_status_content > "./cran_status/${{ steps.today.outputs.date }}.csv"
             else 
               echo "New errors on the cran status found, but identical to previous ones"
             fi
