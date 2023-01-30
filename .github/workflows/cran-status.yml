@@ -98,7 +98,7 @@ jobs:
           else
             current_status_content="NULL"
           fi
-          echo "current_status_content=$current_status_content" >> $GITHUB_OUTPUT
+          echo "current_status_content=$current_status_content" >> "${GITHUB_OUTPUT}"
 
       - name: Checkout repo
         uses: actions/checkout@v3
