@@ -83,22 +83,21 @@ jobs:
         run: |
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
           git branch
+      
+      # test=$("C:\\Users\\grasseld\\AppData\\Local\\Programs\\R\\R-4.2.2\\bin\\Rscript" -e 'paste(desc::desc_get(keys = "Package"))')
+      - name: Get current package name
+        id: current_package
+        run: |
+          package_name=(cat ./DESCRIPTION | grep Package:)
+          package_name=${package_name#Package: }
+          echo "package_name=$package_name" >> $GITHUB_OUTPUT
+          # TODO 31.01: add input package to R action (also change admiral repo) and then test 
 
       - name: Compute Cran Status md5 codes
         uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates # TODO: replace with main 
         with: 
           statuses: "${{ inputs.statuses }}"
-
-      # new problem .. was checking out at another step before and now I am lossing csv file info 
-      - name: Read cran status csv
-        id: cran_csv
-        run: |
-          if [  -e ./cran_errors.csv ]; then
-            current_status_content=$(cat "./cran_errors.csv")
-          else
-            current_status_content="NULL"
-          fi
-          echo "current_status_content=$current_status_content" >> "${GITHUB_OUTPUT}"
+          package: "${{ steps.current_package.outputs.package_name }}""
 
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -110,9 +109,9 @@ jobs:
         id: cran_errors_status
         run: |
           new_errors=false
-          current_status_content=${{ steps.cran_status.outputs.current_status_content }}
-          echo $current_status_content
-          if [ $current_status_content != "NULL" ]; then
+          cran_status_path="${{ inputs.path }}/cran_errors.csv"
+          if [  -e ./cran_errors.csv ]; then
+            current_status_content=$(cat "./cran_errors.csv")
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
             last_status_file=$(ls ./cran_status | tail -n 1)
@@ -126,7 +125,7 @@ jobs:
             if [ "$current_status_content" != "$last_status_content" ]; then
               echo "New errors on the cran status found"
               new_errors=true
-              echo  $current_status_content > "./cran_status/${{ steps.today.outputs.date }}.csv"
+              cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
             else 
               echo "New errors on the cran status found, but identical to previous ones"
             fi

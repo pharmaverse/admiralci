@@ -7,6 +7,11 @@ library(digest)
 # check if needed : package name and working dir path as input arguments :
 library(optparse)
 option_list <- list(
+  make_option(c("-p", "--package"),
+    type = "character",
+    help = "package name (REQUIRED)",
+    metavar = "character"
+  ),
   make_option(c("-s", "--statuses"),
     type = "character", default = "ERROR,WARN",
     help = "status types (comma separated list, for exemple ERROR,WARN,NOTE",
@@ -49,7 +54,7 @@ build_md5_codes <- function(pkg, errors, step) {
   return(errors)
 }
 
-pkg <- paste(desc::desc_get(keys = "Package"))
+pkg <- opt$package # paste(desc::desc_get(keys = "Package"))
 pkg <- "adace"
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
 
