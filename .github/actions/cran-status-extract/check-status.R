@@ -67,6 +67,9 @@ if (!httr::http_error(url)) {
   # filter statuses and get their details links (and convert it to md5 unique code)
   errors <- filter(checks, Status %in% statuses)
 
+  print("checks")
+  print(checks)
+
   # If errors table is empty: just get out !
   if (dim(errors)[1] == 0) {
     print(
