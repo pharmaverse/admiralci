@@ -83,6 +83,7 @@ jobs:
             echo "🔴 Git status: $(git status)"
             git commit -m "Initialize orphan cran_status branch"
             orphan_exists='false'
+            git push
           } else {
             echo "🟢 cran_status branch exists!"
             orphan_exists='true'
@@ -90,13 +91,13 @@ jobs:
           fi
           echo "orphan_exists=$orphan_exists" >> $GITHUB_OUTPUT 
 
-      - name: Push orphan branch
-        if: ${{ steps.create_orphan.outputs.orphan_exists == 'false' }}
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
-          branch: cran_status
-          force: true
+      #- name: Push orphan branch
+      #  if: ${{ steps.create_orphan.outputs.orphan_exists == 'false' }}
+      #  uses: ad-m/github-push-action@master
+      #  with:
+      #    github_token: ${{ secrets.GITHUB_TOKEN }} # CAN NOT TEST THIS ON FORKED REPO
+      #    branch: cran_status
+      #    force: true
 
       - name: Checkout repo
         uses: actions/checkout@v3
