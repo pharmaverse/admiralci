@@ -70,11 +70,8 @@ if (!httr::http_error(url)) {
   # If errors table is empty: just get out !
   if (dim(errors)[1] == 0) {
     print(
-      sprintf("None of this status found in the CRAN table. (status=%s)", status_types)
+      sprintf("None of this status found in the CRAN table. (status=%s). details : pkg=%s, errors=%s, checks=%s", pkg, status_types, errors$CheckDetails, checks)
     )
-    print("details:")
-    print(errors)
-    print(checks)
   } else {
     # Build each step md5 code
     errors <- build_md5_codes(pkg, errors, "Build")
