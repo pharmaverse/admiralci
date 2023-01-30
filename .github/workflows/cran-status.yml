@@ -83,7 +83,7 @@ jobs:
             echo "🔴 Git status: $(git status)"
             git commit -m "Initialize orphan cran_status branch"
             orphan_exists='false'
-            git push
+            git push --set-upstream origin cran_status
           } else {
             echo "🟢 cran_status branch exists!"
             orphan_exists='true'
