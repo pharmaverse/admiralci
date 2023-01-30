@@ -46,6 +46,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Create orphan branch
         id: create_orphan
@@ -53,7 +55,7 @@ jobs:
           git config --global --add safe.directory ${PWD}
           git config --global user.email "113703390+pharmaverse-bot@users.noreply.github.com"
           git config --global user.name "pharmaverse-bot"
-          git fetch --all
+          git fetch origin --all
           echo "git branch --list"
           git branch --list
           echo "git branch -a --list cran_status"
