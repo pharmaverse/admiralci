@@ -99,12 +99,6 @@ jobs:
       #    branch: cran_status
       #    force: true
 
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with: 
-          set-safe-directory: true 
-          ref: cran_status
-
       - name: Get Date
         id: today
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
@@ -113,6 +107,12 @@ jobs:
         uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix-cran-status-duplicates # TODO: replace with main 
         with: 
           statuses: "${{ inputs.statuses }}"
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with: 
+          set-safe-directory: true 
+          ref: cran_status
 
       - name: Update cran_status branch
         id: cran_errors_status
