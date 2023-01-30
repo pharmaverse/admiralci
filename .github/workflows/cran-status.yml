@@ -80,7 +80,9 @@ jobs:
 
       - name: Get Date
         id: today
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        run: |
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          git branch
 
       - name: Compute Cran Status md5 codes
         uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix-cran-status-duplicates # TODO: replace with main 
@@ -96,7 +98,6 @@ jobs:
       - name: Update cran_status branch
         id: cran_errors_status
         run: |
-          git branch
           new_errors=false
           cran_status_path="${{ inputs.path }}/cran_errors.csv"
           if [  -e ./cran_errors.csv ]; then
