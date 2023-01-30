@@ -57,7 +57,7 @@ jobs:
           git config --global user.name "pharmaverse-bot"
           echo "git config --get remote.origin.url"
           git config --get remote.origin.url
-          git fetch origin --all
+          git fetch origin cran_status:cran_status || true 
           echo "git branch --list"
           git branch --list
           echo "git branch -a --list cran_status"
@@ -71,7 +71,6 @@ jobs:
             echo "🟡  cran_status branch DOES NOT exist!"
             echo "🔴 Checking out orphan branch"
             git checkout --orphan cran_status
-            git pull
             echo "🔴 Checked out orphan branch"
             mkdir -p /tmp/${{ github.sha }}
             echo "🔴 Listing new tmp dir: $(ls -ltrha /tmp/${{ github.sha }})"
