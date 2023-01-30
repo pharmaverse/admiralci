@@ -71,6 +71,7 @@ jobs:
             echo "🟡  cran_status branch DOES NOT exist!"
             echo "🔴 Checking out orphan branch"
             git checkout --orphan cran_status
+            git pull
             echo "🔴 Checked out orphan branch"
             mkdir -p /tmp/${{ github.sha }}
             echo "🔴 Listing new tmp dir: $(ls -ltrha /tmp/${{ github.sha }})"
