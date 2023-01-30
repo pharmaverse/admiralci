@@ -61,7 +61,7 @@ jobs:
           echo "git branch"
           git branch 
           echo "try grep"
-          git branch | grep -w cran_status
+          # git branch | grep -w cran_status
           echo "end debug cran_status_branch var"
           cran_status_branch=$(git branch --list cran_status)
           echo "🔴 CRAN STATUS BRANCH: ${cran_status_branch}"
