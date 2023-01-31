@@ -53,7 +53,7 @@ jobs:
         id: today
         run: |
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
+          
       - name: Get current package name
         id: current_package
         run: |
@@ -91,7 +91,7 @@ jobs:
           echo "orphan_exists=$orphan_exists" >> $GITHUB_OUTPUT 
       
       - name: Compute Cran Status md5 codes
-        uses: ./.github/actions/cran-status-extract/action.yml
+        uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates
         with: 
           statuses: "${{ inputs.statuses }}"
           package: "${{ steps.current_package.outputs.package_name }}"
