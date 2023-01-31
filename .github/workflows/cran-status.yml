@@ -88,7 +88,7 @@ jobs:
       - name: Get current package name
         id: current_package
         run: |
-          package_name=(cat ./DESCRIPTION | grep Package:)
+          package_name=$(cat ./DESCRIPTION | grep Package:)
           package_name=${package_name#Package: }
           echo "package_name=$package_name" >> $GITHUB_OUTPUT
 
