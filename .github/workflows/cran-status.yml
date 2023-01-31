@@ -91,19 +91,18 @@ jobs:
           package_name=(cat ./DESCRIPTION | grep Package:)
           package_name=${package_name#Package: }
           echo "package_name=$package_name" >> $GITHUB_OUTPUT
-          # TODO 31.01: add input package to R action (also change admiral repo) and then test 
-
-      - name: Compute Cran Status md5 codes
-        uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates # TODO: replace with main 
-        with: 
-          statuses: "${{ inputs.statuses }}"
-          package: "${{ steps.current_package.outputs.package_name }}""
 
       - name: Checkout repo
         uses: actions/checkout@v3
         with: 
           set-safe-directory: true 
           ref: cran_status
+
+      - name: Compute Cran Status md5 codes
+        uses: pharmaverse/admiralci/.github/actions/cran-status-extract@fix/cran_status_issues_duplicates # TODO: replace with main 
+        with: 
+          statuses: "${{ inputs.statuses }}"
+          package: "${{ steps.current_package.outputs.package_name }}"
 
       - name: Update cran_status branch
         id: cran_errors_status

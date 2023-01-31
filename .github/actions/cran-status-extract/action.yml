@@ -2,6 +2,11 @@ name: CRAN Status Check
 description: Creates a summary of issues reported on the CRAN status check page for a given R package
 
 inputs:
+  package:
+    description: |
+      Package name of the current R package deployed to CRAN
+    required: true
+    type: string
   statuses:
     description: |
       Create an issue if one or more of the following
@@ -16,4 +21,5 @@ runs:
   using: 'docker'
   image: './Dockerfile'
   args:
+    - ${{ inputs.package }}
     - ${{ inputs.statuses }}
