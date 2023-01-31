@@ -89,6 +89,7 @@ jobs:
         run: |
           package_name=$(cat ./DESCRIPTION | grep Package:)
           package_name=${package_name#Package: }
+          echo "current package name is : $package_name"
           echo "package_name=$package_name" >> $GITHUB_OUTPUT
 
       - name: Checkout repo
@@ -121,12 +122,14 @@ jobs:
             fi
             # check if the status is a new error:
             if [ "$current_status_content" != "$last_status_content" ]; then
-              echo "New errors on the cran status found"
+              echo "New errors on the cran status found - package ${{ steps.current_package.outputs.package_name }}"
               new_errors=true
               cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
             else 
-              echo "New errors on the cran status found, but identical to previous ones"
+              echo "New errors on the cran status found, but identical to previous ones - package ${{ steps.current_package.outputs.package_name }}"
             fi
+          else
+            echo "No errors found on the cran status - package ${{ steps.current_package.outputs.package_name }}"
           fi 
           echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
 
