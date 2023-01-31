@@ -113,11 +113,11 @@ jobs:
             current_status_content=$(cat "./cran_errors.csv")
             mkdir -p cran_status
             # read previous cran status from this branch (ls sort files by alphabetic number)
-            last_status_file=$(ls ./cran_status | tail -n 1)
-            if [ -z "./cran_status/${last_status_file}" ]; then
-              # case first writing on the orphan branch
+            if [ -z "$(ls -A ./cran_status)" ]; then
+              # case first writing on the orphan branch (cran_status dir is empty)
               last_status_content="FIRST WRITING"
             else
+              last_status_file=$(ls ./cran_status | tail -n 1)
               last_status_content=$(cat "./cran_status/$last_status_file")
             fi
             # check if the status is a new error:
