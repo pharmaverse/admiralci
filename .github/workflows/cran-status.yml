@@ -84,7 +84,6 @@ jobs:
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
           git branch
       
-      # test=$("C:\\Users\\grasseld\\AppData\\Local\\Programs\\R\\R-4.2.2\\bin\\Rscript" -e 'paste(desc::desc_get(keys = "Package"))')
       - name: Get current package name
         id: current_package
         run: |
