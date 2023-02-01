@@ -50,7 +50,6 @@ jobs:
           - name: admiralonco
             target-branch: devel
             reviewers: |-
-              rossfarrugia
               bundfussr
               cicdguy
           - name: admiraldev
@@ -63,18 +62,15 @@ jobs:
             target-branch: main
             reviewers: |-
               bms63
-              rossfarrugia
               cicdguy
               bundfussr
           - name: admiralophtha
             target-branch: devel
             reviewers: |-
-              rossfarrugia
               cicdguy
           - name: admiral
             target-branch: devel
             reviewers: |-
-              rossfarrugia
               cicdguy
               thomas-neitmann
               bms63
@@ -83,7 +79,6 @@ jobs:
             target-branch: devel
             reviewers: |-
               thomas-neitmann
-              rossfarrugia
               bms63
               bundfussr
 
