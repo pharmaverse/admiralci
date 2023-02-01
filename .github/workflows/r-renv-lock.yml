@@ -1,0 +1,135 @@
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: 'Source branch for package renv'
+        required: true
+        default: 'main'
+      target_branch:
+        description: 'Target branch with PR'
+        required: true
+        default: 'main'
+
+name: Generate renv.lock
+
+concurrency:
+  group: r-renv-lock-${{ github.event.inputs.source_ref }}
+  cancel-in-progress: true
+
+jobs:
+  r-renv-lock-gen:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-20.04, r: '4.0.5', repos: 'https://cran.microsoft.com/snapshot/2021-03-31/'}
+          - {os: ubuntu-20.04, r: '4.1.0', repos: 'https://cran.microsoft.com/snapshot/2022-03-10/'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: true
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      R_REPOS: ${{ matrix.config.repos }}
+      RENV_PROFILE_NAME: ${{ matrix.config.r }}
+
+    steps:
+      ##################### BEGIN boilerplate steps #####################
+      - name: Get branch names
+        id: branch-name
+        uses: tj-actions/branch-names@v5.4
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        if: github.event_name != 'pull_request'
+        with:
+          ref: ${{ github.event.inputs.source_ref }}
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - name: Collect dependencies
+        run: |
+          renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
+          cran_r_release <- Sys.getenv("R_REPOS", "https://cran.microsoft.com/snapshot/2021-03-31")
+          cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
+
+          renv::activate(profile = renv_profile)
+          # CRAN repo from R release
+          options("repos" = c("MRAN" = cran_r_release))
+
+          renv::install("remotes")
+          renv::install("openpharma/staged.dependencies")
+
+          # Install stage dependencies from yaml
+          deps <- staged.dependencies::dependency_table()
+
+          staged.dependencies::install_deps(
+            dep_structure = deps,
+            install_project = FALSE,
+            verbose = 1,
+            install_external_deps = TRUE,
+            upgrade = "never",
+            Ncpus = 1,
+            quiet = TRUE,
+            dependencies = c("Depends", "Imports", "LinkingTo", "Suggests")
+          )
+
+          # Packages from stage dependencies to ignore
+          renv::settings$ignored.packages(c("admiral", "admiraldev", "admiral.test", "admiralci"))
+
+          # Install dependencies
+          renv::install()
+
+          # Set newest CRAN for few packages upgrade
+          options("repos" = c(
+            "CRAN" = cran_latest,
+            "MRAN" = cran_r_release
+          ))
+
+          # Upgrade packages
+          remotes::install_version("pkgdown", version = "2.0.7", upgrade = "never")
+          remotes::install_version("lintr", version = "3.0.2", upgrade = "never")
+          remotes::install_version("roxygen2", version = "7.2.1", upgrade = "never")
+
+          renv::activate(profile = renv_profile)
+
+          renv::settings$snapshot.type("custom")
+          .get_dependencies <- function(project_dir) {
+            admdev_loc <- find.package("admiraldev", lib.loc = .libPaths(), quiet = TRUE)
+            adm_dev_suggests <- if(length(admdev_loc) != 0) {
+              renv:::renv_dependencies_discover_description(admdev_loc, fields = "Suggests")
+            } else {
+              data.frame(Packages = character(0))
+            }
+            suggests_packages <- renv:::renv_dependencies_discover_description(project_dir, fields = "Suggests")
+
+            packages <- names(
+              renv:::renv_package_dependencies(
+                unique(c(
+                  project_dir,
+                  adm_dev_suggests[["Package"]],
+                  suggests_packages[["Package"]],
+                  c("staged.dependencies")
+                ))
+              )
+            )
+            packages[!(packages %in% c("admiral", "admiraldev", "admiralci", "admiral.test"))]
+          }
+
+          options(renv.snapshot.filter = .get_dependencies)
+
+          renv::snapshot()
+        shell: Rscript {0}
+
+      - name: Upload renv lock
+        if: failure()
+        uses: actions/upload-artifact@main
+        with:
+          name: ${{ runner.os }}-r${{ matrix.config.r }}-renv-lock
+          path: renv/profiles
