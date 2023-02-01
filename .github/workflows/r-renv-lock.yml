@@ -51,6 +51,7 @@ jobs:
 
       - name: Collect dependencies
         run: |
+          source("renv/activate.R")
           renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
           cran_r_release <- Sys.getenv("R_REPOS", "https://cran.microsoft.com/snapshot/2021-03-31")
           cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
@@ -126,7 +127,6 @@ jobs:
           options(renv.snapshot.filter = .get_dependencies)
 
           renv::snapshot(force = TRUE)
-
         shell: Rscript {0}
 
       - name: Upload renv lock
