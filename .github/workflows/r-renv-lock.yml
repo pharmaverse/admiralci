@@ -18,6 +18,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     strategy:
+      max-parallel: 1
       fail-fast: false
       matrix:
         config:
@@ -126,6 +127,9 @@ jobs:
           options(renv.snapshot.filter = .get_dependencies)
 
           renv::snapshot(force = TRUE)
+          if (identical(renv_profile, "4.0.5")) {
+            file.copy(renv::paths$lockfile(), "renv.lock", overwrite = TRUE)
+          }
         shell: Rscript {0}
 
       - name: Commit and push changes
