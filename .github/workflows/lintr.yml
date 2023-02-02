@@ -97,7 +97,8 @@ jobs:
           if (!identical("${{ inputs.lint-all-files }}", "true") && 
               identical("${{ github.event_name }}", "pull_request")) {
             files <- gh::gh(sprintf(
-              "GET https://api.github.com/repos/pharmaverse/%s/pulls/%s/files",
+              "GET https://api.github.com/repos/%s/%s/pulls/%s/files",
+              "${{ github.repository_owner }}",
               "${{ github.event.repository.name }}",
               "${{ github.event.pull_request.number }}"
             ))
