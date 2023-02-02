@@ -14,6 +14,7 @@ concurrency:
 
 jobs:
   r-renv-lock-gen:
+    if: "!contains(github.event.head_commit.message, 'Automatic renv profile update.')"
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     strategy:
@@ -119,8 +120,6 @@ jobs:
                 ))
               )
             )
-
-            browser()
             packages[!(packages %in% c("admiral", "admiraldev", "admiralci", "admiral.test"))]
           }
 
@@ -129,9 +128,11 @@ jobs:
           renv::snapshot(force = TRUE)
         shell: Rscript {0}
 
-      - name: Upload renv lock
-        if: failure()
-        uses: actions/upload-artifact@main
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-renv-lock
-          path: renv/profiles
+          commit_message: Automatic renv profile update.
+          file_pattern: 'renv/profiles/*'
+          commit_user_name: pharmaverse-bot
+          commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
+          create_branch: true
