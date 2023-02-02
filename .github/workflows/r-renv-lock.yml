@@ -134,7 +134,6 @@ jobs:
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          token: ${{ secrets.PHARMAVERSE_BOT }}
           commit_message: Automatic renv profile update.
           file_pattern: 'renv.lock renv/profiles/*'
           commit_user_name: pharmaverse-bot
