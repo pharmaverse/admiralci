@@ -1,5 +1,4 @@
 on:
-  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -95,7 +94,7 @@ jobs:
           remotes::install_version("callr", version = "3.7.3", upgrade = "never")
           remotes::install_version("pkgdown", version = "2.0.7", upgrade = "never")
           remotes::install_version("lintr", version = "3.0.2", upgrade = "never")
-          remotes::install_version("cli", version = "3.3.0", upgrade = "never")
+          remotes::install_version("cli", version = "3.4.1", upgrade = "never")
           remotes::install_version("roxygen2", version = "7.2.1", upgrade = "never")
 
           renv::activate(profile = renv_profile)
@@ -135,8 +134,9 @@ jobs:
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          token: ${{ secrets.PHARMAVERSE_BOT }}
           commit_message: Automatic renv profile update.
-          file_pattern: 'renv/profiles/*'
+          file_pattern: 'renv.lock renv/profiles/*'
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
           create_branch: true
