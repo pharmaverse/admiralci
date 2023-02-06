@@ -57,6 +57,7 @@ jobs:
           renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
           cran_r_release <- Sys.getenv("R_REPOS", "https://cran.microsoft.com/snapshot/2021-03-31")
           cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
+          unlink(file.path("renv/profiles", renv_profile), recursive = TRUE)
 
           renv_install_suggests <- function(package) {
             loc_path <- find.package("admiraldev", lib.loc = .libPaths(), quiet = TRUE)
