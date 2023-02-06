@@ -1003,10 +1003,10 @@
     },
     "roxygen2": {
       "Package": "roxygen2",
-      "Version": "7.2.3",
+      "Version": "7.2.1",
       "Source": "Repository",
-      "Repository": "RSPM",
-      "Hash": "7b153c746193b143c14baa072bae4e27",
+      "Repository": "CRAN",
+      "Hash": "da1f278262e563c835345872f2fef537",
       "Requirements": [
         "R6",
         "brew",
@@ -1014,6 +1014,7 @@
         "commonmark",
         "cpp11",
         "desc",
+        "digest",
         "knitr",
         "pkgload",
         "purrr",
