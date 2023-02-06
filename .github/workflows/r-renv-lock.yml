@@ -28,7 +28,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: true
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      R_REPOS: ${{ matrix.config.repos }}
+      R_CRAN_REPO: ${{ matrix.config.repos }}
       RENV_PROFILE_NAME: ${{ matrix.config.r }}
 
     steps:
@@ -52,13 +52,22 @@ jobs:
 
       - name: Collect dependencies
         run: |
+          source("renv/activate.R")
           lock_gen_version <- "0.1.0"
           renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
-          cran_r_release <- Sys.getenv("R_REPOS", "https://cran.microsoft.com/snapshot/2021-03-31")
+          cran_r_release <- Sys.getenv("R_CRAN_REPO", "https://cran.microsoft.com/snapshot/2021-03-31")
           cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
           unlink(file.path("renv", "profiles", renv_profile), recursive = TRUE)
 
-          source("renv/activate.R")
+          cat("\n==================================\n")
+          cat("Create renv.lock files\n")
+          cat(paste("renv_profile: \"", renv_profile, "\"\n", sep = ""))
+          cat(paste("cran_r_release: \"", cran_r_release, "\"\n", sep = ""))
+          cat(paste("cran_latest: \"", cran_latest, "\"\n", sep = ""))
+          cat("==================================\n")
+
+
+          renv::activate(profile = renv_profile)
 
           renv_install_suggests <- function(package) {
             loc_path <- find.package("admiraldev", lib.loc = .libPaths(), quiet = TRUE)
@@ -75,7 +84,6 @@ jobs:
             }
           }
 
-          renv::activate(profile = renv_profile)
           # CRAN repo from R release
           options("repos" = c("MRAN" = cran_r_release))
 
@@ -105,7 +113,7 @@ jobs:
           install_min_version("pkgdown","2.0.7")
           install_min_version("lintr", "3.0.2")
           install_min_version("cli", "3.4.1")
-          install_min_version("roxygen2", "7.2.1")
+          remotes::install_version("roxygen2", version = "7.2.1", upgrade = "never")
 
           renv::activate(profile = renv_profile)
 
