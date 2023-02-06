@@ -53,6 +53,7 @@ jobs:
       - name: Collect dependencies
         run: |
           source("renv/activate.R")
+          version <- "0.1.0"
           renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
           cran_r_release <- Sys.getenv("R_REPOS", "https://cran.microsoft.com/snapshot/2021-03-31")
           cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
@@ -63,6 +64,13 @@ jobs:
               renv:::renv_dependencies_discover_description(loc_path, fields = "Suggests")[["Package"]]
             suggests <- suggests[!(suggests %in% c("admiral", "admiraldev", "admiralci", "admiral.test"))]
             renv::install(suggests)
+          }
+
+          install_min_version <- function(pkg, version) {
+            upgrade <- try(packageVersion(pkg) >= version, silent = TRUE)
+            if (!isTRUE(upgrade)) {
+              remotes::install_version(pkg, version = version, upgrade = "never")
+            }
           }
 
           renv::activate(profile = renv_profile)
@@ -90,12 +98,12 @@ jobs:
           ))
 
           # Upgrade packages
-          remotes::install_version("processx", version = "3.6.1", upgrade = "never")
-          remotes::install_version("callr", version = "3.7.3", upgrade = "never")
-          remotes::install_version("pkgdown", version = "2.0.7", upgrade = "never")
-          remotes::install_version("lintr", version = "3.0.2", upgrade = "never")
-          remotes::install_version("cli", version = "3.4.1", upgrade = "never")
-          remotes::install_version("roxygen2", version = "7.2.1", upgrade = "never")
+          install_min_version("processx", version = "3.6.1")
+          install_min_version("callr", version = "3.7.3")
+          install_min_version("pkgdown", version = "2.0.7")
+          install_min_version("lintr", version = "3.0.2")
+          install_min_version("cli", version = "3.4.1")
+          install_min_version("roxygen2", version = "7.2.1")
 
           renv::activate(profile = renv_profile)
 

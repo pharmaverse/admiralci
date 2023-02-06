@@ -12,7 +12,7 @@ on:
       - renv.lock
       - renv/**
   workflow_run:
-    workflows: [Generate renv.lock]
+    workflows: [r-renv-lock-gen]
     types: [completed]
 
 jobs:
