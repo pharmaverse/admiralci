@@ -52,12 +52,13 @@ jobs:
 
       - name: Collect dependencies
         run: |
-          source("renv/activate.R")
-          version <- "0.1.0"
+          lock_gen_version <- "0.1.0"
           renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
           cran_r_release <- Sys.getenv("R_REPOS", "https://cran.microsoft.com/snapshot/2021-03-31")
           cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
-          unlink(file.path("renv/profiles", renv_profile), recursive = TRUE)
+          unlink(file.path("renv", "profiles", renv_profile), recursive = TRUE)
+
+          source("renv/activate.R")
 
           renv_install_suggests <- function(package) {
             loc_path <- find.package("admiraldev", lib.loc = .libPaths(), quiet = TRUE)
@@ -99,12 +100,12 @@ jobs:
           ))
 
           # Upgrade packages
-          install_min_version("processx", version = "3.6.1")
-          install_min_version("callr", version = "3.7.3")
-          install_min_version("pkgdown", version = "2.0.7")
-          install_min_version("lintr", version = "3.0.2")
-          install_min_version("cli", version = "3.4.1")
-          install_min_version("roxygen2", version = "7.2.1")
+          install_min_version("processx", "3.6.1")
+          install_min_version("callr", "3.7.3")
+          install_min_version("pkgdown","2.0.7")
+          install_min_version("lintr", "3.0.2")
+          install_min_version("cli", "3.4.1")
+          install_min_version("roxygen2", "7.2.1")
 
           renv::activate(profile = renv_profile)
 
