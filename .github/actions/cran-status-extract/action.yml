@@ -1,0 +1,25 @@
+name: CRAN Status Check
+description: Creates a summary of issues reported on the CRAN status check page for a given R package
+
+inputs:
+  package:
+    description: |
+      Package name of the current R package deployed to CRAN
+    required: true
+    type: string
+  statuses:
+    description: |
+      Create an issue if one or more of the following
+      statuses are reported on the check report.
+      This is a comma-separated string of statuses.
+      Allowed statuses are 'NOTE', 'WARN', and 'ERROR'
+    default: 'ERROR'
+    required: false
+    type: string
+
+runs:
+  using: 'docker'
+  image: './Dockerfile'
+  args:
+    - ${{ inputs.package }}
+    - ${{ inputs.statuses }}
