@@ -13,7 +13,6 @@ concurrency:
 
 jobs:
   r-renv-lock-gen:
-    if: "!contains(github.event.head_commit.message, 'Automatic renv profile update.')"
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     strategy:
@@ -74,7 +73,7 @@ jobs:
             suggests <-
               renv:::renv_dependencies_discover_description(loc_path, fields = "Suggests")[["Package"]]
             suggests <- suggests[!(suggests %in% c("admiral", "admiraldev", "admiralci", "admiral.test"))]
-            renv::install(suggests)
+            renv::install(suggests, repos = options("repos"))
           }
 
           install_min_version <- function(pkg, version) {
@@ -87,19 +86,19 @@ jobs:
           # CRAN repo from R release
           options("repos" = c("MRAN" = cran_r_release))
 
-          renv::install("remotes")
-          renv::install("openpharma/staged.dependencies")
+          renv::install("remotes", repos = options("repos"))
+          renv::install("openpharma/staged.dependencies", repos = options("repos"))
 
           # Packages from stage dependencies to ignore
           renv::settings$ignored.packages(c("admiral", "admiraldev", "admiral.test", "admiralci"))
 
-          renv::install("pharmaverse/admiral.test@devel")
-          renv::install("pharmaverse/admiraldev@devel")
+          renv::install("pharmaverse/admiral.test@devel", repos = options("repos"))
+          renv::install("pharmaverse/admiraldev@devel", repos = options("repos"))
           renv_install_suggests("admiraldev")
           renv_install_suggests("admiral.test")
 
           # Install dependencies
-          renv::install()
+          renv::install(repos = options("repos"))
 
           # Set newest CRAN for few packages upgrade
           options("repos" = c(
@@ -143,7 +142,7 @@ jobs:
 
           options(renv.snapshot.filter = .get_dependencies)
 
-          renv::snapshot(force = TRUE)
+          renv::snapshot(force = TRUE, prompt = FALSE)
           if (identical(renv_profile, "4.0.5")) {
             file.copy(renv::paths$lockfile(), "renv.lock", overwrite = TRUE)
           }

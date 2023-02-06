@@ -5,12 +5,6 @@
 name: Propagate renv.lock
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - renv.lock
-      - renv/**
   workflow_run:
     workflows: [r-renv-lock-gen]
     types: [completed]
