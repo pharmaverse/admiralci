@@ -26,12 +26,12 @@ jobs:
       fail-fast: false
       matrix:
         system:
-          - rhub/debian-clang-devel
-          - rhub/debian-gcc-devel
-          - rhub/fedora-clang-devel
-          - rhub/fedora-gcc-devel
-          - rhub/debian-gcc-patched
-          - rhub/debian-gcc-release
+          - ghcr.io/insightsengineering/debian-gcc-devel:latest
+          - ghcr.io/insightsengineering/debian-gcc-devel:latest
+          - ghcr.io/insightsengineering/fedora-clang-devel:latest
+          - ghcr.io/insightsengineering/fedora-gcc-devel:latest
+          - ghcr.io/insightsengineering/debian-gcc-patched:latest
+          - ghcr.io/insightsengineering/debian-gcc-release:latest
 
     container:
       image: ${{ matrix.system }}
@@ -80,32 +80,8 @@ jobs:
       _R_CHECK_FORCE_SUGGESTS_: false
 
     steps:
-      - name: Update image
-        run: apt-get update -y || dnf update -y
-
-      - name: Install pre-requisites
-        run: |
-          apt-get install -y git libssl-dev libxml2-dev || \
-          dnf install -y git-all openssl-devel libxml2-devel
-
       - name: Checkout Repo
         uses: actions/checkout@v3
-
-      - name: Setup R path and yeet renv
-        id: r-paths
-        run: |
-          rm -rf renv* .Rprofile
-          if [[ ${{ matrix.system }} == *devel ]]; then {
-            ln -s /opt/R-devel/bin/Rscript /bin/Rscript
-            ln -s /opt/R-devel/bin/R /bin/R
-          }
-          fi
-          if [[ ${{ matrix.system }} == *patched ]]; then {
-            ln -s /opt/R-patched/bin/Rscript /bin/Rscript
-            ln -s /opt/R-patched/bin/R /bin/R
-          }
-          fi
-        shell: bash
 
       - name: Install devtools
         run: install.packages("devtools", repos = "https://cloud.r-project.org")
@@ -117,8 +93,6 @@ jobs:
 
       - name: Build package
         run: R CMD build .
-        shell: bash
 
       - name: Test package
         run: R CMD check *.tar.gz
-        shell: bash
