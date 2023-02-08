@@ -117,7 +117,23 @@ jobs:
         shell: Rscript {0}
         
       - name: Set options(warn=2)
-        run: echo "options(warn = 2)" >> ~/.Rprofile
+        run: |
+          if [ -d "templates" ]
+          then {
+            cd templates
+          } else {
+            echo "No templates directory. Exiting."
+            exit 0
+          }
+          fi
+          for template in $(ls *.R)
+          do {
+            cp ${template} ${template}.bak
+            echo -e "options(warn=2)\n" > ${template}
+            cat ${template}.bak > ${template}
+            rm ${template}.bak
+          }
+          done
         shell: bash
 
       - name: Run Template Scripts
