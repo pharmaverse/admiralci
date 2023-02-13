@@ -20,8 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04, r: '4.0.5', repos: 'https://cran.microsoft.com/snapshot/2021-03-31/'}
-          - {os: ubuntu-20.04, r: '4.1.0', repos: 'https://cran.microsoft.com/snapshot/2022-03-10/'}
+          - {os: ubuntu-20.04, r: '4.0', repos: 'https://cran.microsoft.com/snapshot/2021-03-31/'}
+          - {os: ubuntu-20.04, r: '4.1', repos: 'https://cran.microsoft.com/snapshot/2022-03-10/'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -48,6 +48,9 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
+
+      - name: Install cURL Headers
+        run: sudo apt update && sudo apt install libcurl4-openssl-dev -y
 
       - name: Collect dependencies
         run: |
@@ -143,7 +146,7 @@ jobs:
           options(renv.snapshot.filter = .get_dependencies)
 
           renv::snapshot(force = TRUE, prompt = FALSE)
-          if (identical(renv_profile, "4.0.5")) {
+          if (identical(renv_profile, "4.0")) {
             file.copy(renv::paths$lockfile(), "renv.lock", overwrite = TRUE)
           }
         shell: Rscript {0}
