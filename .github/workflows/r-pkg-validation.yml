@@ -78,7 +78,7 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Build report
-        uses: insightsengineering/thevalidatoR@v1
+        uses: insightsengineering/thevalidatoR@fix-validation-report
         id: validation
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
