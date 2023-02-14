@@ -69,7 +69,7 @@ jobs:
           restore-keys: ${{ runner.os }}-renv-
 
       - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v1
+        uses: insightsengineering/staged-dependencies-action@fix-validation-report
         with:
           run-system-dependencies: true
           enable-check: false
