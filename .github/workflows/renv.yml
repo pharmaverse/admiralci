@@ -6,8 +6,9 @@ name: Propagate renv.lock
 
 on:
   workflow_run:
-    workflows: [r-renv-lock-gen]
-    types: [completed]
+    workflows: ["Generate renv.lock"]
+    types:
+      - completed
 
 jobs:
   integrity:

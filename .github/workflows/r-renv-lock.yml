@@ -22,6 +22,7 @@ jobs:
         config:
           - {os: ubuntu-20.04, r: '4.0', repos: 'https://cran.microsoft.com/snapshot/2021-03-31/'}
           - {os: ubuntu-20.04, r: '4.1', repos: 'https://cran.microsoft.com/snapshot/2022-03-10/'}
+          - {os: ubuntu-20.04, r: '4.2', repos: 'https://cran.microsoft.com/snapshot/2022-10-31/'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -110,6 +111,7 @@ jobs:
           ))
 
           # Upgrade packages
+          install_min_version("rlang", "1.0.6")
           install_min_version("processx", "3.6.1")
           install_min_version("callr", "3.7.3")
           install_min_version("pkgdown","2.0.7")
