@@ -120,6 +120,7 @@ jobs:
           install_min_version("pkgdown","2.0.7")
           install_min_version("lintr", "3.0.2")
           install_min_version("cli", "3.4.1")
+          install_min_version("assertthat", "0.2.1")
           remotes::install_version("roxygen2", version = "7.2.1", upgrade = "never")
 
           renv::activate(profile = renv_profile)
@@ -141,7 +142,7 @@ jobs:
                   project_dir,
                   adm_dev_suggests[["Package"]],
                   suggests_packages[["Package"]],
-                  c("staged.dependencies")
+                  c("staged.dependencies", "assertthat")
                 ))
               )
             )
