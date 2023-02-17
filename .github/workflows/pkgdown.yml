@@ -17,6 +17,11 @@ on:
         default: main
         required: false
         type: string
+      latest-tag-alt-name:
+        description: "An alternate name to use for 'latest-tag' for multiversion pkgdown docs"
+        default: ""
+        required: false
+        type: string
 
   push:
     branches:
@@ -158,3 +163,4 @@ jobs:
         with:
           path: ${{ github.event.repository.name }}
           default-landing-page: "${{ steps.normalizer.outputs.DOCS_LANDING_PAGE }}"
+          latest-tag-alt-name: "${{ inputs.latest-tag-alt-name }}"
