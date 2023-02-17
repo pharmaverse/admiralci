@@ -111,31 +111,31 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
-
+      - name: Set options(warn=2)
+        run: echo "options(warn = 2)" >> ~/.Rprofile
+        shell: bash
+      
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.local/share/renv
+            ~/.staged.dependencies
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: ${{ runner.os }}-renv-
+      - name: Run Staged dependencies
+        uses: insightsengineering/staged-dependencies-action@v1
+        with:
+          run-system-dependencies: true
+          enable-check: false
+          git-ref: ${{ steps.normalizer.outputs.SD_GIT_REF }}
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      ##################### END boilerplate steps #####################
       - name: Install package
         run: renv::install(".")
         shell: Rscript {0}
         
-      - name: Set options(warn=2)
-        run: |
-          if [ -d "templates" ]
-          then {
-            cd templates
-          } else {
-            echo "No templates directory. Exiting."
-            exit 0
-          }
-          fi
-          for template in $(ls *.R)
-          do {
-            cp ${template} ${template}.bak
-            echo -e "options(warn=2)\n" > ${template}
-            cat ${template}.bak > ${template}
-            rm ${template}.bak
-          }
-          done
-        shell: bash
-
       - name: Run Template Scripts
         run: |
           desc <- read.dcf("DESCRIPTION")
