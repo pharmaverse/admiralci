@@ -3,7 +3,7 @@ title: "Lock File Updates and Propagation"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry"Lock File Updates and Propagation}
+  %\VignetteIndexEntry{Lock File Updates and Propagation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
