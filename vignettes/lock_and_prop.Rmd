@@ -75,3 +75,15 @@ knitr::include_graphics("./prop.png", dpi = 144)
 
 We are keen on continuously evaluating this process as we balance our software development and stability needs.  Please don't hesitate to raise concerns or questions around this process, but at this point in time we have determined this is our best course to maintain a consistent development environment across multiple repository, companies and collaborations.  
 
+# Working with project profiles
+
+The automate generation create the `renv.lock` file for all supported R version by admiral project. Using profiles simplify testing process for in all R environment.
+
+To activate a particular profile, use:
+
+```r
+renv::activate(profile = "4.1")
+```
+
+You can read more about profiles in [renv documentation](https://rstudio.github.io/renv/articles/profiles.html).
+
