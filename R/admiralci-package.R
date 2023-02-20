@@ -8,8 +8,9 @@ tweak_yml_url <- function(...) {
   html <- ..1
 
   links <- xml2::xml_find_all(html, ".//a")
-  if (length(links) == 0)
+  if (length(links) == 0) {
     return(invisible())
+  }
 
   hrefs <- xml2::xml_attr(links, "href")
   needs_tweak <- grepl("\\.yml$", hrefs) & xml2::url_parse(hrefs)$scheme == ""
@@ -42,5 +43,4 @@ tweak_yml_url <- function(...) {
 
   # Tweak page with special custom hook.
   setHook("UserHook::admiralci::tweak_page", tweak_yml_url)
-
 }
