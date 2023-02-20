@@ -14,12 +14,12 @@ on:
         default: ''
         required: false
         type: string
-      status-types:
+      statuses:
         description: |
           Create an issue if one or more of the following
           statuses are reported on the check report.
           This is a comma-separated string of statuses.
-          Allowed statuses are 'NOTE', 'WARNING', and 'ERROR'
+          Allowed statuses are 'NOTE', 'WARN', and 'ERROR'
         default: 'ERROR'
         required: false
         type: string
@@ -30,6 +30,8 @@ on:
         default: '.'
         required: false
         type: string
+
+permissions: write-all
 
 concurrency:
   group: cran-status-${{ github.event.pull_request.number || github.ref }}
@@ -44,47 +46,106 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Get Date
         id: today
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
-      - name: Check Status
         run: |
-          pkg <- paste(desc::desc_get(keys="Package"))
-          url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
-          if (!httr::http_error(url)) {
-            library(rvest)
-            checks <- url %>%
-              read_html() %>%
-              html_element("table") %>%
-              html_table()
-            status_types <- "${{ inputs.status-types }}"
-            statuses <- unlist(strsplit(status_types, split = ","))
-            cran_status <- function(x) {
-              cat(x, file="cran-status.md", append=TRUE, sep="\n")
-            }
-            if (any(checks$Status %in% statuses)) {
-              cran_status(sprintf(
-                "CRAN checks for %s resulted in one or more (%s)s:\n\n",
-                pkg,
-                status_types
-              ))
-              cran_status("\nSee the table below for a summary of the checks run by CRAN:\n\n")
-              cran_status(knitr::kable(checks))
-              cran_status(sprintf(
-                "\n\nAll details and logs are available here: %s", url
-              ))
-              stop("❌ One or more CRAN checks resulted in an invalid status ❌")
-            }
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          
+      - name: Get current package name
+        id: current_package
+        run: |
+          package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
+          echo "package_name=$package_name" >> $GITHUB_OUTPUT 
+
+      - name: Create orphan branch
+        id: create_orphan
+        run: |
+          git config --global --add safe.directory ${PWD}
+          git config --global user.email "113703390+pharmaverse-bot@users.noreply.github.com"
+          git config --global user.name "pharmaverse-bot"
+          git fetch origin cran_status:cran_status || true 
+          cran_status_branch=$(git branch -a --list cran_status)
+          # Try to create a new orphan branch if it does not already exist
+          if [ -z "${cran_status_branch}" ]
+          then {
+            echo "🟡 Create cran_status branch"
+            git checkout --orphan cran_status
+            mkdir -p /tmp/${{ github.sha }}
+            cp -r .git /tmp/${{ github.sha }}
+            cd /tmp/${{ github.sha }}
+            echo "# CRAN Status" > README.md
+            git reset
+            git add --all -f
+            git commit -m "Initialize orphan cran_status branch"
+            orphan_exists='false'
+            git push --set-upstream origin cran_status
+          } else {
+            echo "🟢 cran_status branch exists!"
+            orphan_exists='true'
+            git checkout
           }
-        shell: Rscript {0}
-        working-directory: ${{ inputs.path }}
+          fi
+          echo "orphan_exists=$orphan_exists" >> $GITHUB_OUTPUT 
+      
+      - name: Compute Cran Status md5 codes
+        uses: pharmaverse/admiralci/.github/actions/cran-status-extract@main
+        with: 
+          statuses: "${{ inputs.statuses }}"
+          package: "${{ steps.current_package.outputs.package_name }}"
+
+      - name: Update cran_status branch
+        id: cran_errors_status
+        run: |
+          new_errors=false
+          cran_status_path="${{ inputs.path }}/cran_errors.csv"
+          if [  -e ./cran_errors.csv ]; then
+            current_status_content=$(cat "./cran_errors.csv")
+            mkdir -p cran_status
+            # read previous cran status from this branch (ls sort files by alphabetic number)
+            if [ -z "$(ls -A ./cran_status)" ]; then
+              # case first writing on the orphan branch (cran_status dir is empty)
+              last_status_content="FIRST WRITING"
+            else
+              last_status_file=$(ls ./cran_status | tail -n 1)
+              last_status_content=$(cat "./cran_status/$last_status_file")
+            fi
+            # check if the status is a new error:
+            if [ "$current_status_content" != "$last_status_content" ]; then
+              echo "New errors on the cran status found - package ${{ steps.current_package.outputs.package_name }}"
+              new_errors=true
+              cp ./cran_errors.csv "./cran_status/${{ steps.today.outputs.date }}.csv"
+            else 
+              echo "New errors on the cran status found, but identical to previous ones - package ${{ steps.current_package.outputs.package_name }}"
+            fi
+          else
+            echo "No errors found on the cran status - package ${{ steps.current_package.outputs.package_name }}"
+          fi 
+          echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
 
       - name: Report Status
-        if: failure()
+        if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
           content-filepath: ./${{ inputs.path }}/cran-status.md
           assignees: ${{ inputs.issue-assignees }}
+
+      - name: Clean Repo and add changes
+        if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
+        run: |
+          rm ./cran_errors.csv 2> /dev/null
+          rm ./cran-status.md 2> /dev/null
+          git config --global --add safe.directory ${PWD}
+          git add "./cran_status/${{ steps.today.outputs.date }}.csv"
+
+          
+      - name: Commit and push to orphan branch
+        if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: update cran status "${{ steps.today.outputs.date }}"
+          branch: cran_status
+          create_branch: false
