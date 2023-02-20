@@ -148,7 +148,7 @@ jobs:
           )
           if (length(templates) > 0) {
             exit_codes <- purrr::map_chr(templates, function(file) {
-              cmd <- sprintf("Rscript --vanilla %s", file)
+              cmd <- sprintf("Rscript %s", file)
               system(cmd)
             })
             if (any(exit_codes == 1L)) {
