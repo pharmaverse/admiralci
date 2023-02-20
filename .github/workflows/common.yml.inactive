@@ -97,6 +97,9 @@ jobs:
     if: github.event_name == 'pull_request'
     with:
       r-version: $R_VERSION
+      # Set to true to lint all files each time
+      # the job is run on pull request
+      lint-all-files: false
   links:
     name: Links
     uses: pharmaverse/admiralci/.github/workflows/links.yml@main

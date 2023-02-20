@@ -2,8 +2,10 @@
 .Rhistory
 .Rapp.history
 
-# Session Data files
+# Related R files
 .RData
+*.Rout
+bashtest.sh
 
 # User-specific files
 .Ruserdata
