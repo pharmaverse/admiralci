@@ -25,7 +25,7 @@ For more information about hooks, please read `help("getHook", "base")`.
 
 ## Custom hooks
 
-Currently, the pkgdown do not allow set up any custom action, the changes apply during the executing will modify the `tweak_page` function to execute extra code base on the hook content.
+Currently,  `{pkgdown}` does not allow the set up of any custom action.  However, using custom hooks we can apply changes during execution by using the `tweak_page()` function to execute extra code based on the hook content.
 
 To reproduce this behavior on local environment:
 
@@ -67,7 +67,7 @@ This part is executed automatically on GitHub CI. The developer need to define o
 
 ## Creating hooks
 
-The `UserHook::admiralci::tweak_page` hook should be defined as function. Please note that an error in function will stop the pkgdown from build. The below code showing an example of `tweak_page` function. The most convenient way to set up the hook is to define them in the package `.onLoad` event. 
+The `UserHook::admiralci::tweak_page` hook should be defined as function. Please note that an error in function will stop the pkgdown from building the site. The below code showing an example of `tweak_page` function. The most convenient way to set up the hook is to define them in the package `.onLoad` event. 
 
 
 ```r
