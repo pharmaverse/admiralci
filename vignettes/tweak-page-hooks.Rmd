@@ -23,6 +23,10 @@ This article will go over the following:
 
 For more information about hooks, please read `help("getHook", "base")`.
 
+The examples of issues that can be solved by tweak html file:
+
+- [Links broken on pkgdown site #13](https://github.com/pharmaverse/admiralci/issues/13)
+
 ## Custom hooks
 
 Currently,  `{pkgdown}` does not allow the set up of any custom action.  However, using custom hooks we can apply changes during execution by using the `tweak_page()` function to execute extra code based on the hook content.
