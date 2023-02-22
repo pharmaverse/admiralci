@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04, r: '4.0', repos: 'https://cran.microsoft.com/snapshot/2021-03-31/'}
-          - {os: ubuntu-20.04, r: '4.1', repos: 'https://cran.microsoft.com/snapshot/2022-03-10/'}
-          - {os: ubuntu-20.04, r: '4.2', repos: 'https://cran.microsoft.com/snapshot/2022-10-31/'}
+          - {os: ubuntu-20.04, r: '4.0', repos: 'https://packagemanager.posit.co/cran/2021-03-31/'}
+          - {os: ubuntu-20.04, r: '4.1', repos: 'https://packagemanager.posit.co/cran/2022-03-10/'}
+          - {os: ubuntu-20.04, r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-10-31/'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
           source("renv/activate.R")
           lock_gen_version <- "0.1.1"
           renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
-          cran_r_release <- Sys.getenv("R_CRAN_REPO", "https://cran.microsoft.com/snapshot/2021-03-31")
+          cran_r_release <- Sys.getenv("R_CRAN_REPO", "https://cran.microsoft.com/snapshot/2021-03-31/")
           cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
           unlink(file.path("renv", "profiles", renv_profile), recursive = TRUE)
 
@@ -88,7 +88,7 @@ jobs:
           }
 
           # CRAN repo from R release
-          options("repos" = c("MRAN" = cran_r_release))
+          options("repos" = c("RSPM" = cran_r_release))
 
           renv::install("remotes", repos = options("repos"))
           renv::install("openpharma/staged.dependencies", repos = options("repos"))
@@ -107,7 +107,7 @@ jobs:
           # Set newest CRAN for few packages upgrade
           options("repos" = c(
             "CRAN" = cran_latest,
-            "MRAN" = cran_r_release
+            "RSPM" = cran_r_release
           ))
 
           # Upgrade packages
@@ -116,6 +116,7 @@ jobs:
           install_min_version("rlang", "1.0.6")
           install_min_version("processx", "3.6.1")
           install_min_version("callr", "3.7.3")
+          install_min_version("htmltools", "0.5.2")
           install_min_version("bslib", "0.3.1")
           install_min_version("downlit", "0.4.0")
           install_min_version("withr", "2.4.3")
