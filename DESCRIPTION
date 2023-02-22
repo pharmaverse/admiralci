@@ -23,7 +23,5 @@ Suggests:
     roxygen2,
     spelling,
     styler,
-    covr,
-    xml2,
-    purrr
+    covr
 VignetteBuilder: knitr
