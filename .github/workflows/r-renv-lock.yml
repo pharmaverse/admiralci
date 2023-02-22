@@ -56,7 +56,7 @@ jobs:
       - name: Collect dependencies
         run: |
           source("renv/activate.R")
-          lock_gen_version <- "0.1.3"
+          lock_gen_version <- "0.1.4"
           renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
           cran_r_release <- Sys.getenv("R_CRAN_REPO", "https://packagemanager.posit.co/cran/2021-03-31/")
           cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
