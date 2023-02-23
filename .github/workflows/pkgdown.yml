@@ -135,7 +135,7 @@ jobs:
           rlang::env_unlock(env = pkgdown_env)
           rlang::env_binding_unlock(env = pkgdown_env)
           # Modify tweak_page
-          pkgdown_env$call_hook <- function(hook_name, ...) {
+          call_hook <- function(hook_name, ...) {
             # Get hooks from base::getHook
             hooks <- getHook(paste0("UserHook::admiralci::", hook_name))
             if (!is.list(hooks)) {
@@ -148,8 +148,8 @@ jobs:
             }) %>%
               invisible()
           }
-          environment(pkgdown_env$call_hook) <- pkgdown_env
-
+          environment(call_hook) <- pkgdown_env
+          pkgdown_env$call_hook <- call_hook
           tweak_page <- body(pkgdown_env$tweak_page)
           body(pkgdown_env$tweak_page) <-
             as.call(
