@@ -130,28 +130,22 @@ jobs:
           }
           fi
           Rscript - <<EOF
-
           pkgdown_env <- asNamespace("pkgdown")
           rlang::env_unlock(env = pkgdown_env)
           rlang::env_binding_unlock(env = pkgdown_env)
-          # Modify tweak_page
-          pkgdown_env$call_hook <- function(hook_name, ...) {
-            # Get hooks from base::getHook
+          pkgdown_env\$call_hook <- function(hook_name, ...) {
             hooks <- getHook(paste0("UserHook::admiralci::", hook_name))
             if (!is.list(hooks)) {
               hooks <- list(hooks)
             }
-
-            # Evaluate hooks
             purrr::map(hooks, function(fun) {
               fun(...)
             }) %>%
               invisible()
           }
-          environment(pkgdown_env$call_hook) <- pkgdown_env
-
-          tweak_page <- body(pkgdown_env$tweak_page)
-          body(pkgdown_env$tweak_page) <-
+          environment(pkgdown_env\$call_hook) <- pkgdown_env
+          tweak_page <- body(pkgdown_env\$tweak_page)
+          body(pkgdown_env\$tweak_page) <-
             as.call(
               append(
                 as.list(tweak_page),
@@ -159,13 +153,9 @@ jobs:
                 after=length(tweak_page)
               )
             )
-
           rlang::env_binding_lock(env = pkgdown_env)
           rlang::env_lock(pkgdown_env)
-
-          # Load package
           require(desc::desc_get("Package"), character.only = TRUE)
-
           pkgdown::deploy_to_branch(
             new_process = FALSE,
             ${SUBDIR_OPTION}
