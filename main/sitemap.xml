@@ -13,6 +13,9 @@
     <loc>https://pharmaverse.github.io/admiralci/main/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://pharmaverse.github.io/admiralci/main/articles/tweak-page-hooks.html</loc>
+  </url>
+  <url>
     <loc>https://pharmaverse.github.io/admiralci/main/authors.html</loc>
   </url>
   <url>
@@ -29,5 +32,8 @@
   </url>
   <url>
     <loc>https://pharmaverse.github.io/admiralci/main/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://pharmaverse.github.io/admiralci/main/reference/tweak_yml_url.html</loc>
   </url>
 </urlset>
