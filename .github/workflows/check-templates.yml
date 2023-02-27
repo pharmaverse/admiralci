@@ -111,9 +111,7 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
-      - name: Set options(warn=2)
-        run: echo "options(warn = 2)" >> ~/.Rprofile
-        shell: bash
+ 
       
       - name: Restore cache
         uses: actions/cache@v3
@@ -132,6 +130,10 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
+      - name: Set options(warn=2)
+        run: echo "options(warn = 2)" >> ~/.Rprofile
+        shell: bash
+      
       - name: Install package
         run: renv::install(".")
         shell: Rscript {0}
