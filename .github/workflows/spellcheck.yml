@@ -91,5 +91,4 @@ jobs:
       - name: Run Spellcheck
         uses: insightsengineering/r-spellcheck-action@v3
         with:
-          exclude: data/*,**/*.Rd,**/*.Rmd,**/*.md,**/*.qmd
           additional_options: ""
