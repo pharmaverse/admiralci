@@ -74,7 +74,7 @@ jobs:
         with:
           run-system-dependencies: true
           enable-check: false
-          cran-repos: "RSPM=${R_REPOS}"
+          cran-repos: "RSPM=${{ env.R_REPOS }}"
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
