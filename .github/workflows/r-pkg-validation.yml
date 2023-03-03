@@ -70,7 +70,7 @@ jobs:
           restore-keys: ${{ runner.os }}-renv-
 
       - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@fix-validation-report
+        uses: insightsengineering/staged-dependencies-action@v1.7.2
         with:
           run-system-dependencies: true
           enable-check: false
@@ -80,7 +80,7 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Build report
-        uses: insightsengineering/thevalidatoR@fix-validation-report
+        uses: insightsengineering/thevalidatoR@v1.2.4
         id: validation
         with:
           disable_install_dev_deps: true
