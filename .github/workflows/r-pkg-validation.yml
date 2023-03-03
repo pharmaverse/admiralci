@@ -19,6 +19,7 @@ jobs:
     # Set Github token permissions
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_REPOS: 'https://packagemanager.posit.co/cran/2021-03-31/'
     permissions:
       contents: write
       packages: write
@@ -73,6 +74,7 @@ jobs:
         with:
           run-system-dependencies: true
           enable-check: false
+          cran-repos: "RSPM=${R_REPOS}"
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
@@ -80,6 +82,8 @@ jobs:
       - name: Build report
         uses: insightsengineering/thevalidatoR@fix-validation-report
         id: validation
+        with:
+          disable_install_dev_deps: true
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
