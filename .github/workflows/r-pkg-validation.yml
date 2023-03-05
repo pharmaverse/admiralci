@@ -15,10 +15,11 @@ on:
 jobs:
   r-pkg-validation:
     name: Generate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     # Set Github token permissions
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_REPOS: 'https://packagemanager.posit.co/cran/2021-03-31/'
     permissions:
       contents: write
       packages: write
@@ -69,17 +70,20 @@ jobs:
           restore-keys: ${{ runner.os }}-renv-
 
       - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v1
+        uses: insightsengineering/staged-dependencies-action@v1.7.2
         with:
           run-system-dependencies: true
           enable-check: false
+          cran-repos: "RSPM=${{ env.R_REPOS }}"
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
 
       - name: Build report
-        uses: insightsengineering/thevalidatoR@v1
+        uses: insightsengineering/thevalidatoR@v1.2.4
         id: validation
+        with:
+          disable_install_dev_deps: true
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
