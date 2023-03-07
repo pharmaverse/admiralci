@@ -1,0 +1,45 @@
+---
+name: Create Auto-MR
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      source-branch:
+        description: |
+          Source branch for MR
+        required: true
+        type: string
+      target-branch:
+        description: |
+          Target branch for MR
+          Allowed statuses are 'NOTE', 'WARNING', and 'ERROR'
+        required: true
+        type: string
+      mr-assignees:
+        description: |
+          assignes for the MR
+        required: true
+        type: string
+      
+
+
+concurrency:
+  group: links-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  create-mr:
+    name: Create Merge Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Open pull request
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          FROM_BRANCH: ${{inputs.source-branch}}
+          TO_BRANCH: ${{inputs.target-branch}}
+          REVIEWERS: ${{inputs.mr-assignees}}
