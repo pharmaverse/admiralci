@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/.local/share/renv
+            ~/.cache/R/renv
             ~/.staged.dependencies
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: ${{ runner.os }}-renv-
@@ -91,5 +91,4 @@ jobs:
       - name: Run Spellcheck
         uses: insightsengineering/r-spellcheck-action@v3
         with:
-          exclude: data/*,**/*.Rd,**/*.Rmd,**/*.md,**/*.qmd
           additional_options: ""
