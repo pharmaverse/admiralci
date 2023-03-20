@@ -35,7 +35,7 @@ optional.
 Following the installation of system dependencies, R, and package
 dependencies, each workflow does something different.
 
-### [`check-templates.yml`](./.github/workflows/check-templates.yml)
+### [Check Templates](./.github/workflows/check-templates.yml)
 
 [![Check
 Templates](https://github.com/pharmaverse/admiralci/actions/workflows/check-templates.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/check-templates.yml)
@@ -47,7 +47,7 @@ admiral functions, we want to make sure these template scripts execute
 appropriately. Functions in the template scripts that are deprecated or
 used inappropriately will cause this workflow to fail.
 
-### [`code-coverage.yml`](./.github/workflows/code-coverage.yml)
+### [Testing Code Coverage](./.github/workflows/code-coverage.yml)
 
 [![Code
 Coverage](https://github.com/pharmaverse/admiralci/actions/workflows/code-coverage.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/code-coverage.yml)
@@ -79,7 +79,7 @@ using the following steps:
     # Add, commit and push your new branch
     git add . && git commit -m "Init badges" && git push origin badges
 
-### [`links.yml`](./.github/workflows/links.yml)
+### [Check URLs](./.github/workflows/links.yml)
 
 [![Check
 URLs](https://github.com/pharmaverse/admiralci/actions/workflows/links.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/links.yml)
@@ -91,7 +91,7 @@ links. Occasionally this check will detect false positives of urls that
 look like urls. To remedy, please add this false positive to the
 `.lycheeignore` file.
 
-### [`lintr.yml`](./.github/workflows/lintr.yml)
+### [Lintr Check](./.github/workflows/lintr.yml)
 
 [![Lint](https://github.com/pharmaverse/admiralci/actions/workflows/lintr.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/lintr.yml)
 
@@ -101,7 +101,7 @@ the [`lintr`](https://lintr.r-lib.org/) R package.
 Any [`.lintr`](.lintr) configurations in the repository will be by this
 workflow.
 
-### [`man-pages.yml`](./.github/workflows/man-pages.yml)
+### [ROxygen Comments Check](./.github/workflows/man-pages.yml)
 
 [![Man
 Pages](https://github.com/pharmaverse/admiralci/actions/workflows/man-pages.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/man-pages.yml)
@@ -113,7 +113,7 @@ Workflow failures indicate that the manual pages are not up-to-date with
 ROxygen comments, and corrective actions are provided in the workflow
 log.
 
-### [`pkgdown.yml`](./.github/workflows/pkgdown.yml)
+### [Documentation](./.github/workflows/pkgdown.yml)
 
 [![Documentation](https://github.com/pharmaverse/admiralci/actions/workflows/pkgdown.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/pkgdown.yml)
 
@@ -127,7 +127,7 @@ Moreover, an additional `Versions` dropdown is generated via the
 GitHub Action, so that an end user can view multiple versions of the
 documentation for the package.
 
-### [`r-cmd-check.yml`](./.github/workflows/r-cmd-check.yml)
+### [R CMD Check](./.github/workflows/r-cmd-check.yml)
 
 [![R CMD
 Check](https://github.com/pharmaverse/admiralci/actions/workflows/r-cmd-check.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/r-cmd-check.yml)
@@ -137,7 +137,7 @@ are typically indicative of problems encountered during the check, and
 therefore an indication that the package does not meet quality
 standards.
 
-### [`r-pkg-validation.yml`](./.github/workflows/r-pkg-validation.yml)
+### [R Package Validation](./.github/workflows/r-pkg-validation.yml)
 
 [![R Package Validation
 report](https://github.com/pharmaverse/admiralci/actions/workflows/r-pkg-validation.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/r-pkg-validation.yml)
@@ -147,7 +147,7 @@ create a validation report via
 [theValidatoR](https://github.com/marketplace/actions/r-package-validation-report).
 The PDF report is then attached to the release within GitHub.
 
-### [`readme-render.yml`](./.github/workflows/readme-render.yml)
+### [Render README](./.github/workflows/readme-render.yml)
 
 [![Render
 README](https://github.com/pharmaverse/admiralci/actions/workflows/readme-render.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/readme-render.yml)
@@ -156,7 +156,7 @@ If your codebase uses a [`README.Rmd` file](README.Rmd) (like this
 repository), then this workflow will automatically render a `README.md`
 and commit it to your branch.
 
-### [`spellcheck.yml`](./.github/workflows/spellcheck.yml)
+### [Spellcheck](./.github/workflows/spellcheck.yml)
 
 [![Spelling](https://github.com/pharmaverse/admiralci/actions/workflows/spellcheck.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/spellcheck.yml)
 
@@ -168,7 +168,7 @@ that you want the spell check to ignore, for example *CDISC* is not an
 English word but a common acronym used within Pharma. The workflow will
 flag this until a user adds it to the `inst/WORDLIST`.
 
-### [`style.yml`](./.github/workflows/style.yml)
+### [Styler check](./.github/workflows/style.yml)
 
 [![Style](https://github.com/pharmaverse/admiralci/actions/workflows/style.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/style.yml)
 
@@ -177,6 +177,26 @@ package. Custom style configurations, if any, will be honored by this
 workflow.
 
 Failed workflows are indicative of unstyled code.
+
+### [CRAN Status](./.github/workflows/cran-status.yml)
+
+[![CRAN
+Status](https://github.com/pharmaverse/admiralci/actions/workflows/cran-status.yml/badge.svg)](https://github.com/pharmaverse/admiralci/actions/workflows/cran-status.yml)
+
+This workflow allows you to monitor the current status of checks on
+CRAN, if your package has been published on CRAN. Given that CRAN has
+its own systems on which it runs checks and it might not be possible to
+emulate all of their checks using GitHub Actions or CI/CD, it’s just
+more efficient to let their systems run tests and be notified via a
+GitHub issue if an error is encountered.
+
+Usually CRAN sends out email notifications if errors are encountered
+during their checks but only individual package owners are notified and
+a stringent deadline of 2 weeks is given to remediate the errors on
+CRAN. To mitigate the risk of the package being kicked off CRAN, this
+workflow provides transparency and visibility to all project
+collaborators by creating a GitHub issue so that the errors can be
+remediated before the deadline has passed.
 
 ## How to use these workflows?
 
