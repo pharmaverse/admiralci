@@ -11,6 +11,10 @@ on:
     paths:
       - renv.lock
       - renv/**
+  workflow_run:
+    workflows: ["Generate renv.lock"]
+    types:
+      - completed
 
 jobs:
   integrity:
@@ -50,7 +54,6 @@ jobs:
           - name: admiralonco
             target-branch: devel
             reviewers: |-
-              rossfarrugia
               bundfussr
               cicdguy
           - name: admiraldev
@@ -63,18 +66,15 @@ jobs:
             target-branch: main
             reviewers: |-
               bms63
-              rossfarrugia
               cicdguy
               bundfussr
           - name: admiralophtha
             target-branch: devel
             reviewers: |-
-              rossfarrugia
               cicdguy
           - name: admiral
             target-branch: devel
             reviewers: |-
-              rossfarrugia
               cicdguy
               thomas-neitmann
               bms63
@@ -83,10 +83,12 @@ jobs:
             target-branch: devel
             reviewers: |-
               thomas-neitmann
-              rossfarrugia
               bms63
               bundfussr
-
+          - name: admiralvaccine
+            target-branch: devel
+            reviewers: |-
+              bms63
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3
