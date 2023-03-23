@@ -85,7 +85,10 @@ jobs:
               thomas-neitmann
               bms63
               bundfussr
-
+          - name: admiralvaccine
+            target-branch: devel
+            reviewers: |-
+              bms63
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v3
