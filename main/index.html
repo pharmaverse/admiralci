@@ -50,13 +50,6 @@
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/.git">.git</a> </div></li>
-<!-- end dropdown for versions -->
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -88,15 +81,15 @@
 <p>The underlying mechanisms for installing R and Pandoc are defined in <a href="https://github.com/r-lib/actions" class="external-link"><code>r-lib/actions</code></a>, while the installation of system dependencies and R package dependencies is managed via the <a href="https://github.com/marketplace/actions/staged-dependencies-action" class="external-link">Staged Dependencies GitHub Action</a>. The latter is used in conjunction with the <a href="staged_dependencies.yaml"><code>staged_dependencies.yaml</code></a> file in order to install dependencies that are in the <em>same stage of development</em> as the current package. You can read more about how it works <a href="https://github.com/openpharma/staged.dependencies" class="external-link">here</a>. Note that the latter is not necessary for this workflow to work and is completely optional.</p>
 <p>Following the installation of system dependencies, R, and package dependencies, each workflow does something different.</p>
 <div class="section level3">
-<h3 id="check-templatesyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/check-templates.yml"><code>check-templates.yml</code></a><a class="anchor" aria-label="anchor" href="#check-templatesyml"></a>
+<h3 id="check-templates">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/check-templates.yml">Check Templates</a><a class="anchor" aria-label="anchor" href="#check-templates"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/check-templates.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/check-templates.yml/badge.svg" alt="Check Templates"></a></p>
 <p>This workflow checks for issues within template scripts. For example, in admiral package there are several template scripts with admiral-based functions showing how to build certain ADaM datasets. As we update the admiral functions, we want to make sure these template scripts execute appropriately. Functions in the template scripts that are deprecated or used inappropriately will cause this workflow to fail.</p>
 </div>
 <div class="section level3">
-<h3 id="code-coverageyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/code-coverage.yml"><code>code-coverage.yml</code></a><a class="anchor" aria-label="anchor" href="#code-coverageyml"></a>
+<h3 id="code-coverage">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/code-coverage.yml">Code Coverage</a><a class="anchor" aria-label="anchor" href="#code-coverage"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/code-coverage.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/code-coverage.yml/badge.svg" alt="Code Coverage"></a></p>
 <p>This workflow measures code coverage for unit tests and reports the code coverage as a percentage of the <em>total number of lines covered by unit tests</em> vs. the <em>total number of lines in the codebase</em>.</p>
@@ -117,71 +110,79 @@
 <span id="cb1-12"><a href="#cb1-12"></a>git add . <span class="op">&amp;&amp;</span><span class="st"> </span>git commit <span class="op">-</span>m <span class="st">"Init badges"</span> <span class="op">&amp;&amp;</span><span class="st"> </span>git push origin badges</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="linksyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/links.yml"><code>links.yml</code></a><a class="anchor" aria-label="anchor" href="#linksyml"></a>
+<h3 id="links">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/links.yml">Links</a><a class="anchor" aria-label="anchor" href="#links"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/links.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/links.yml/badge.svg" alt="Check URLs"></a></p>
 <p>This workflow checks whether URLs embedded in code and documentation are valid. Invalid URLs result in workflow failures. This workflow uses <a href="https://github.com/lycheeverse/lychee" class="external-link"><code>lychee</code></a> to detect broken links. Occasionally this check will detect false positives of urls that look like urls. To remedy, please add this false positive to the <code>.lycheeignore</code> file.</p>
 </div>
 <div class="section level3">
-<h3 id="lintryml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/lintr.yml"><code>lintr.yml</code></a><a class="anchor" aria-label="anchor" href="#lintryml"></a>
+<h3 id="lint">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/lintr.yml">Lint</a><a class="anchor" aria-label="anchor" href="#lint"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/lintr.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/lintr.yml/badge.svg" alt="Lint"></a></p>
 <p>Static code analysis is performed by this workflow, which in turn uses the <a href="https://lintr.r-lib.org/" class="external-link"><code>lintr</code></a> R package.</p>
 <p>Any <a href=".lintr"><code>.lintr</code></a> configurations in the repository will be by this workflow.</p>
 </div>
 <div class="section level3">
-<h3 id="man-pagesyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/man-pages.yml"><code>man-pages.yml</code></a><a class="anchor" aria-label="anchor" href="#man-pagesyml"></a>
+<h3 id="man-pages">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/man-pages.yml">Man Pages</a><a class="anchor" aria-label="anchor" href="#man-pages"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/man-pages.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/man-pages.yml/badge.svg" alt="Man Pages"></a></p>
 <p>This workflow checks if the manual pages in the <code>man/</code> directory of the package are up-to-date with ROxygen comments in the code.</p>
 <p>Workflow failures indicate that the manual pages are not up-to-date with ROxygen comments, and corrective actions are provided in the workflow log.</p>
 </div>
 <div class="section level3">
-<h3 id="pkgdownyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/pkgdown.yml"><code>pkgdown.yml</code></a><a class="anchor" aria-label="anchor" href="#pkgdownyml"></a>
+<h3 id="documentation">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/pkgdown.yml">Documentation</a><a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/pkgdown.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/pkgdown.yml/badge.svg" alt="Documentation"></a></p>
 <p>Documentation for the R package is generated via this workflow. This workflow uses the <a href="https://pkgdown.r-lib.org/" class="external-link"><code>pkgdown</code></a> framework to generate documentation in HTML, and the HTML pages are deployed to the <code>gh-pages</code> branch.</p>
 <p>Moreover, an additional <code>Versions</code> dropdown is generated via the <a href="https://github.com/marketplace/actions/r-pkgdown-multi-version-docs" class="external-link"></a> GitHub Action, so that an end user can view multiple versions of the documentation for the package.</p>
 </div>
 <div class="section level3">
-<h3 id="r-cmd-checkyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/r-cmd-check.yml"><code>r-cmd-check.yml</code></a><a class="anchor" aria-label="anchor" href="#r-cmd-checkyml"></a>
+<h3 id="check-r-versions">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/r-cmd-check.yml">Check R Versions</a><a class="anchor" aria-label="anchor" href="#check-r-versions"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/r-cmd-check.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/r-cmd-check.yml/badge.svg" alt="R CMD Check"></a></p>
 <p>This workflow performs <code>R CMD check</code> for the package. Failed workflows are typically indicative of problems encountered during the check, and therefore an indication that the package does not meet quality standards.</p>
 </div>
 <div class="section level3">
-<h3 id="r-pkg-validationyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/r-pkg-validation.yml"><code>r-pkg-validation.yml</code></a><a class="anchor" aria-label="anchor" href="#r-pkg-validationyml"></a>
+<h3 id="validation">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/r-pkg-validation.yml">Validation</a><a class="anchor" aria-label="anchor" href="#validation"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/r-pkg-validation.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/r-pkg-validation.yml/badge.svg" alt="R Package Validation report"></a></p>
 <p>When a new release of the package is made, this workflow executes to create a validation report via <a href="https://github.com/marketplace/actions/r-package-validation-report" class="external-link">theValidatoR</a>. The PDF report is then attached to the release within GitHub.</p>
 </div>
 <div class="section level3">
-<h3 id="readme-renderyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/readme-render.yml"><code>readme-render.yml</code></a><a class="anchor" aria-label="anchor" href="#readme-renderyml"></a>
+<h3 id="render-readme">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/readme-render.yml">Render README</a><a class="anchor" aria-label="anchor" href="#render-readme"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/readme-render.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/readme-render.yml/badge.svg" alt="Render README"></a></p>
 <p>If your codebase uses a <a href="README.Rmd"><code>README.Rmd</code> file</a> (like this repository), then this workflow will automatically render a <code>README.md</code> and commit it to your branch.</p>
 </div>
 <div class="section level3">
-<h3 id="spellcheckyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/spellcheck.yml"><code>spellcheck.yml</code></a><a class="anchor" aria-label="anchor" href="#spellcheckyml"></a>
+<h3 id="spelling">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/spellcheck.yml">Spelling</a><a class="anchor" aria-label="anchor" href="#spelling"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/spellcheck.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/spellcheck.yml/badge.svg" alt="Spelling"></a></p>
 <p>Spellchecks are performed by this workflow, and the <a href="https://docs.ropensci.org/spelling/" class="external-link"><code>spelling</code></a> R package is used to detect spelling mistakes. Failed workflows typically indicate misspelled words. In the <code>inst/WORDLIST</code> file, you can add words and or acronyms that you want the spell check to ignore, for example <em>CDISC</em> is not an English word but a common acronym used within Pharma. The workflow will flag this until a user adds it to the <code>inst/WORDLIST</code>.</p>
 </div>
 <div class="section level3">
-<h3 id="styleyml">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/style.yml"><code>style.yml</code></a><a class="anchor" aria-label="anchor" href="#styleyml"></a>
+<h3 id="code-style">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/style.yml">Code Style</a><a class="anchor" aria-label="anchor" href="#code-style"></a>
 </h3>
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/style.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/style.yml/badge.svg" alt="Style"></a></p>
 <p>Code style is enforced via the <a href="https://styler.r-lib.org/" class="external-link"><code>styler</code></a> R package. Custom style configurations, if any, will be honored by this workflow.</p>
 <p>Failed workflows are indicative of unstyled code.</p>
+</div>
+<div class="section level3">
+<h3 id="cran-status">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/cran-status.yml">CRAN Status</a><a class="anchor" aria-label="anchor" href="#cran-status"></a>
+</h3>
+<p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/cran-status.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/cran-status.yml/badge.svg" alt="CRAN Status"></a></p>
+<p>This workflow allows you to monitor the current status of checks on CRAN, if your package has been published on CRAN. Given that CRAN has its own systems on which it runs checks and it might not be possible to emulate all of their checks using GitHub Actions or CI/CD, it’s just more efficient to let their systems run tests and be notified via a GitHub issue if an error is encountered.</p>
+<p>Usually CRAN sends out email notifications if errors are encountered during their checks but only individual package owners are notified and a stringent deadline of 2 weeks is given to remediate the errors on CRAN. To mitigate the risk of the package being kicked off CRAN, this workflow provides transparency and visibility to all project collaborators by creating a GitHub issue so that the errors can be remediated before the deadline has passed.</p>
 </div>
 </div>
 <div class="section level2">
@@ -197,6 +198,20 @@
 <h3 id="copy-as-is-not-recommended">Copy as-is (not recommended)<a class="anchor" aria-label="anchor" href="#copy-as-is-not-recommended"></a>
 </h3>
 <p>Alternatively, if you want a high level of customization, you could simply copy the workflows as-is from this repository to your repository and modify them to your liking.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="where-to-see-these-workflows-in-action">Where to see these workflows in action?<a class="anchor" aria-label="anchor" href="#where-to-see-these-workflows-in-action"></a>
+</h2>
+<div class="section level3">
+<h3 id="pull-request">Pull Request<a class="anchor" aria-label="anchor" href="#pull-request"></a>
+</h3>
+<p>At the bottom of a pull request, you can check on the status of each workflow: <img src="reference/figures/pr_workflows.jpg" align="left" width="1000" style="margin-left:5px;"></p>
+</div>
+<div class="section level3">
+<h3 id="actions-tab">Actions Tab<a class="anchor" aria-label="anchor" href="#actions-tab"></a>
+</h3>
+<p>Alternatively, you can check on the workflows on the Actions tab in the repository as well: <img src="reference/figures/actions_tab_workflows.jpg" align="left" width="1000" style="margin-left:5px;"></p>
 <!-- Begin links --><!-- End links -->
 </div>
 </div>
