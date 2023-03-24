@@ -222,5 +222,19 @@ Alternatively, if you want a high level of customization, you could
 simply copy the workflows as-is from this repository to your repository
 and modify them to your liking.
 
+## Where to see these workflows in action?
+
+### Pull Request
+
+At the bottom of a pull request, you can check on the status of each
+workflow:
+<img src="man/figures/pr_workflows.jpg" align="left" width="1000" style="margin-left:5px;"/>
+
+### Actions Tab
+
+Alternatively, you can check on the workflows on the Actions tab in the
+repository as well:
+<img src="man/figures/actions_tab_workflows.jpg" align="left" width="1000" style="margin-left:5px;"/>
+
 <!-- Begin links -->
 <!-- End links -->
