@@ -136,7 +136,7 @@ jobs:
 
           if (legacy) {
             renv::snapshot(force = TRUE, prompt = FALSE)
-            return()
+            quit(save = "no", status = 0)
           }
 
           # Set newest CRAN for few packages upgrade
