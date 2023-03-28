@@ -11,10 +11,6 @@ on:
     paths:
       - renv.lock
       - renv/**
-  workflow_run:
-    workflows: ["Generate renv.lock"]
-    types:
-      - completed
 
 jobs:
   integrity:
