@@ -8,5 +8,7 @@ tj-actions/branch-names@v5.4
 tretuna/sync-branches@1.4.0
 .*@users.noreply.github.com
 https://cran.r-project.org/web/checks/check_results_%s.html
+https://packagemanager.posit.co/cran/2022-10-31/
+https://packagemanager.posit.co/cran/2022-03-10/
 https://github.com/pharmaverse/admiralci/blob/HEAD/
 https://packagemanager.posit.co/cran/2021-03-31/
