@@ -58,7 +58,7 @@ jobs:
       - name: Collect dependencies
         run: |
           source("renv/activate.R")
-          lock_gen_version <- "0.1.6"
+          lock_gen_version <- "0.1.7"
           legacy <- identical(Sys.getenv("R_RELEASE_LAGACY"), "true")
           renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
           if (legacy) renv_profile <- paste0(renv_profile, "_legacy")
