@@ -43,20 +43,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/adxx.html">Creating ADXX</a>
+    <a class="dropdown-item" href="articles/lock_and_prop.html">Lock File Updates and Propagation</a>
     <a class="dropdown-item" href="articles/tweak-page-hooks.html">Custom pkgdown tweak page hooks</a>
   </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/.git">.git</a> </div></li>
-<!-- end dropdown for versions -->
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -190,6 +183,12 @@
 <p><a href="https://github.com/pharmaverse/admiralci/actions/workflows/cran-status.yml" class="external-link"><img src="https://github.com/pharmaverse/admiralci/actions/workflows/cran-status.yml/badge.svg" alt="CRAN Status"></a></p>
 <p>This workflow allows you to monitor the current status of checks on CRAN, if your package has been published on CRAN. Given that CRAN has its own systems on which it runs checks and it might not be possible to emulate all of their checks using GitHub Actions or CI/CD, it’s just more efficient to let their systems run tests and be notified via a GitHub issue if an error is encountered.</p>
 <p>Usually CRAN sends out email notifications if errors are encountered during their checks but only individual package owners are notified and a stringent deadline of 2 weeks is given to remediate the errors on CRAN. To mitigate the risk of the package being kicked off CRAN, this workflow provides transparency and visibility to all project collaborators by creating a GitHub issue so that the errors can be remediated before the deadline has passed.</p>
+</div>
+<div class="section level3">
+<h3 id="renv-propagation">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/renv.yml"><code>renv propagation</code></a><a class="anchor" aria-label="anchor" href="#renv-propagation"></a>
+</h3>
+<p>This workflow controls the propagation process for delivering updated <code>renv.lock</code> files across the family of admiral repositories. A vignette has been developed for this process found at <a href="https://pharmaverse.github.io/admiralci/index.html#lock-file-updates-and-propagation" class="external-link">Lock File Updates and Propagation</a></p>
 </div>
 </div>
 <div class="section level2">
