@@ -76,13 +76,20 @@ It's possible to use R version `4.1` and `4.2` with the renv profiles. The profi
 
 # Working with project profiles
 
-The automate generation create the `renv.lock` file for all supported R version by admiral project. Using profiles simplify testing process for in all R environment.
+The automate generation create the `renv.lock` file for all supported R version by admiral project. The use of profiles simplifies the testing process across all R environments.
 
 To activate a particular profile, use:
 
 ```r
 renv::activate(profile = "4.1")
 ```
+
+The available profiles are:
+
+- R 4.0_legacy - To reproduces the checks from R 4.0 CMD CHECK on GitHub CI.
+- R 4.0 - Currently the default development profile.
+- R 4.1 - Generated for R 4.1.
+- R 4.2 - Generated for R 4.2.
 
 You can read more about profiles in [renv documentation](https://rstudio.github.io/renv/articles/profiles.html).
 
