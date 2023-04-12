@@ -145,7 +145,7 @@ jobs:
           ))
 
           # Install latest remotes version
-          renv::install("remotes", repos = options("repos"))
+          renv::install("remotes", repos = cran_latest)
 
           # Upgrade packages
           install_min_version("cpp11", "0.4.3")
