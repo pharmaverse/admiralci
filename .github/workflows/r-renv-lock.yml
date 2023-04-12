@@ -1,0 +1,181 @@
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/r-renv-lock.yml
+
+name: Generate renv.lock
+
+concurrency:
+  group: r-renv-lock-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  r-renv-lock-gen:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-20.04, r: '4.0', repos: 'https://packagemanager.posit.co/cran/2021-03-31/'}
+          - {os: ubuntu-20.04, r: '4.1', repos: 'https://packagemanager.posit.co/cran/2022-03-10/'}
+          - {os: ubuntu-20.04, r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-10-31/'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: true
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      R_CRAN_REPO: ${{ matrix.config.repos }}
+      RENV_PROFILE_NAME: ${{ matrix.config.r }}
+
+    steps:
+      - name: Get branch names
+        id: branch-name
+        uses: tj-actions/branch-names@v5.4
+
+      - name: Checkout repo (PR) 🛎
+        uses: actions/checkout@v3
+        if: github.event_name == 'pull_request'
+        with:
+          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - name: Install system dependencies
+        run: sudo apt update && sudo apt install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev -y
+
+      - name: Collect dependencies
+        run: |
+          source("renv/activate.R")
+          lock_gen_version <- "0.1.6"
+          renv_profile <- Sys.getenv("RENV_PROFILE_NAME", "dev")
+          cran_r_release <- Sys.getenv("R_CRAN_REPO", "https://packagemanager.posit.co/cran/2021-03-31/")
+          cran_latest <- Sys.getenv("CRAN_R_LATEST", "https://cloud.r-project.org")
+          unlink(file.path("renv", "profiles", renv_profile), recursive = TRUE)
+
+          cat("\n==================================\n")
+          cat("Create renv.lock files\n")
+          cat(paste("renv_profile: \"", renv_profile, "\"\n", sep = ""))
+          cat(paste("cran_r_release: \"", cran_r_release, "\"\n", sep = ""))
+          cat(paste("cran_latest: \"", cran_latest, "\"\n", sep = ""))
+          cat("==================================\n")
+
+
+          renv::activate(profile = renv_profile)
+
+          renv_install_suggests <- function(package) {
+            loc_path <- find.package("admiraldev", lib.loc = .libPaths(), quiet = TRUE)
+            suggests <-
+              renv:::renv_dependencies_discover_description(loc_path, fields = "Suggests")[["Package"]]
+            suggests <- suggests[!(suggests %in% c("admiral", "admiraldev", "admiralci", "admiral.test"))]
+            renv::install(suggests, repos = options("repos"))
+          }
+
+          install_min_version <- function(pkg, version) {
+            upgrade <- try(packageVersion(pkg) >= version, silent = TRUE)
+            if (!isTRUE(upgrade)) {
+              remotes::install_version(pkg, version = version, upgrade = "never")
+            }
+          }
+
+          # CRAN repo from R release
+          options("repos" = c("RSPM" = cran_r_release))
+
+          renv::install("remotes", repos = options("repos"))
+          renv::install("openpharma/staged.dependencies", repos = options("repos"))
+
+          # Packages from stage dependencies to ignore
+          renv::settings$ignored.packages(c("admiral", "admiraldev", "admiral.test", "admiralci"))
+
+          renv::install("pharmaverse/admiral.test@devel", repos = options("repos"))
+          renv::install("pharmaverse/admiraldev@devel", repos = options("repos"))
+          renv_install_suggests("admiraldev")
+          renv_install_suggests("admiral.test")
+
+          # Install dependencies
+          renv::install(repos = options("repos"))
+
+          # Set newest CRAN for few packages upgrade
+          options("repos" = c(
+            "CRAN" = cran_latest,
+            "RSPM" = cran_r_release
+          ))
+
+          # Upgrade packages
+          install_min_version("xml2", "1.3.3")
+          install_min_version("desc", "1.4.2")
+          install_min_version("rlang", "1.0.6")
+          install_min_version("processx", "3.6.1")
+          install_min_version("callr", "3.7.3")
+          install_min_version("htmltools", "0.5.2")
+          install_min_version("sass", "0.4.0")
+          install_min_version("bslib", "0.3.1")
+          install_min_version("xfun", "0.34")
+          install_min_version("waldo","0.4.0")
+          install_min_version("evaluate", "0.15")
+          install_min_version("knitr", "1.40")
+          install_min_version("R.cache", "0.15")
+          install_min_version("vctrs", "0.4.1")
+          install_min_version("styler", "1.8.0")
+          install_min_version("downlit", "0.4.0")
+          install_min_version("withr", "2.4.3")
+          install_min_version("rmarkdown","2.17")
+          install_min_version("pkgdown","2.0.7")
+          install_min_version("lintr", "3.0.2")
+          install_min_version("cli", "3.4.1")
+          install_min_version("assertthat", "0.2.1")
+          install_min_version("testthat","3.1.7")
+          install_min_version("styler","1.9.1")
+          remotes::install_version("roxygen2", version = "7.2.1", upgrade = "never")
+
+          renv::activate(profile = renv_profile)
+
+          renv::settings$snapshot.type("custom")
+          .get_dependencies <- function(project_dir) {
+
+            admdev_loc <- find.package("admiraldev", lib.loc = .libPaths(), quiet = TRUE)
+            adm_dev_suggests <- if(length(admdev_loc) != 0) {
+              renv:::renv_dependencies_discover_description(admdev_loc, fields = c("Depends", "Imports", "LinkingTo", "Suggests"))
+            } else {
+              data.frame(Packages = character(0))
+            }
+            suggests_packages <- renv:::renv_dependencies_discover_description(project_dir, fields = "Suggests")
+
+            packages <- names(
+              renv:::renv_package_dependencies(
+                unique(c(
+                  project_dir,
+                  adm_dev_suggests[["Package"]],
+                  suggests_packages[["Package"]],
+                  c("staged.dependencies", "assertthat")
+                ))
+              )
+            )
+            packages[!(packages %in% c("admiral", "admiraldev", "admiralci", "admiral.test"))]
+          }
+
+          options(renv.snapshot.filter = .get_dependencies)
+
+          renv::snapshot(force = TRUE, prompt = FALSE)
+          if (identical(renv_profile, "4.0")) {
+            file.copy(renv::paths$lockfile(), "renv.lock", overwrite = TRUE)
+          }
+        shell: Rscript {0}
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Automatic renv profile update.
+          file_pattern: 'renv.lock renv/profiles/*'
+          commit_user_name: pharmaverse-bot
+          commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
+          create_branch: true
