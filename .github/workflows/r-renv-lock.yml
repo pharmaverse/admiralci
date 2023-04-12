@@ -93,7 +93,7 @@ jobs:
                   project_dir,
                   adm_dev_suggests[["Package"]],
                   suggests_packages[["Package"]],
-                  c("staged.dependencies", "assertthat")
+                  c("staged.dependencies", "assertthat", "renv")
                 ))
               )
             )
@@ -120,7 +120,6 @@ jobs:
           # CRAN repo from R release
           options("repos" = c("RSPM" = cran_r_release))
 
-          renv::install("remotes", repos = options("repos"))
           renv::install("openpharma/staged.dependencies", repos = options("repos"))
 
           # Packages from stage dependencies to ignore
@@ -145,8 +144,13 @@ jobs:
             "RSPM" = cran_r_release
           ))
 
+          # Install latest remotes version
+          renv::install("remotes", repos = options("repos"))
+
           # Upgrade packages
           install_min_version("cpp11", "0.4.3")
+          install_min_version("ellipsis", "0.3.2")
+          install_min_version("lifecycle", "1.0.1")
           install_min_version("xml2", "1.3.3")
           install_min_version("desc", "1.4.2")
           install_min_version("rlang", "1.0.6")
