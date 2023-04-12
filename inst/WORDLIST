@@ -1,4 +1,3 @@
-ADXX
 ADaM
 CDISC
 CMD
@@ -8,8 +7,15 @@ Pharmaverse
 README
 ROxygen
 codebase
+codeowner
+codeowners
+cran
 dropdown
+pharmaverse
 pkgdown
+renv
+repo
+repos
 reproducibility
 theValidatoR
 unstyled
