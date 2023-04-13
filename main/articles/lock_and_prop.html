@@ -48,13 +48,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/.git">.git</a> </div></li>
-<!-- end dropdown for versions -->
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -76,7 +69,8 @@
 
 
 
-<script src="lock_and_prop_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Lock File Updates and Propagation</h1>
             
@@ -92,76 +86,169 @@
 </h2>
 <p>This article will go over the following:</p>
 <ul>
-<li>The process for requesting an update to the Lock Files, i.e. <code>renv.lock</code>, for the <a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a> family of packages.</li>
-<li>How <a href="https://pharmaverse.github.io/admiralci" class="external-link">admiralci</a> uses a propagation process to update <code>renv.lock</code> files across the family of <a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a> packages.</li>
+<li>The process for requesting an update to the Lock Files,
+i.e. <code>renv.lock</code>, for the <a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a> family of
+packages.</li>
+<li>How <a href="https://pharmaverse.github.io/admiralci" class="external-link">admiralci</a> uses a propagation process to update
+<code>renv.lock</code> files across the family of <a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a>
+packages.</li>
 </ul>
 <div class="section level3">
 <h3 id="updates-to-lock-files">Updates to Lock Files<a class="anchor" aria-label="anchor" href="#updates-to-lock-files"></a>
 </h3>
-<p>The intention of the <code>renv.lock</code> file is to create a harmonized development environment across our many different companies and collaborators. The core team feels that if everyone is working with the same version of R and the same versions of R packages then communication around development issues will be much easier.</p>
-<p>Unfortunately, this adoption of a <code>renv.lock</code> file also creates a few barriers for our development process. First, if we <strong>lock</strong> in a version of R and R packages then we can not quickly adopt the latest and greatest of updates from new releases. Second, how does a team decide to update a certain package or version of R and who gets to make that final call? Finally, when do we make updates to the lock file. Hopefully, the below will provide some guidance around these issues. Please note, these process might change over time and admiral developers are encouraged to stay up to date with the latest processes and participate in the discussion.</p>
-<p><strong>Note:</strong> Through GitHub Actions we continuously test admiral’s integration with the latest 3 snapshots of dependent R packages on CRAN that are closest in date to latest 3 versions of R. Please see <a href="https://pharmaverse.github.io/admiraldev/devel/articles/pr_review_guidance.html#github-actionsworkflows" class="external-link">GitHub Actions/Workflows</a> on the <a href="https://pharmaverse.github.io/admiraldev/main/" class="external-link">admiraldev</a> site for more information on this process.</p>
+<p>The intention of the <code>renv.lock</code> file is to create a
+harmonized development environment across our many different companies
+and collaborators. The core team feels that if everyone is working with
+the same version of R and the same versions of R packages then
+communication around development issues will be much easier.</p>
+<p>Unfortunately, this adoption of a <code>renv.lock</code> file also
+creates a few barriers for our development process. First, if we
+<strong>lock</strong> in a version of R and R packages then we can not
+quickly adopt the latest and greatest of updates from new releases.
+Second, how does a team decide to update a certain package or version of
+R and who gets to make that final call? Finally, when do we make updates
+to the lock file. Hopefully, the below will provide some guidance around
+these issues. Please note, these process might change over time and
+admiral developers are encouraged to stay up to date with the latest
+processes and participate in the discussion.</p>
+<p><strong>Note:</strong> Through GitHub Actions we continuously test
+admiral’s integration with the latest 3 snapshots of dependent R
+packages on CRAN that are closest in date to latest 3 versions of R.
+Please see <a href="https://pharmaverse.github.io/admiraldev/devel/articles/pr_review_guidance.html#github-actionsworkflows" class="external-link">GitHub
+Actions/Workflows</a> on the <a href="https://pharmaverse.github.io/admiraldev/main/" class="external-link">admiraldev</a> site for more
+information on this process.</p>
 <div class="section level4">
 <h4 id="r-package-updates-and-lock-files">R Package Updates and Lock Files<a class="anchor" aria-label="anchor" href="#r-package-updates-and-lock-files"></a>
 </h4>
-<p>As you gathered, package updates to the <code>renv.lock</code> file are permissible and needed as our family grows and dependent packages and R versions change over time.</p>
-<p>Most of the scenarios for updates can be slotted into the following:</p>
+<p>As you gathered, package updates to the <code>renv.lock</code> file
+are permissible and needed as our family grows and dependent packages
+and R versions change over time.</p>
+<p>Most of the scenarios for updates can be slotted into the
+following:</p>
 <ol style="list-style-type: decimal">
-<li>A new function in a dependent package, e.g. <a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a> is available and could be utilized in a new admiral function.</li>
-<li>A new package is available with new functions that could greatly simplify our code base or add in additional functionality.</li>
-<li>A breaking bug is discovered in a dependent package that breaks backward compatibility for that package with <a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a>.</li>
+<li>A new function in a dependent package, e.g. <a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a> is
+available and could be utilized in a new admiral function.</li>
+<li>A new package is available with new functions that could greatly
+simplify our code base or add in additional functionality.</li>
+<li>A breaking bug is discovered in a dependent package that breaks
+backward compatibility for that package with
+<a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a>.</li>
 <li>A dependency is no longer used in <a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a>.</li>
-<li>A dependency package cause an issue in R checks or R-CMD checks to fail .</li>
+<li>A dependency package cause an issue in R checks or R-CMD checks to
+fail .</li>
 </ol>
-<p>The first step for requesting an update for a R package in the <code>renv.lock</code> file is to raise it in our <a href="https://app.slack.com/client/T028PB489D3/C028SJ83KM1" class="external-link">slack channel</a>. The next step is to make an issue for it in the <a href="https://github.com/pharmaverse/admiralci/" class="external-link">admiralci repository</a> and tag <a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a> leads. This will create discussion around why this update is needed. The <code>admiralci</code> leads will then make the final decision (<strong>almost always in the affirmative</strong>) and we can move this to the attention of other admiral extension package leads. Once all leads are aware of this needed update, then the <code>renv.lock</code> file for the entire admiral family packages will be updated through a <strong>centrally controlled propagation processes</strong>. It is expected that all repositories adopt this update <code>renv.lock</code> file.</p>
+<p>The first step for requesting an update for a R package in the
+<code>renv.lock</code> file is to raise it in our <a href="https://app.slack.com/client/T028PB489D3/C028SJ83KM1" class="external-link">slack
+channel</a>. The next step is to make an issue for it in the <a href="https://github.com/pharmaverse/admiralci/" class="external-link">admiralci
+repository</a> and tag <a href="https://pharmaverse.github.io/admiral/" class="external-link">admiral</a> leads. This will create
+discussion around why this update is needed. The <code>admiralci</code>
+leads will then make the final decision (<strong>almost always in the
+affirmative</strong>) and we can move this to the attention of other
+admiral extension package leads. Once all leads are aware of this needed
+update, then the <code>renv.lock</code> file for the entire admiral
+family packages will be updated through a <strong>centrally controlled
+propagation processes</strong>. It is expected that all repositories
+adopt this update <code>renv.lock</code> file.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="propagation-process">Propagation Process<a class="anchor" aria-label="anchor" href="#propagation-process"></a>
 </h3>
-<p>Through GitHub Actions we have developed the ability to <strong>propagate</strong> updated lock files with our preferred versions of R and R packages throughout the family of admiral packages. This ensures that developers working on <code>{admiral.test}</code> and <code>{admiralonco}</code> have the same common environment as those working on <a href="https://pharmaverse.github.io/admiraldev/main/" class="external-link">admiraldev</a> and <code>{admiralvaccines}</code>.</p>
-<p>The file that does the propagation process is called <a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/renv.yml" class="external-link"><code>renv.yml</code></a> located in the <code>.github/workflows</code> folder of the <a href="https://github.com/pharmaverse/admiralci/" class="external-link">admiralci repository</a>.</p>
-<p>The process is implemented to generate <code>renv.lock</code> file automatically. It will be done for all supported R releases that need to be compatible with admiral. The propagation occurs in the following steps:</p>
+<p>Through GitHub Actions we have developed the ability to
+<strong>propagate</strong> updated lock files with our preferred
+versions of R and R packages throughout the family of admiral packages.
+This ensures that developers working on <code>{admiral.test}</code> and
+<code>{admiralonco}</code> have the same common environment as those
+working on <a href="https://pharmaverse.github.io/admiraldev/main/" class="external-link">admiraldev</a> and
+<code>{admiralvaccines}</code>.</p>
+<p>The file that does the propagation process is called <a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/renv.yml" class="external-link"><code>renv.yml</code></a>
+located in the <code>.github/workflows</code> folder of the <a href="https://github.com/pharmaverse/admiralci/" class="external-link">admiralci
+repository</a>.</p>
+<p>The process is implemented to generate <code>renv.lock</code> file
+automatically. It will be done for all supported R releases that need to
+be compatible with admiral. The propagation occurs in the following
+steps:</p>
 <ol style="list-style-type: decimal">
-<li>The modification of <code>r-renv-lock.yml</code> triggers regenerate the package dependencies that automatically commit changes for <code>renv.lock</code>.</li>
-<li>A Pull Request will be created in all admiral family repos as seen below with the tile <strong>Propagate renv.lock from pharmaverse/admiralci</strong> title.<br>
+<li>The modification of <code>r-renv-lock.yml</code> triggers regenerate
+the package dependencies that automatically commit changes for
+<code>renv.lock</code>.</li>
+<li>A Pull Request will be created in all admiral family repos as seen
+below with the tile <strong>Propagate renv.lock from
+pharmaverse/admiralci</strong> title.<br>
 </li>
-<li>A <code>pharmaverse-bot</code> is the author of the Pull Request as seen in <code>[2]</code> in the image below.<br>
+<li>A <code>pharmaverse-bot</code> is the author of the Pull Request as
+seen in <code>[2]</code> in the image below.<br>
 </li>
-<li>The bot assign relevant reviewers to the Pull Requests. The reviewers tend to be admins or core contributors to the repo and can be adjusted if needed.</li>
+<li>The bot assign relevant reviewers to the Pull Requests. The
+reviewers tend to be admins or core contributors to the repo and can be
+adjusted if needed.</li>
 </ol>
-<p><strong>Note:</strong> In <code>[1]</code> you will see that one reviewer has a special shield symbol next to their name. This person is a codeowner of the <code>common.yml</code> and is alerted whenever a change is made to this file. You can read more about codeowners on <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" class="external-link">About Code Owners</a> in GitHub Documentation</p>
+<p><strong>Note:</strong> In <code>[1]</code> you will see that one
+reviewer has a special shield symbol next to their name. This person is
+a codeowner of the <code>common.yml</code> and is alerted whenever a
+change is made to this file. You can read more about codeowners on <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" class="external-link">About
+Code Owners</a> in GitHub Documentation</p>
 <p><img src="prop.png"><!-- --></p>
 <div class="section level4">
 <h4 id="r-version-updates-and-lock-files">R Version Updates and Lock Files<a class="anchor" aria-label="anchor" href="#r-version-updates-and-lock-files"></a>
 </h4>
-<p>Currently, the family of admiral packages operate 3 R versions back from the latest R version release. For example, if the latest release of R is <code>4.2</code>, then our <code>renv.lock</code> files will use <code>4.0.5</code>. We use <code>4.0.5</code> as this has the latest patches available for <code>4.0</code>. We will use the propagation process to update the latest version of R when a new release becomes available.</p>
-<p>It’s possible to use R version <code>4.1</code> and <code>4.2</code> with the renv profiles. The profiles are used to reproduce the development environment. Please notice that the profiles for R <code>4.1</code> and <code>4.2</code> using different cran snapshot. The snapshot is generated by discovering the packages used by <code>admiral</code> packages, with extra rules for missing dependencies. The script is defining minimum version or specific version of packages. For example, we can define <code>roxygen2</code> version that is used across all other packages to generate documentation.</p>
-<p><strong>Note:</strong> Through GitHub Actions we continuously test admiral’s integration with the latest three version of R and closest snapshot of R packages to the R version release date. For example, while we use version <code>4.0.5</code> in development we are continuously testing R version <code>4.1</code> and <code>4.2</code> for compatibility with <code>admiral</code>.</p>
+<p>Currently, the family of admiral packages operate 3 R versions back
+from the latest R version release. For example, if the latest release of
+R is <code>4.2</code>, then our <code>renv.lock</code> files will use
+<code>4.0.5</code>. We use <code>4.0.5</code> as this has the latest
+patches available for <code>4.0</code>. We will use the propagation
+process to update the latest version of R when a new release becomes
+available.</p>
+<p>It’s possible to use R version <code>4.1</code> and <code>4.2</code>
+with the renv profiles. The profiles are used to reproduce the
+development environment. Please notice that the profiles for R
+<code>4.1</code> and <code>4.2</code> using different cran snapshot. The
+snapshot is generated by discovering the packages used by
+<code>admiral</code> packages, with extra rules for missing
+dependencies. The script is defining minimum version or specific version
+of packages. For example, we can define <code>roxygen2</code> version
+that is used across all other packages to generate documentation.</p>
+<p><strong>Note:</strong> Through GitHub Actions we continuously test
+admiral’s integration with the latest three version of R and closest
+snapshot of R packages to the R version release date. For example, while
+we use version <code>4.0.5</code> in development we are continuously
+testing R version <code>4.1</code> and <code>4.2</code> for
+compatibility with <code>admiral</code>.</p>
 </div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="working-with-project-profiles">Working with project profiles<a class="anchor" aria-label="anchor" href="#working-with-project-profiles"></a>
 </h2>
-<p>The automate generation create the <code>renv.lock</code> file for all supported R version by admiral project. The use of profiles simplifies the testing process across all R environments.</p>
+<p>The automate generation create the <code>renv.lock</code> file for
+all supported R version by admiral project. The use of profiles
+simplifies the testing process across all R environments.</p>
 <p>To activate a particular profile, use:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/activate.html" class="external-link">activate</a></span><span class="op">(</span>profile <span class="op">=</span> <span class="st">"4.1"</span><span class="op">)</span></code></pre></div>
 <p>The available profiles are:</p>
 <ul>
-<li>R 4.0_legacy - To reproduces the checks from R 4.0 CMD CHECK on GitHub CI.</li>
+<li>R 4.0_legacy - To reproduces the checks from R 4.0 CMD CHECK on
+GitHub CI.</li>
 <li>R 4.0 - Currently the default development profile.</li>
 <li>R 4.1 - Generated for R 4.1.</li>
 <li>R 4.2 - Generated for R 4.2.</li>
 </ul>
-<p>You can read more about profiles in <a href="https://rstudio.github.io/renv/articles/profiles.html" class="external-link">renv documentation</a>.</p>
+<p>You can read more about profiles in <a href="https://rstudio.github.io/renv/articles/profiles.html" class="external-link">renv
+documentation</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="containers">Containers<a class="anchor" aria-label="anchor" href="#containers"></a>
 </h2>
-<p>Several <code>admiral</code> developers are looking into a container strategy to be utilized in a parallel with the <code>renv.lock</code> strategy.</p>
-<p>We are keen on continuously evaluating this process as we balance our software development and stability needs. Please don’t hesitate to raise concerns or questions around this process, but at this point in time we have determined this is our best course to maintain a consistent development environment across multiple repository, companies and collaborations.</p>
+<p>Several <code>admiral</code> developers are looking into a container
+strategy to be utilized in a parallel with the <code>renv.lock</code>
+strategy.</p>
+<p>We are keen on continuously evaluating this process as we balance our
+software development and stability needs. Please don’t hesitate to raise
+concerns or questions around this process, but at this point in time we
+have determined this is our best course to maintain a consistent
+development environment across multiple repository, companies and
+collaborations.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

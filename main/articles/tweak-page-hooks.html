@@ -48,13 +48,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/.git">.git</a> </div></li>
-<!-- end dropdown for versions -->
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -76,7 +69,8 @@
 
 
 
-<script src="tweak-page-hooks_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Custom pkgdown tweak page hooks</h1>
             
@@ -95,15 +89,20 @@
 <li>The process for using custom hooks in R packages</li>
 <li>Example how to create custom hooks</li>
 </ul>
-<p>For more information about hooks, please read <code><a href="https://rdrr.io/r/base/userhooks.html" class="external-link">help("getHook", "base")</a></code>.</p>
+<p>For more information about hooks, please read
+<code><a href="https://rdrr.io/r/base/userhooks.html" class="external-link">help("getHook", "base")</a></code>.</p>
 <p>The examples of issues that can be solved by tweak html file:</p>
 <ul>
-<li><a href="https://github.com/pharmaverse/admiralci/issues/13" class="external-link">Links broken on pkgdown site #13</a></li>
+<li><a href="https://github.com/pharmaverse/admiralci/issues/13" class="external-link">Links
+broken on pkgdown site #13</a></li>
 </ul>
 <div class="section level3">
 <h3 id="custom-hooks">Custom hooks<a class="anchor" aria-label="anchor" href="#custom-hooks"></a>
 </h3>
-<p>Currently, <a href="https://pkgdown.r-lib.org" class="external-link">pkgdown</a> does not allow the set up of any custom action. However, using custom hooks we can apply changes during execution by using the <code>tweak_page()</code> function to execute extra code based on the hook content.</p>
+<p>Currently, <a href="https://pkgdown.r-lib.org" class="external-link">pkgdown</a> does not allow the set up of any
+custom action. However, using custom hooks we can apply changes during
+execution by using the <code>tweak_page()</code> function to execute
+extra code based on the hook content.</p>
 <p>To reproduce this behavior on local environment:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pkgdown_env</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-internal.html" class="external-link">asNamespace</a></span><span class="op">(</span><span class="st">"pkgdown"</span><span class="op">)</span>
@@ -137,12 +136,17 @@
 
 <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/env_binding_lock.html" class="external-link">env_binding_lock</a></span><span class="op">(</span>env <span class="op">=</span> <span class="va">pkgdown_env</span><span class="op">)</span>
 <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/env_lock.html" class="external-link">env_lock</a></span><span class="op">(</span><span class="va">pkgdown_env</span><span class="op">)</span></code></pre></div>
-<p>This part is executed automatically on GitHub CI. The developer need to define only the hooks.</p>
+<p>This part is executed automatically on GitHub CI. The developer need
+to define only the hooks.</p>
 </div>
 <div class="section level3">
 <h3 id="creating-hooks">Creating hooks<a class="anchor" aria-label="anchor" href="#creating-hooks"></a>
 </h3>
-<p>The <code>UserHook::admiralci::tweak_page</code> hook should be defined as function. Please note that an error in function will stop the pkgdown from building the site. The below code showing an example of <code>tweak_page</code> function. The most convenient way to set up the hook is to define them in the package <code>.onLoad</code> event.</p>
+<p>The <code>UserHook::admiralci::tweak_page</code> hook should be
+defined as function. Please note that an error in function will stop the
+pkgdown from building the site. The below code showing an example of
+<code>tweak_page</code> function. The most convenient way to set up the
+hook is to define them in the package <code>.onLoad</code> event.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Tweak page with special custom hook.</span>
 <span class="fu"><a href="https://rdrr.io/r/base/userhooks.html" class="external-link">setHook</a></span><span class="op">(</span><span class="st">"UserHook::admiralci::tweak_page"</span>, <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span>
