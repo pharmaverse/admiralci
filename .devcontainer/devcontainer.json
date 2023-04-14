@@ -1,0 +1,41 @@
+{
+	"name": "Admiral R (RStudio) container",
+	"build": {
+		"dockerfile": "Dockerfile",
+		// Update VARIANT to pick a specific R version: 4.2, 4.1, 4.0
+		// Update ROCKER_VERSION to pick a specific rocker version: r-ver, tidverser(contains rstudio/posit ide)
+		// More info: https://github.com/rocker-org/devcontainer-images/pkgs/container/devcontainer%2Ftidyverse
+		"args": { "VARIANT": "4.0", "ROCKER_VERSION": "tidyverse" }
+	},
+
+	// Install Dev Container Features. More info: https://containers.dev/features
+	"features": {
+		"ghcr.io/rocker-org/devcontainer-features/renv-cache:latest": {}
+	},
+	"postCreateCommand": "R -q -e 'renv::install()'",
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vsls-contrib.codetour",
+				"GitHub.copilot"
+			]
+		}
+	},
+
+	// RStudio ports
+	"forwardPorts": [8787],
+	"portsAttributes": {
+		"8787": {
+			"label": "Rstudio",
+			"requireLocalPort": true,
+			"onAutoForward": "ignore"
+		}
+	},
+
+	// Use 'postAttachCommand' to run commands after the container is started.
+	"postAttachCommand": "sudo rstudio-server start"
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root
+	// "remoteUser": "root"
+}
