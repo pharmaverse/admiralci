@@ -1,0 +1,122 @@
+---
+name: Deploy Docker Image
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      r_version:
+        description: R Version
+        required: true
+        type: choice
+        default: "4.2.3"
+        options:
+          - "4.0.5"
+          - "4.1.0"
+          - "4.1.1"
+          - "4.1.2"
+          - "4.1.3"
+          - "4.2.0"
+          - "4.2.1"
+          - "4.2.2"
+          - "latest"
+      tag:
+        description: |
+          Custom Image Tag/Version. Defaults to current branch if unspecified.
+        required: false
+        default: ${GITHUB_REF##*/}
+      tag_latest:
+        description: Tag image as `latest`
+        default: false
+        type: boolean
+
+permissions: write-all 
+
+concurrency:
+  group: deploy-docker-image-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-image:
+    name: Deploy Docker Image
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/tidyverse:latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get Date
+        id: today
+        run: |
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          
+      - name: Get current package name 
+        id: current_package
+        run: |
+          package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
+          echo "package_name=$package_name" >> $GITHUB_OUTPUT 
+      
+      # TODO: add step to normalize inputs
+
+
+      - name: Log in to the Container registry 🗝
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }} 
+
+       - name: Set build variables 📐
+        id: build_vars
+        run: |
+          # Set Image name
+          image_name="${{ steps.current_package.outputs.package_name }}"
+          echo "IMAGE_NAME=${image_name}" >> $GITHUB_OUTPUT
+          r_version=${{ github.event.inputs.r_version }
+          echo "R_VERSION=${r_version}" >> $GITHUB_OUTPUT
+          minor_version=${r_version:0:3}
+          echo "R_VERSION_MINOR=${minor_version}" >> $GITHUB_OUTPUT
+          if [ "${GITHUB_REF##*/}" == "main" ]; then staged_deps_ref=main; else staged_deps_ref=devel; fi;
+          echo "STAGED_DEP_REF=${staged_deps_ref}" >> $GITHUB_OUTPUT
+
+      # Question for Dinakar: way to speed up building image by caching docker layers for the docker build ? 
+       - name: Cache Docker layers ♻️
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ build_vars.outputs.package_name }}-${{ build_vars.outputs.R_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-${{ build_vars.outputs.package_name }}-${{ build_vars.outputs.R_VERSION }}
+
+
+      - name: Build and push image 🏗
+        uses: docker/build-push-action@v3
+        with:
+          context: ./
+          file: Dockerfile
+          push: true
+          tags: ${{ github.event.inputs.tags }
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          build-args: |
+            R_VERSION=${{ build_vars.outputs.R_VERSION }}
+            R_VERSION_MINOR=${{ build_vars.outputs.R_VERSION_MINOR }}
+            STAGED_DEP_REF=${{ build_vars.outputs.STAGED_DEP_REF }}
+          platforms: linux/amd64
+
+      - name: Move cache ♻️
+        run: |
+          rm -rf /tmp/.buildx-cache
+          if [ -f /tmp/.buildx-cache-new ]
+          then {
+            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          }
+          fi
+          
+          
+
+
+      
