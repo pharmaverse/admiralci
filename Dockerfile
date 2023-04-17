@@ -1,5 +1,5 @@
 # Build arguments
-ARG R_VERSION=4.1.3
+ARG R_VERSION=4.2.3
 ARG STAGED_DEP_REF=devel
 
 # R version managed by --build-arg at build cmd 
@@ -7,7 +7,7 @@ ARG STAGED_DEP_REF=devel
 # Fetch base image
 FROM rocker/rstudio:${R_VERSION}
 
-ENV R_VERSION_MINOR=4.1
+ENV R_VERSION_MINOR=4.2
 
 
 # Set image metadata
@@ -21,7 +21,7 @@ WORKDIR /workspace
 COPY "renv/profiles/${R_VERSION_MINOR}/renv.lock" renv.lock
 
 # Copy installation scripts TODO: see needed scripts for admiral
-COPY --chmod=0755 ./.github/actions/push-docker-image/scripts ./scripts 
+COPY --chmod=0755 ./.github/scripts ./scripts 
 
 # Install sysdeps
 RUN ./scripts/install_sysdeps.sh
