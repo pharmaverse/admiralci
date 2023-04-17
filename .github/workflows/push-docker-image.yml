@@ -72,16 +72,16 @@ jobs:
 
       - name: Set build variables 📐
         id: build_vars
-          run: |
-            # Set Image name
-            image_name="${{ steps.current_package.outputs.package_name }}"
-            echo "IMAGE_NAME=${image_name}" >> $GITHUB_OUTPUT
-            r_version=${{ github.event.inputs.r_version }
-            echo "R_VERSION=${r_version}" >> $GITHUB_OUTPUT
-            minor_version=${r_version:0:3}
-            echo "R_VERSION_MINOR=${minor_version}" >> $GITHUB_OUTPUT
-            if [ "${GITHUB_REF##*/}" == "main" ]; then staged_deps_ref=main; else staged_deps_ref=devel; fi;
-            echo "STAGED_DEP_REF=${staged_deps_ref}" >> $GITHUB_OUTPUT
+        run: |
+          # Set Image name
+          image_name="${{ steps.current_package.outputs.package_name }}"
+          echo "IMAGE_NAME=${image_name}" >> $GITHUB_OUTPUT
+          r_version=${{ github.event.inputs.r_version }
+          echo "R_VERSION=${r_version}" >> $GITHUB_OUTPUT
+          minor_version=${r_version:0:3}
+          echo "R_VERSION_MINOR=${minor_version}" >> $GITHUB_OUTPUT
+          if [ "${GITHUB_REF##*/}" == "main" ]; then staged_deps_ref=main; else staged_deps_ref=devel; fi;
+          echo "STAGED_DEP_REF=${staged_deps_ref}" >> $GITHUB_OUTPUT
 
       # Question for Dinakar: way to speed up building image by caching docker layers for the docker build ? 
       - name: Cache Docker layers ♻️
