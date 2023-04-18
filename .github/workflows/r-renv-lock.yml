@@ -135,6 +135,7 @@ jobs:
 
           if (legacy) {
             renv::snapshot(force = TRUE, prompt = FALSE)
+            renv::settings$snapshot.type("implicit")
             quit(save = "no", status = 0)
           }
 
@@ -178,6 +179,7 @@ jobs:
           remotes::install_version("roxygen2", version = "7.2.1", upgrade = "never")
 
           renv::snapshot(force = TRUE, prompt = FALSE)
+          renv::settings$snapshot.type("implicit")
           if (identical(renv_profile, "4.0")) {
             file.copy(renv::paths$lockfile(), "renv.lock", overwrite = TRUE)
           }
