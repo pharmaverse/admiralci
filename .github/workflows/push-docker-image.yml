@@ -5,33 +5,13 @@ env:
   REGISTRY: ghcr.io
 
 on:
-  workflow_dispatch:
-  workflow_call:
-    inputs:
-      r_version:
-        description: R Version
-        required: true
-        type: choice
-        default: "4.2.3"
-        options:
-          - "4.0.5"
-          - "4.1.0"
-          - "4.1.1"
-          - "4.1.2"
-          - "4.1.3"
-          - "4.2.0"
-          - "4.2.1"
-          - "4.2.2"
-          - "latest"
-      tag:
-        description: |
-          Custom Image Tag/Version. Defaults to current branch if unspecified.
-        required: false
-        default: ${GITHUB_REF##*/}
-      tag_latest:
-        description: Tag image as `latest`
-        default: false
-        type: boolean
+  pull_request:
+    branches:
+      - main
+      # - 85_init_dockerfile # TODO: del after testing
+    paths:
+      - 'Dockerfile'
+      - 'renv/profiles/**/renv.lock'
 
 permissions: write-all 
 
@@ -72,7 +52,7 @@ jobs:
 
       - name: Set build variables 📐
         id: build_vars
-        run: |
+        run: | # TODO: get image properties from changes files (if profiles/4.0/renv.lock changed then push new docker im admiral-r4.0)
           # Set Image name
           image_name="${{ steps.current_package.outputs.package_name }}"
           echo "IMAGE_NAME=${image_name}" >> $GITHUB_OUTPUT
