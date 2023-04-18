@@ -26,7 +26,7 @@
 			"r.rterm.linux": "/usr/local/bin/radian",
 			"r.bracketedPaste": true,
 			"cSpell.customDictionaries": {
-				"myWords": {
+				"WORDLIST": {
 				  "name": "WORDLIST",
 				  "path": "${workspaceFolder:common}/inst/WORDLIST",
 				  "scope": "folder",
