@@ -1,0 +1,59 @@
+{
+	"name": "Admiral R (RStudio) container",
+	"build": {
+		"dockerfile": "Dockerfile",
+		// Update VARIANT to pick a specific R version: 4.2, 4.1
+		// Update ROCKER_VERSION to pick a specific rocker version: tidverser(contains rstudio/posit ide)
+		// More info: https://github.com/rocker-org/devcontainer-images/pkgs/container/devcontainer%2Ftidyverse
+		"args": { "VARIANT": "4.1", "ROCKER_VERSION": "tidyverse", "RENV": "0.17.0" }
+	},
+
+	// Install Dev Container Features. More info: https://containers.dev/features
+	"features": {
+		"ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
+			"version": "none",
+			"vscodeRSupport": "full",
+			"installRadian": true,
+			"installVscDebugger": true
+		},
+		"ghcr.io/rocker-org/devcontainer-features/renv-cache:latest": {}
+	},
+	"postCreateCommand": "R -q -e 'renv::activate(profile = '4.1'); renv::install()'",
+
+	"customizations": {
+		"settings": {
+			"terminal.integrated.shell.linux": "/bin/bash",
+			"r.rterm.linux": "/usr/local/bin/radian",
+			"r.bracketedPaste": true
+		},
+		"vscode": {
+			"extensions": [
+				"vsls-contrib.codetour",
+				"GitHub.copilot",
+				// R extensions
+				"ikuyadeu.r",
+				"REditorSupport.r-lsp",
+				// Extra extension
+				"coenraads.bracket-pair-colorizer-2",
+				"streetsidesoftware.code-spell-checker",
+				"eamodio.gitlens"
+			]
+		}
+	},
+
+	// RStudio ports
+	"forwardPorts": [8787],
+	"portsAttributes": {
+		"8787": {
+			"label": "Rstudio",
+			"requireLocalPort": true,
+			"onAutoForward": "ignore"
+		}
+	},
+
+	// Use 'postAttachCommand' to run commands after the container is started.
+	"postAttachCommand": "sudo rstudio-server start"
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root
+	// "remoteUser": "root"
+}
