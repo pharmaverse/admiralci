@@ -7,4 +7,4 @@ FROM ghcr.io/rocker-org/devcontainer/${ROCKER_VERSION}:${VARIANT}
 
 # Install renv from GitHub.
 ENV RENV_VERSION=$RENV_VERSION
-RUN R -e "remotes::install_github('rstudio/renv@${RENV_VERSION}')"
+RUN R -e "remotes::install_github('rstudio/renv', ref = Sys.getenv('RENV_VERSION'))"
