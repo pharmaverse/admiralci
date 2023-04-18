@@ -24,7 +24,16 @@
 		"settings": {
 			"terminal.integrated.shell.linux": "/bin/bash",
 			"r.rterm.linux": "/usr/local/bin/radian",
-			"r.bracketedPaste": true
+			"r.bracketedPaste": true,
+			"cSpell.customDictionaries": {
+				"myWords": {
+				  "name": "WORDLIST",
+				  "path": "${workspaceFolder:common}/inst/WORDLIST",
+				  "scope": "folder",
+				  "addWords": false
+				}
+			  },
+			  "cSpell.customWorkspaceDictionaries": [ "WORDLIST" ]
 		},
 		"vscode": {
 			"extensions": [
