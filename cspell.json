@@ -1,0 +1,13 @@
+{
+    // Enable your dictionary by adding it to the list of `dictionaries`
+    "dictionaries": [
+        "WORDLIST"
+    ],
+    "dictionaryDefinitions": [
+        {
+            "name": "WORDLIST",
+            "path": "./inst/WORDLIST",
+            "addWords": true
+        }
+    ]
+}
