@@ -27,6 +27,10 @@
 			"r.bracketedPaste": true
 		},
 		"vscode": {
+			"settings": {
+				"r.rterm.linux": "/usr/local/bin/radian",
+				"r.bracketedPaste": true
+			},
 			"extensions": [
 				"vsls-contrib.codetour",
 				"GitHub.copilot",
