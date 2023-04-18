@@ -21,11 +21,6 @@
 	"postCreateCommand": "R -q -e 'renv::activate(profile = \"4.1\"); renv::restore()'",
 
 	"customizations": {
-		"settings": {
-			"terminal.integrated.shell.linux": "/bin/bash",
-			"r.rterm.linux": "/usr/local/bin/radian",
-			"r.bracketedPaste": true
-		},
 		"vscode": {
 			"settings": {
 				"r.rterm.linux": "/usr/local/bin/radian",
