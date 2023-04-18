@@ -56,7 +56,6 @@ jobs:
             target-branch: devel
             reviewers: |-
               bms63
-              thomas-neitmann
               cicdguy
           - name: admiraltemplate
             target-branch: main
@@ -72,13 +71,11 @@ jobs:
             target-branch: devel
             reviewers: |-
               cicdguy
-              thomas-neitmann
               bms63
               bundfussr
           - name: admiral.test
             target-branch: devel
             reviewers: |-
-              thomas-neitmann
               bms63
               bundfussr
           - name: admiralvaccine
