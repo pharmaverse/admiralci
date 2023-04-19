@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - main
-      # - 85_init_dockerfile # TODO: del after testing
+      - 85_init_dockerfile # TODO: del after testing
     paths:
       - 'renv/profiles/**/renv.lock'
 
