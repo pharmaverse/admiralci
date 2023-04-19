@@ -32,7 +32,7 @@ jobs:
           for renv_folder in renv/profiles/*; do 
             renv_path="${renv_folder}/renv/renv.lock"
             diff=$(git diff "$renv_path")
-            if [[ -z ${diff} | ${{ github.event_name == 'schedule' }} ]]{
+            if [ -z ${diff} ] || [ "${{github.event_name}}" == 'schedule' ]{
               renv_list=" ${renv_tab}"
             }
             fi
