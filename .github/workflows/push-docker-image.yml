@@ -5,7 +5,7 @@ on:
   repository_dispatch:
     types:
       - scheduled
-  pull_request:
+  push:
     branches:
       - main
       - 85_init_dockerfile # TODO: del after testing

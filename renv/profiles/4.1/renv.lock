@@ -28,7 +28,7 @@
         "promises"
       ],
       "Hash": "45fa28dbf288cd606e13ca35d3d72437"
-    }, 
+    },
     "R.cache": {
       "Package": "R.cache",
       "Version": "0.15.0",
