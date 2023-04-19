@@ -28,16 +28,17 @@ jobs:
       - name: Get Updated renv # note: for case schedules job, we update every docker images, and for renv.lock files updates we only update modified renv.lock versions
         id: matrix
         run: |
-          renv_tab=()
+          renv_list=""
           for renv_folder in renv/profiles/*; do 
             renv_path="${renv_folder}/renv/renv.lock"
             diff=$(git diff "$renv_path")
             if [[ -z ${diff} | ${{ github.event_name == 'schedule' }} ]]{
-              renv_tab+=("\"$renv_path\"")
+              renv_list=" ${renv_tab}"
             }
             fi
           done
-          renv_list=( IFS=$', '; echo "${renv_tab[*]}" )
+          renv_list=$(echo "${renv_list}" | xargs)
+          renv_list=$(echo $renv_list | tr -s '[:blank:]' ',')
           echo '::set-output name=value::[${renv_list}]'
 
   deploy-image:
