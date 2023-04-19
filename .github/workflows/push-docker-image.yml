@@ -5,6 +5,9 @@ env:
   REGISTRY: ghcr.io
 
 on:
+  repository_dispatch:
+    types:
+      - scheduled
   pull_request:
     branches:
       - main
@@ -20,84 +23,60 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy-image:
-    name: Deploy Docker Image
+
+  get_renv_list: 
     runs-on: ubuntu-latest
+    outputs:
+        matrix: ${{ steps.matrix.outputs.value }} 
+
+    steps: 
+      name: Get Updated renv # note: for case schedules job, we update every docker images, and for renv.lock files updates we only update modified renv.lock versions
+      id: matrix
+      run: |
+        renv_tab=()
+        for renv_folder in renv/profiles/*; do 
+          renv_path="${renv_folder}/renv/renv.lock"
+          diff=$(git diff "$renv_path")
+          if [[ -z ${diff} | ${{ github.event_name == 'schedule' }} ]]{
+            renv_tab+=("\"$renv_path\"")
+          }
+          fi
+        done
+        renv_list=( IFS=$', '; echo "${renv_tab[*]}" )
+        echo '::set-output name=value::[${renv_list}]'
+
+  deploy-image:
+
+    needs: [ get_renv_list ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        value: ${{fromJson(needs.get_renv_list.outputs.matrix)}}
     steps:
+
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Get Date
-        id: today
+      - name: Print message
         run: |
-          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-          
-      - name: Get current package name 
-        id: current_package
+          echo "updating docker image for renv ${{ matrix.value }}"
+
+      - name: Set image specs 
+        id: image_specs
         run: |
           package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          echo "package_name=$package_name" >> $GITHUB_OUTPUT 
-      
-      # TODO: add step to normalize inputs
+          r_version=$(basename $(dirname ${{ matrix.value }}))
+          echo "r_version=$r_version" >> $GITHUB_OUTPUT 
+          echo "image_name=$package_name-$r_version" >> $GITHUB_OUTPUT 
 
-
-      - name: Log in to the Container registry 🗝
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }} 
-
-      - name: Set build variables 📐
-        id: build_vars
-        run: | # TODO: get image properties from changes files (if profiles/4.0/renv.lock changed then push new docker im admiral-r4.0)
-          # Set Image name
-          image_name="${{ steps.current_package.outputs.package_name }}"
-          echo "IMAGE_NAME=${image_name}" >> $GITHUB_OUTPUT
-          r_version=${{ github.event.inputs.r_version }
-          echo "R_VERSION=${r_version}" >> $GITHUB_OUTPUT
-          minor_version=${r_version:0:3}
-          echo "R_VERSION_MINOR=${minor_version}" >> $GITHUB_OUTPUT
-          if [ "${GITHUB_REF##*/}" == "main" ]; then staged_deps_ref=main; else staged_deps_ref=devel; fi;
-          echo "STAGED_DEP_REF=${staged_deps_ref}" >> $GITHUB_OUTPUT
-
-      # Question for Dinakar: way to speed up building image by caching docker layers for the docker build ? 
-      - name: Cache Docker layers ♻️
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ build_vars.outputs.package_name }}-${{ build_vars.outputs.R_VERSION }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-${{ build_vars.outputs.package_name }}-${{ build_vars.outputs.R_VERSION }}
-
-
-      - name: Build and push image 🏗
-        uses: docker/build-push-action@v3
-        with:
-          context: ./
-          file: Dockerfile
-          push: true
-          tags: ${{ github.event.inputs.tags }
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
-          build-args: |
-            R_VERSION=${{ build_vars.outputs.R_VERSION }}
-            R_VERSION_MINOR=${{ build_vars.outputs.R_VERSION_MINOR }}
-            STAGED_DEP_REF=${{ build_vars.outputs.STAGED_DEP_REF }}
-          platforms: linux/amd64
-
-      - name: Move cache ♻️
-        run: |
-          rm -rf /tmp/.buildx-cache
-          if [ -f /tmp/.buildx-cache-new ]
-          then {
-            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-          }
-          fi
-          
-          
-
-
-      
+      - name: Call deploy docker image action for every renv
+        uses: insightsengineering/r-image-creator@init_action
+        with: 
+          image-name: "${{ steps.image_specs.outputs.image_name }}" 
+          tag-latest: true
+          base-image: "rocker/rstudio:${{ steps.image_specs.outputs.r_version }}"
+          sysdeps: qpdf,libxt-dev
+          renv-lock-file: "${{ matrix.value }}"
+          packages: admiraldev,admiral.test
