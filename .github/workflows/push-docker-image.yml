@@ -1,9 +1,6 @@
 ---
 name: Deploy Docker Image
 
-env:
-  REGISTRY: ghcr.io
-
 on:
   repository_dispatch:
     types:
@@ -13,7 +10,6 @@ on:
       - main
       # - 85_init_dockerfile # TODO: del after testing
     paths:
-      - 'Dockerfile'
       - 'renv/profiles/**/renv.lock'
 
 permissions: write-all 
@@ -23,37 +19,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
   get_renv_list: 
     runs-on: ubuntu-latest
     outputs:
         matrix: ${{ steps.matrix.outputs.value }} 
 
     steps: 
-      name: Get Updated renv # note: for case schedules job, we update every docker images, and for renv.lock files updates we only update modified renv.lock versions
-      id: matrix
-      run: |
-        renv_tab=()
-        for renv_folder in renv/profiles/*; do 
-          renv_path="${renv_folder}/renv/renv.lock"
-          diff=$(git diff "$renv_path")
-          if [[ -z ${diff} | ${{ github.event_name == 'schedule' }} ]]{
-            renv_tab+=("\"$renv_path\"")
-          }
-          fi
-        done
-        renv_list=( IFS=$', '; echo "${renv_tab[*]}" )
-        echo '::set-output name=value::[${renv_list}]'
+      - name: Get Updated renv # note: for case schedules job, we update every docker images, and for renv.lock files updates we only update modified renv.lock versions
+        id: matrix
+        run: |
+          renv_tab=()
+          for renv_folder in renv/profiles/*; do 
+            renv_path="${renv_folder}/renv/renv.lock"
+            diff=$(git diff "$renv_path")
+            if [[ -z ${diff} | ${{ github.event_name == 'schedule' }} ]]{
+              renv_tab+=("\"$renv_path\"")
+            }
+            fi
+          done
+          renv_list=( IFS=$', '; echo "${renv_tab[*]}" )
+          echo '::set-output name=value::[${renv_list}]'
 
   deploy-image:
-
     needs: [ get_renv_list ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         value: ${{fromJson(needs.get_renv_list.outputs.matrix)}}
     steps:
-
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
