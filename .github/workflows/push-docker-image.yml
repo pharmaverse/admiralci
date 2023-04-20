@@ -25,6 +25,12 @@ jobs:
         matrix: ${{ steps.matrix.outputs.value }} 
 
     steps: 
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
       - name: Get Updated renv # note: for case schedules job, we update every docker images, and for renv.lock files updates we only update modified renv.lock versions
         id: matrix
         run: |
