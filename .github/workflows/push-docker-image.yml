@@ -14,6 +14,9 @@ on:
 
 permissions: write-all 
 
+env:
+  REGISTRY: ghcr.io
+
 concurrency:
   group: deploy-docker-image-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -22,37 +25,49 @@ jobs:
   get_renv_list: 
     runs-on: ubuntu-latest
     outputs:
-        matrix: ${{ steps.matrix.outputs.value }} 
+        matrix: ${{ steps.matrix.outputs.renv }} 
 
     steps: 
 
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 2 # "2" -> To retrieve the preceding commit.
+
+      - name: Get changed files in renv/profiles
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: renv/profiles/**/renv.lock  
           
       - name: Get Updated renv # note: for case schedules job, we update every docker images, and for renv.lock files updates we only update modified renv.lock versions
         id: matrix
         run: |
-          renv_list=""
-          for renv_folder in renv/profiles/*; do 
-            renv_path="${renv_folder}/renv.lock"
-            diff=$(git diff --name-only "$renv_path")
-            if [[ ! -z ${diff} || "${{github.event_name}}" == 'schedule' ]]
-            then
-              renv_list="${renv_list} ${diff}"
-            fi
-          done
-          renv_list=$(echo "${renv_list}" | xargs)
-          renv_list=$(echo $renv_list | tr -s '[:blank:]' ',')
-          echo '::set-output name=value::[${renv_list}]'
-
+          if [ "${{github.event_name}}" == "schedule" ]
+          then
+            renv_list=$(find renv/profiles | grep renv.lock )
+          else
+            renv_list="${{ steps.changed-files.outputs.all_changed_files }}"
+          fi 
+          renv_list=$(echo $renv_list | sed 's/ /", "/g')
+          echo "${renv_list}"
+          echo "::set-output name=renv::[\"$renv_list\"]"
+      - name: Debug Step
+        run: |
+          echo ${{matrix.outputs.renv}} 
   deploy-image:
     needs: [ get_renv_list ]
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
       matrix:
         value: ${{fromJson(needs.get_renv_list.outputs.matrix)}}
+
+    # Token permissions
+    permissions:
+      contents: read
+      packages: write 
+      
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -62,7 +77,6 @@ jobs:
       - name: Print message
         run: |
           echo "updating docker image for renv ${{ matrix.value }}"
-
       - name: Set image specs 
         id: image_specs
         run: |
@@ -70,7 +84,8 @@ jobs:
           r_version=$(basename $(dirname ${{ matrix.value }}))
           echo "r_version=$r_version" >> $GITHUB_OUTPUT 
           echo "image_name=$package_name-$r_version" >> $GITHUB_OUTPUT 
-
+          renv=$(echo "${{ matrix.value }}" | tr -d '"')
+          echo "renv_lock_path=$renv" >> $GITHUB_OUTPUT 
       - name: Call deploy docker image action for every renv
         uses: insightsengineering/r-image-creator@init_action
         with: 
@@ -78,5 +93,8 @@ jobs:
           tag-latest: true
           base-image: "rocker/rstudio:${{ steps.image_specs.outputs.r_version }}"
           sysdeps: qpdf,libxt-dev
-          renv-lock-file: "${{ matrix.value }}"
+          renv-lock-file: "${{ steps.image_specs.outputs.renv_lock_path }}"
           packages: admiraldev,admiral.test
+          repository_owner: ${{ github.repository_owner }} 
+          repo-user: ${{ github.actor }}  # pharmaverse-bot
+          repo-token: "${{ secrets.GITHUB_TOKEN }}" # ${{ secrets.PHARMAVERSE_BOT }}
