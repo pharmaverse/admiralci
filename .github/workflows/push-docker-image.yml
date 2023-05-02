@@ -94,7 +94,6 @@ jobs:
           base-image: "rocker/rstudio:${{ steps.image_specs.outputs.r_version }}"
           sysdeps: qpdf,libxt-dev
           renv-lock-file: "${{ steps.image_specs.outputs.renv_lock_path }}"
-          packages: admiraldev,admiral.test
           repository_owner: ${{ github.repository_owner }} 
           repo-user: ${{ github.actor }}  # pharmaverse-bot
           repo-token: "${{ secrets.GITHUB_TOKEN }}" # ${{ secrets.PHARMAVERSE_BOT }}
