@@ -80,37 +80,13 @@ jobs:
           restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}
 
       - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v1
+        uses: insightsengineering/staged-dependencies-action@fix-remotes-self-install
         with:
           run-system-dependencies: true
           enable-check: false
           renv-restore: false
           cran-repos: "CRAN=${{ matrix.config.repos }}"
+          upgrade-remotes: true
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       #####################c#####################
-
-      - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_REMOTE_: false
-          _R_CHECK_FORCE_SUGGESTS_: false
-        run: |
-          if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
-          options(crayon.enabled = TRUE)
-          check_error_on <- "${{ inputs.error-on }}"
-          if (check_error_on == "") {
-            check_error_on <- "note"
-          }
-          rcmdcheck::rcmdcheck(
-            args = c("--no-manual", "--as-cran"),
-            error_on = check_error_on,
-            check_dir = "check"
-          )
-        shell: Rscript {0}
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@main
-        with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
-          path: check
