@@ -112,7 +112,7 @@ jobs:
 
       - name: Install package
         run: |
-          R CMD build .
+          R CMD build --no-build-vignettes --no-manual .
           R CMD INSTALL *.tar.gz
 
       - name: Run Template Scripts
