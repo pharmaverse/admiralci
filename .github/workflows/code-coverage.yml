@@ -97,7 +97,7 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Install package
-        run: renv::install(".")
+        run: devtools::install_local(".")
         shell: Rscript {0}
 
       - name: Run coverage 👟
