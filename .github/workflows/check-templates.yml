@@ -111,8 +111,9 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Install package
-        run: renv::install(".")
-        shell: Rscript {0}
+        run: |
+          R CMD build .
+          R CMD INSTALL *.tar.gz
 
       - name: Run Template Scripts
         run: |
