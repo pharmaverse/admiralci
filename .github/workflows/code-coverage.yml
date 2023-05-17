@@ -96,10 +96,6 @@ jobs:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
 
-      - name: Install package
-        run: renv::install(".")
-        shell: Rscript {0}
-
       - name: Run coverage 👟
         run: |
           tryCatch(
