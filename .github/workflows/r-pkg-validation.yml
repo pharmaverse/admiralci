@@ -83,7 +83,7 @@ jobs:
           key: staged-deps
 
       - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v1
+        uses: insightsengineering/staged-dependencies-action@v1.7.2
         with:
           run-system-dependencies: true
           enable-check: false
