@@ -6,7 +6,7 @@ on:
     branches:
       - main
       - 85_init_dockerfile # TODO: del after testing
-      - 101_use_docker_im # TODO: del after testing
+      - 101-use-docker-images # TODO: del after testing
     paths:
       - 'renv/profiles/**/renv.lock'
   workflow_dispatch: # give possibility to run it manually
@@ -41,6 +41,7 @@ jobs:
         with:
           files: renv/profiles/**/renv.lock
 
+      # TODO: what to do with renv_legacy ?
       - name: Get Updated renv # note: for case schedules job, we update every docker images, and for renv.lock files updates we only update modified renv.lock versions
         id: matrix
         run: |
