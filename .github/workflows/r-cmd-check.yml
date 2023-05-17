@@ -11,10 +11,12 @@ on:
     branches:
       - main
       - devel
+      - pre-release
   pull_request:
     branches:
       - main
       - devel
+      - pre-release
 
 name: R CMD Check
 
@@ -24,7 +26,12 @@ concurrency:
 
 jobs:
   R-CMD-check:
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/dgrassellyb/admiralci-${{ matrix.config.r }}:latest"
+    defaults:
+      run:
+        working-directory: /workspace
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     if: >
       !contains(github.event.commits[0].message, '[skip r-cmd-check]')
@@ -32,9 +39,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04, r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
-          - {os: ubuntu-20.04, r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
-          - {os: ubuntu-20.04, r: 'release', repos: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
+          - {r: '4.0', repos: 'https://packagemanager.posit.co/cran/2021-03-31/'}
+          - {r: '4.1', repos: 'https://packagemanager.posit.co/cran/2022-03-10/'}
+          - {r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-10-31/'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -61,21 +68,27 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
+      - name: Copy repo into workspace
+        run: |
+          ls /__w/admiral/admiral
+          admiral_dir="/__w/admiral/admiral"
+          rm -rf "${admiral_dir}/renv"
+          rm "${admiral_dir}/renv.lock"
+          cp -r "${admiral_dir}/." /workspace
+          ls -al /workspace
+          git status /workspace
+          # get that renv.lock is identical
+          git config --global --add safe.directory /workspace
+          diff=$(git diff /workspace/renv.lock)
+          echo $diff # TODO: check differences renv.lock to be sure docker im not outdated ? (renv.lock of admiral pointing on r4.0 ..)
+        shell: bash
 
       - name: Restore cache
         uses: actions/cache@v3
         with:
           path: |
-            ${{ env.R_LIBS_USER }}
             ~/.staged.dependencies
-          key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('DESCRIPTION') }}
-          restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}
+          key: staged-deps
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
@@ -84,6 +97,7 @@ jobs:
           enable-check: false
           renv-restore: false
           cran-repos: "CRAN=${{ matrix.config.repos }}"
+          path: /workspace
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       #####################c#####################

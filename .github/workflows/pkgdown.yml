@@ -47,7 +47,12 @@ concurrency:
 jobs:
   pkgdown:
     name: pkgdown
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/dgrassellyb/admiralci-${{ inputs.r-version }}:latest"
+    defaults:
+      run:
+        working-directory: /workspace
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     if: >
@@ -71,6 +76,21 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
+      - name: Copy repo into workspace
+        run: |
+          ls /__w/admiral/admiral
+          admiral_dir="/__w/admiral/admiral"
+          rm -rf "${admiral_dir}/renv"
+          rm "${admiral_dir}/renv.lock"
+          cp -r "${admiral_dir}/." /workspace
+          ls -al /workspace
+          git status /workspace
+          # get that renv.lock is identical
+          git config --global --add safe.directory /workspace
+          diff=$(git diff /workspace/renv.lock)
+          echo $diff # TODO: check differences renv.lock to be sure docker im not outdated ? (renv.lock of admiral pointing on r4.0 ..)
+        shell: bash
+
       - name: Normalize inputs
         id: normalizer
         run: |
@@ -89,19 +109,12 @@ jobs:
           echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ steps.normalizer.outputs.R_VERSION }}
-
       - name: Restore cache
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cache/R/renv
             ~/.staged.dependencies
-          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
-          restore-keys: ${{ runner.os }}-renv-
+          key: staged-deps
 
       - name: Setup pandoc
         uses: r-lib/actions/setup-pandoc@v2
@@ -111,12 +124,13 @@ jobs:
         with:
           run-system-dependencies: true
           enable-check: false
+          path: /workspace
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
 
       - name: Install package
-        run: renv::install(".", dependencies = FALSE)
+        run: renv::install(".")
         shell: Rscript {0}
 
       - name: Publish documentation
