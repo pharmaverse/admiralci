@@ -57,7 +57,7 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
-          path: "/__w/admiral"
+          path: "/__w/admiral/admiral"
 
       - name: test
         run: |
