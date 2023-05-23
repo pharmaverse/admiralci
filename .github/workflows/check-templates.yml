@@ -59,6 +59,14 @@ jobs:
           fetch-depth: 0
           path: $GITHUB_WORKSPACE/workspace
 
+      - name: test
+        run: |
+          ls
+          ls $GITHUB_WORKSPACE 
+          ls "${{ github.workspace }}"
+          ls /workspace
+        shell: bash
+
       # - name: Copy repo into workspace
       #   run: |
       #     ls /__w/admiral/admiral
