@@ -66,7 +66,7 @@ jobs:
           echo "/workspace"
           ls /workspace
           echo "ls ${GITHUB_WORKSPACE}"
-          ls "${GITHUB_WORKSPACE}"
+          ls /__w/admiral/admiral
         shell: bash
 
       # - name: Copy repo into workspace
