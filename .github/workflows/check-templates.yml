@@ -57,7 +57,7 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
-          path: ${{GITHUB_WORKSPACE}}/workspace
+          path: $GITHUB_WORKSPACE/workspace
 
       # - name: Copy repo into workspace
       #   run: |
