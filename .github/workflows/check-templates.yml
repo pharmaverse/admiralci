@@ -62,8 +62,7 @@ jobs:
       - name: test
         run: |
           ls
-          ls $GITHUB_WORKSPACE 
-          ls "${{ github.workspace }}"
+          ls $GITHUB_WORKSPACE
           ls /workspace
         shell: bash
 
