@@ -57,21 +57,22 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
+          path: /workspace
 
-      - name: Copy repo into workspace
-        run: |
-          ls /__w/admiral/admiral
-          admiral_dir="/__w/admiral/admiral"
-          rm -rf "${admiral_dir}/renv"
-          rm "${admiral_dir}/renv.lock"
-          cp -r "${admiral_dir}/." /workspace
-          ls -al /workspace
-          git status /workspace
-          # get that renv.lock is identical
-          git config --global --add safe.directory /workspace # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
-          diff=$(git diff /workspace/renv.lock)
-          echo $diff # TODO: check differences renv.lock to be sure docker im not outdated ? (renv.lock of admiral pointing on r4.0 ..)
-        shell: bash
+      # - name: Copy repo into workspace
+      #   run: |
+      #     ls /__w/admiral/admiral
+      #     admiral_dir="/__w/admiral/admiral"
+      #     rm -rf "${admiral_dir}/renv"
+      #     rm "${admiral_dir}/renv.lock"
+      #     cp -r "${admiral_dir}/." /workspace
+      #     ls -al /workspace
+      #     git status /workspace
+      #     # get that renv.lock is identical
+      #     git config --global --add safe.directory /workspace # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
+      #     diff=$(git diff /workspace/renv.lock)
+      #     echo $diff # TODO: check differences renv.lock to be sure docker im not outdated ? (renv.lock of admiral pointing on r4.0 ..)
+      #   shell: bash
 
       - name: Normalize inputs
         id: normalizer
@@ -113,6 +114,7 @@ jobs:
           path: |
             ~/.staged.dependencies
           key: staged-deps
+          restore-keys: staged-deps
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
@@ -127,7 +129,6 @@ jobs:
 
       - name: Install package
         run: |
-          cd /workspace
           ls /workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
           export R_LIBS_USER=/workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
           R CMD build --no-build-vignettes --no-manual .
