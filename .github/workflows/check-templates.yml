@@ -54,6 +54,7 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
+          set-safe-directory: /workspace
 
       - name: test
         run: |
