@@ -136,7 +136,7 @@ jobs:
 
       - name: Run Template Scripts
         run: |
-          # renv::load("/workspace")
+          renv::load("/workspace")
           desc <- read.dcf("DESCRIPTION")
           package_name <- as.character(desc[, "Package"])
           templates <- list.files(
