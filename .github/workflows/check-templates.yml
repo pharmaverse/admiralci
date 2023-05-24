@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: "ghcr.io/dgrassellyb/admiralci-${{ inputs.r-version }}:latest"
+      volumes:
+        - "/workspace:${GITHUB_WORKSPACE}/workspace_test"
     defaults:
       run:
         working-directory: /workspace
@@ -57,7 +59,7 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
-          path: "/__w/admiral/admiral"
+          path: "${GITHUB_WORKSPACE}/workspace_test"
 
       - name: test
         run: |
@@ -66,7 +68,9 @@ jobs:
           echo "/workspace"
           ls /workspace
           echo "ls ${GITHUB_WORKSPACE}"
-          ls /__w/admiral/admiral
+          ls "${GITHUB_WORKSPACE}"
+          echo "ls ${GITHUB_WORKSPACE}/workspace_test"
+          ls "${GITHUB_WORKSPACE}/workspace_test"
         shell: bash
 
       # - name: Copy repo into workspace
