@@ -130,7 +130,7 @@ jobs:
       - name: Install package
         run: |
           # ls /workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
-          # export R_LIBS_USER=/workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
+          export R_LIBS_USER=/workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
           R CMD build --no-build-vignettes --no-manual .
           R CMD INSTALL *.tar.gz
 
