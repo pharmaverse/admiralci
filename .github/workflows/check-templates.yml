@@ -54,10 +54,14 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
+          set-safe-directory: /__w/admiral/admiral
 
-      - name: add safe directory
+      - name: test
         run: |
-          git config --global --add safe.directory /workspace # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
+          echo "ls"
+          ls
+          echo "/workspace"
+          ls /workspace
         shell: bash
 
       # - name: Copy repo into workspace
