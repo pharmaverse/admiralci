@@ -103,7 +103,7 @@ jobs:
           restore-keys: staged-deps
 
       - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@tmp-fix-remotes
+        uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: true
           enable-check: false
