@@ -105,7 +105,7 @@ jobs:
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
-          run-system-dependencies: true
+          run-system-dependencies: false
           enable-check: false
           git-ref: ${{ steps.normalizer.outputs.SD_GIT_REF }}
           renv-restore: false
