@@ -27,9 +27,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: "ghcr.io/dgrassellyb/admiralci-${{ matrix.config.r }}:latest"
-    defaults:
-      run:
-        working-directory: /workspace
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     if: >
       !contains(github.event.commits[0].message, '[skip r-cmd-check]')
@@ -66,21 +63,6 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Copy repo into workspace
-        run: |
-          ls /__w/admiral/admiral
-          admiral_dir="/__w/admiral/admiral"
-          rm -rf "${admiral_dir}/renv"
-          rm "${admiral_dir}/renv.lock"
-          cp -r "${admiral_dir}/." /workspace
-          ls -al /workspace
-          git status /workspace
-          # get that renv.lock is identical
-          git config --global --add safe.directory /workspace
-          diff=$(git diff /workspace/renv.lock)
-          echo $diff # TODO: check differences renv.lock to be sure docker im not outdated ? (renv.lock of admiral pointing on r4.0 ..)
-        shell: bash
-
       - name: Restore cache
         uses: actions/cache@v3
         with:
@@ -91,11 +73,10 @@ jobs:
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
-          run-system-dependencies: true
-          enable-check: false
+          run-system-dependencies: false
           renv-restore: false
+          enable-check: false
           cran-repos: "CRAN=${{ matrix.config.repos }}"
-          path: /workspace
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       #####################c#####################
