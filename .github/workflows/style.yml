@@ -30,7 +30,7 @@ jobs:
     name: Code Style
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/dgrassellyb/admiralci-${{ inputs.r-version }}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     if: >
       !contains(github.event.commits[0].message, '[skip style]')
 

@@ -17,7 +17,7 @@ jobs:
     name: Generate
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/dgrassellyb/admiralci-${{ inputs.r-version }}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     # Set Github token permissions
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

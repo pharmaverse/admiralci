@@ -26,7 +26,7 @@ jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/dgrassellyb/admiralci-${{ matrix.config.r }}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{ matrix.config.r }}:latest"
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     if: >
       !contains(github.event.commits[0].message, '[skip r-cmd-check]')
