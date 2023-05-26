@@ -69,6 +69,11 @@ jobs:
       #     path: |
       #       ~/.staged.dependencies
       #     key: staged-deps
+      - name: debug
+        run: |
+          ldconfig -p | grep libgit2
+          ldconfig -p | grep libxml
+          export PATH="$PATH:/lib/x86_64-linux-gnu/"
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
