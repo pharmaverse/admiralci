@@ -80,7 +80,6 @@ jobs:
         id: validation
         with:
           disable_install_dev_deps: true
-          report_pkg_dir: /workspace
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
