@@ -27,6 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.config.r }}:latest"
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     if: >
       !contains(github.event.commits[0].message, '[skip r-cmd-check]')
