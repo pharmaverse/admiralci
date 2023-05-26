@@ -27,9 +27,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.config.r }}:latest"
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.github_token }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     if: >
       !contains(github.event.commits[0].message, '[skip r-cmd-check]')
@@ -66,17 +63,12 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      # - name: Restore cache
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       ~/.staged.dependencies
-      #     key: staged-deps
-      - name: debug
-        run: |
-          ldconfig -p | grep libgit2
-          ldconfig -p | grep libxml
-          export PATH="$PATH:/lib/x86_64-linux-gnu/"
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.staged.dependencies
+          key: staged-deps
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1

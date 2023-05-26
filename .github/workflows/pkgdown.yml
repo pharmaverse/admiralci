@@ -72,6 +72,13 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
+          # https://github.com/actions/runner/issues/2033
+
+      - name: Set-up safe dir
+        run: |
+          echo "${PWD}"
+          git config --global --add safe.directory /__w/admiral/admiral
+        shell: bash
 
       - name: Normalize inputs
         id: normalizer
@@ -112,7 +119,7 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Install package
-        run: renv::install(".")
+        run: renv::install(".", dependencies = "no-deps")
         shell: Rscript {0}
 
       - name: Publish documentation

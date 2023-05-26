@@ -86,6 +86,10 @@ jobs:
         run: roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))
         shell: Rscript {0}
 
+      - name: Set-up safe dir
+        run: git config --global --add safe.directory /__w/admiral/admiral
+        shell: bash
+
       - name: Roxygen check
         if: "!startsWith(github.event.comment.body, '/roxygenize')"
         run: |
