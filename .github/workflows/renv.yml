@@ -111,6 +111,8 @@ jobs:
           cp ../renv.lock .
           # Also update the renv directory
           rm -rf renv && cp -r ../renv .
+          # ALso update the `.Rprofile` file in the repository
+          cp ../.Rprofile .
           # Also update the R_VERSION setting in workflows to match
           # what's available in the renv.lock file, but skip R patch version
           R_VERSION=$(cat ../renv.lock | jq -r '.R.Version' | grep -oE '^[0-9]+\.[0-9]+')
@@ -120,7 +122,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: renv update from ${{ github.repository }}
-          file_pattern: 'renv.lock renv/* .github/workflows/*'
+          file_pattern: 'renv.lock renv/* .github/workflows/* .Rprofile'
           repository: extension-repo
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
