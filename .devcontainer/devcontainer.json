@@ -5,7 +5,7 @@
 		// Update VARIANT to pick a specific R version: 4.2, 4.1
 		// Update ROCKER_VERSION to pick a specific rocker version: tidyverse(contains rstudio/posit ide)
 		// More info: https://github.com/rocker-org/devcontainer-images/pkgs/container/devcontainer%2Ftidyverse
-		"args": { "VARIANT": "4.1", "ROCKER_VERSION": "tidyverse", "RENV": "0.17.0" }
+		"args": { "VARIANT": "4.1", "RENV": "0.17.0" }
 	},
 
 	// Install Dev Container Features. More info: https://containers.dev/features
