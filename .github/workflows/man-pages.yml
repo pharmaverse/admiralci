@@ -107,7 +107,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Set-up safe dir
-        run: git config --global --add safe.directory /__w/admiral/admiral
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
         shell: bash
 
       - name: Roxygen check
