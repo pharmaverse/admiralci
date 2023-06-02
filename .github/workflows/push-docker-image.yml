@@ -5,17 +5,11 @@ on:
   push:
     branches:
       - main
-      - 85_init_dockerfile # TODO: del after testing
-      - 101-use-docker-images # TODO: del after testing
-      - improve_docker_images
     paths:
       - 'renv/profiles/**/renv.lock'
   workflow_dispatch: # give possibility to run it manually
-  schedule: # Triggers the workflow every day at 6.00 am
-    - cron: "0 6 * * *"
 
 permissions: write-all
-
 env:
   REGISTRY: ghcr.io
 
