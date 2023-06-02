@@ -4,7 +4,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.0'
+        default: '4.1'
         required: false
         type: string
   push:
@@ -32,9 +32,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: "ghcr.io/dgrassellyb/admiralci-${{ inputs.r-version }}:latest"
-    defaults:
-      run:
-        working-directory: /workspace
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -58,19 +55,9 @@ jobs:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
 
-      - name: Copy repo into workspace
+      - name: Add safe directory
         run: |
-          ls /__w/admiral/admiral
-          admiral_dir="/__w/admiral/admiral"
-          rm -rf "${admiral_dir}/renv"
-          rm "${admiral_dir}/renv.lock"
-          cp -r "${admiral_dir}/." /workspace
-          ls -al /workspace
-          git status /workspace
-          # get that renv.lock is identical
-          git config --global --add safe.directory /workspace # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
-          diff=$(git diff /workspace/renv.lock)
-          echo $diff # TODO: check differences renv.lock to be sure docker im not outdated ? (renv.lock of admiral pointing on r4.0 ..)
+          git config --global --add safe.directory /__w/admiral/admiral # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
         shell: bash
 
       - name: Normalize inputs
@@ -98,7 +85,7 @@ jobs:
           R_VERSION="${{ inputs.r-version }}"
           if [ "$R_VERSION" == "" ]
           then {
-            R_VERSION="4.0"
+            R_VERSION="4.1"
           }
           fi
           echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
@@ -113,29 +100,26 @@ jobs:
           path: |
             ~/.staged.dependencies
           key: staged-deps
+          restore-keys: staged-deps
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
-          run-system-dependencies: true
+          run-system-dependencies: false
           enable-check: false
           git-ref: ${{ steps.normalizer.outputs.SD_GIT_REF }}
-          path: /workspace
+          renv-restore: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
 
       - name: Install package
         run: |
-          cd /workspace
-          ls /workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
-          export R_LIBS_USER=/workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
           R CMD build --no-build-vignettes --no-manual .
           R CMD INSTALL *.tar.gz
 
       - name: Run Template Scripts
         run: |
-          renv::load("/workspace")
           desc <- read.dcf("DESCRIPTION")
           package_name <- as.character(desc[, "Package"])
           templates <- list.files(
