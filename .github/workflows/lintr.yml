@@ -4,7 +4,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.0'
+        default: '4.1'
         required: false
         type: string
       lint-all-files:
@@ -34,7 +34,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
+      image: "ghcr.io/dgrassellyb/admiralci-${{ inputs.r-version }}:latest"
     if: >
       !contains(github.event.commits[0].message, '[skip lint]')
     env:
@@ -64,7 +64,7 @@ jobs:
           R_VERSION="${{ inputs.r-version }}"
           if [ "$R_VERSION" == "" ]
           then {
-            R_VERSION="4.0"
+            R_VERSION="4.1"
           }
           fi
           echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT

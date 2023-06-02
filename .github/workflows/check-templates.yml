@@ -4,7 +4,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.0'
+        default: '4.1'
         required: false
         type: string
   push:
@@ -31,7 +31,7 @@ jobs:
       !contains(github.event.commits[0].message, '[skip check_templates]')
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
+      image: "ghcr.io/dgrassellyb/admiralci-${{ inputs.r-version }}:latest"
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -85,7 +85,7 @@ jobs:
           R_VERSION="${{ inputs.r-version }}"
           if [ "$R_VERSION" == "" ]
           then {
-            R_VERSION="4.0"
+            R_VERSION="4.1"
           }
           fi
           echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
@@ -115,14 +115,11 @@ jobs:
 
       - name: Install package
         run: |
-          # ls /workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
-          export R_LIBS_USER=/workspace/renv/library/R-4.0/x86_64-pc-linux-gnu
           R CMD build --no-build-vignettes --no-manual .
           R CMD INSTALL *.tar.gz
 
       - name: Run Template Scripts
         run: |
-          renv::load("/workspace")
           desc <- read.dcf("DESCRIPTION")
           package_name <- as.character(desc[, "Package"])
           templates <- list.files(
