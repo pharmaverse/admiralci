@@ -24,7 +24,9 @@ concurrency:
 
 jobs:
   R-CMD-check:
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/pharmaverse/admiralci-${{ matrix.config.r }}:latest"
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
     if: >
       !contains(github.event.commits[0].message, '[skip r-cmd-check]')
@@ -32,9 +34,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04, r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
-          - {os: ubuntu-20.04, r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
-          - {os: ubuntu-20.04, r: 'release', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
+          - {r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
+          - {r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
+          - {r: '4.3', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -61,28 +63,19 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
-
       - name: Restore cache
         uses: actions/cache@v3
         with:
           path: |
-            ${{ env.R_LIBS_USER }}
             ~/.staged.dependencies
-          key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('DESCRIPTION') }}
-          restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}
+          key: staged-deps
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
-          run-system-dependencies: true
-          enable-check: false
+          run-system-dependencies: false
           renv-restore: false
+          enable-check: false
           cran-repos: "CRAN=${{ matrix.config.repos }}"
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

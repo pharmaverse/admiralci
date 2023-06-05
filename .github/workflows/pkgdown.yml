@@ -45,13 +45,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  get_r_version:
+    name: Get R version
+    runs-on: ubuntu-latest
+    if: >
+      !contains(github.event.commits[0].message, '[skip docs]')
+    outputs:
+      r-version: ${{ steps.normalizer.outputs.R_VERSION }}
+    steps:
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          R_VERSION="${{ inputs.r-version }}"
+          if [ "$R_VERSION" == "" ]
+          then {
+            R_VERSION="4.1"
+          }
+          fi
+          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
+        shell: bash
   pkgdown:
     name: pkgdown
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/pharmaverse/admiralci-${{ needs.get_r_version.outputs.r-version }}:latest"
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     if: >
       !contains(github.event.commits[0].message, '[skip docs]')
+    needs: get_r_version
     steps:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
@@ -70,6 +92,13 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
+          # https://github.com/actions/runner/issues/2033
+
+      - name: Set-up safe dir
+        run: |
+          echo "${PWD}"
+          git config --global --add safe.directory /__w/admiral/admiral
+        shell: bash
 
       - name: Normalize inputs
         id: normalizer
@@ -89,19 +118,12 @@ jobs:
           echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ steps.normalizer.outputs.R_VERSION }}
-
       - name: Restore cache
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cache/R/renv
             ~/.staged.dependencies
-          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
-          restore-keys: ${{ runner.os }}-renv-
+          key: staged-deps
 
       - name: Setup pandoc
         uses: r-lib/actions/setup-pandoc@v2
@@ -109,7 +131,8 @@ jobs:
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
-          run-system-dependencies: true
+          run-system-dependencies: false
+          renv-restore: false
           enable-check: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
