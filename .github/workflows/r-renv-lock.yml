@@ -93,7 +93,7 @@ jobs:
                   project_dir,
                   adm_dev_suggests[["Package"]],
                   suggests_packages[["Package"]],
-                  c("staged.dependencies", "renv")
+                  c("staged.dependencies", "renv", "styler")
                 ))
               )
             )
