@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - fix-images-names
     paths:
       - 'renv/profiles/**/renv.lock'
   workflow_dispatch: # give possibility to run it manually
