@@ -48,7 +48,7 @@ jobs:
     name: Roxygen
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/dgrassellyb/admiralci-${{needs.get_r_version.outputs.r-version}}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{needs.get_r_version.outputs.r-version}}:latest"
     if: >
       !contains(github.event.commits[0].message, '[skip lint]')
     env:

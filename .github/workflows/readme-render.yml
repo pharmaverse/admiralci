@@ -124,7 +124,7 @@ jobs:
             markdown-format -r -f README.md
           }
           fi
-          git config --global --add safe.directory /__w/admiral/admiral
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
           BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
