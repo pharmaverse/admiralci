@@ -47,18 +47,15 @@ jobs:
             renv_list="${{ steps.changed-files.outputs.all_changed_files }}"
           fi
           renv_list=$(echo $renv_list | sed 's/ /", "/g')
-          echo "${renv_list}"
-          echo "::set-output name=renv::[\"$renv_list\"]"
-      - name: Debug Step
-        run: |
-          echo ${{matrix.outputs.renv}}
+          echo "renv=[\"$renv_list\"]" >> $GITHUB_OUTPUT
+
   deploy-image:
     needs: [ get_renv_list ]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
       matrix:
-        value: ${{fromJson(needs.get_renv_list.outputs.matrix)}}
+        value: ${{ fromJson(needs.get_renv_list.outputs.matrix) }}
 
     # Token permissions
     permissions:
