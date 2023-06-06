@@ -51,7 +51,7 @@ jobs:
       !contains(github.event.commits[0].message, '[skip check_templates]')
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/dgrassellyb/admiralci-${{needs.get_r_version.outputs.r-version}}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{needs.get_r_version.outputs.r-version}}:latest"
     needs: get_r_version
 
     env:
@@ -78,7 +78,7 @@ jobs:
 
       - name: Add safe directory
         run: |
-          git config --global --add safe.directory /__w/admiral/admiral # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}" # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
         shell: bash
 
       - name: Normalize inputs

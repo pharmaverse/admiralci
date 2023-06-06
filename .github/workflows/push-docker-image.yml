@@ -47,18 +47,15 @@ jobs:
             renv_list="${{ steps.changed-files.outputs.all_changed_files }}"
           fi
           renv_list=$(echo $renv_list | sed 's/ /", "/g')
-          echo "${renv_list}"
-          echo "::set-output name=renv::[\"$renv_list\"]"
-      - name: Debug Step
-        run: |
-          echo ${{matrix.outputs.renv}}
+          echo "renv=[\"$renv_list\"]" >> $GITHUB_OUTPUT
+
   deploy-image:
     needs: [ get_renv_list ]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
       matrix:
-        value: ${{fromJson(needs.get_renv_list.outputs.matrix)}}
+        value: ${{ fromJson(needs.get_renv_list.outputs.matrix) }}
 
     # Token permissions
     permissions:
@@ -91,7 +88,7 @@ jobs:
           image-name: "${{ steps.image_specs.outputs.image_name }}"
           tag-latest: true
           base-image: "rocker/rstudio:${{ steps.image_specs.outputs.r_version }}"
-          sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev
+          sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
           renv-lock-file: "${{ steps.image_specs.outputs.renv_lock_path }}"
           repository_owner: ${{ github.repository_owner }}
           repo-user: ${{ github.actor }}  # pharmaverse-bot
