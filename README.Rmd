@@ -6,6 +6,40 @@ date: '2022-08-03'
 
 <!-- Please do not edit the README.md file as it is auto-generated. Only edit the README.Rmd file -->
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+link <- function(text, url) {
+  return(
+    paste0(
+      "[", text, "]",
+      "(", url, ")"
+    )
+  )
+}
+dyn_link <- function(text,
+                     base_url,
+                     relative_url = "",
+                     # Change to TRUE when admiral adopts multiversion docs
+                     is_multiversion = FALSE,
+                     multiversion_default_ref = "main") {
+  url <- paste(base_url, relative_url, sep = "/")
+  if (is_multiversion) {
+    url <- paste(
+      base_url,
+      Sys.getenv("BRANCH_NAME", multiversion_default_ref),
+      relative_url,
+      sep = "/"
+    )
+  }
+  return(link(text, url))
+}
+# Other variables
+admiralci_homepage <- "https://pharmaverse.github.io/admiralci"
+```
+
+
+
+
 # CI/CD Workflows for Admiral R Packages
 
 This repository contains GitHub Actions continuous integration/continuous delivery (CI/CD) workflows, most of which are used by [`Admiral`](https://github.com/pharmaverse/admiral) and its extensions extensions.
@@ -123,6 +157,11 @@ Failed workflows are indicative of unstyled code.
 This workflow allows you to monitor the current status of checks on CRAN, if your package has been published on CRAN. Given that CRAN has its own systems on which it runs checks and it might not be possible to emulate all of their checks using GitHub Actions or CI/CD, it's just more efficient to let their systems run tests and be notified via a GitHub issue if an error is encountered.
 
 Usually CRAN sends out email notifications if errors are encountered during their checks but only individual package owners are notified and a stringent deadline of 2 weeks is given to remediate the errors on CRAN. To mitigate the risk of the package being kicked off CRAN, this workflow provides transparency and visibility to all project collaborators by creating a GitHub issue so that the errors can be remediated before the deadline has passed.
+
+### [`renv.yml`](./.github/workflows/renv.yml)
+
+This workflow controls the propagation process for delivering updated `renv.lock` files across the family of admiral repositories.  A vignette has been developed for this process found at `r dyn_link("Lock File Updates and Propagation", admiralci_homepage, "index.html#lock-file-updates-and-propagation")`
+
 
 ## How to use these workflows?
 

@@ -49,3 +49,6 @@ admiralci*.tgz
 
 # MacOS
 .DS_Store
+
+# VS Code
+.vscode/

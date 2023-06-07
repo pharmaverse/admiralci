@@ -4,7 +4,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.0'
+        default: '4.1'
         required: false
         type: string
   push:
@@ -25,11 +25,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  get_r_version:
+    name: Get R version
+    runs-on: ubuntu-latest
+    if: >
+      !contains(github.event.commits[0].message, '[skip check_templates]')
+    outputs:
+      r-version: ${{ steps.normalizer.outputs.R_VERSION }}
+    steps:
+      - name: Normalize inputs
+        id: normalizer
+        run: |
+          R_VERSION="${{ inputs.r-version }}"
+          if [ "$R_VERSION" == "" ]
+          then {
+            R_VERSION="4.1"
+          }
+          fi
+          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
+        shell: bash
+
   check_templates:
     name: Verify
     if: >
       !contains(github.event.commits[0].message, '[skip check_templates]')
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/pharmaverse/admiralci-${{needs.get_r_version.outputs.r-version}}:latest"
+    needs: get_r_version
+
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -51,6 +75,11 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           fetch-depth: 0
+
+      - name: Add safe directory
+        run: |
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}" # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
+        shell: bash
 
       - name: Normalize inputs
         id: normalizer
@@ -77,7 +106,7 @@ jobs:
           R_VERSION="${{ inputs.r-version }}"
           if [ "$R_VERSION" == "" ]
           then {
-            R_VERSION="4.0"
+            R_VERSION="4.1"
           }
           fi
           echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
@@ -86,33 +115,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ steps.normalizer.outputs.R_VERSION }}
-
       - name: Restore cache
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cache/R/renv
             ~/.staged.dependencies
-          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
-          restore-keys: ${{ runner.os }}-renv-
+          key: staged-deps
+          restore-keys: staged-deps
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
         with:
-          run-system-dependencies: true
+          run-system-dependencies: false
           enable-check: false
           git-ref: ${{ steps.normalizer.outputs.SD_GIT_REF }}
+          renv-restore: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       ##################### END boilerplate steps #####################
 
       - name: Install package
-        run: renv::install(".")
-        shell: Rscript {0}
+        run: |
+          R CMD build --no-build-vignettes --no-manual .
+          R CMD INSTALL *.tar.gz
 
       - name: Run Template Scripts
         run: |
