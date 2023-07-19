@@ -198,7 +198,7 @@ workflow provides transparency and visibility to all project
 collaborators by creating a GitHub issue so that the errors can be
 remediated before the deadline has passed.
 
-### [`renv propagation`](./.github/workflows/renv.yml)
+### [`renv propagation`](./.github/workflows/propagate.yml)
 
 This workflow controls the propagation process for delivering updated
 `renv.lock` files across the family of admiral repositories. A vignette
