@@ -44,7 +44,7 @@
 		}
 	},
 	// install staged deps - note that It will execute at least once, but cloud services will also periodically execute the command to refresh cached or prebuilt containers
-	"updateContentCommand": "Rscript -e \"staged.dependencies::install_deps(staged.dependencies::dependency_table(project = '.', verbose = 1), verbose = 1)\"",
+	"updateContentCommand": "git config --global user.email ${GIT_COMMITTER_EMAIL};Rscript -e \"staged.dependencies::install_deps(staged.dependencies::dependency_table(project = '.', verbose = 1), verbose = 1)\"",
 	// Use 'postAttachCommand' to run commands after the container is started.
 	"postAttachCommand": "sudo rstudio-server start"
 
