@@ -28,10 +28,10 @@ This article will go over the following:
 
 ### What are codespaces, and why are we using it for Admiral ?
 
-Codespaces are development environments hosted in the cloud. These environment are running on virtual machines and can be customised.
+Codespaces are development environments hosted in the cloud. These environment are running on virtual machines and can be customized.
 For `admiral` we setup custom codespaces with all admiral dependencies installed (system dependencies, renv.lock files packages, staged dependencies from `staged_dependencies.yaml` file).
 Then every contributors of admiral can use these codespaces and run Rstudio in their web browsers as a development environment, without having to install locally every dependencies, 
-and without any compatibilities problems with their local machines / operating system.
+and without any compatibility problem with their local machines / operating system.
 
 ### How to use codespaces
 
@@ -79,7 +79,7 @@ Every json fields are described here : https://containers.dev/implementors/json_
 
 In our case we are using following configuration:
 
-- `name` : Name of the dev container displayed in the web browser
+- `name` : Name of the devcontainer displayed in the web browser
 - `image` : Base docker image for the codespace (in our case ghcr admiralci based image)
 - `features`: (see https://github.com/rocker-org/devcontainer-features for every available features for rocker containers). We use r-rig feature to install R and some dependencies + vscode requirements.
 - `customizations`: used to customize IDE (vscode) settings.
@@ -112,7 +112,7 @@ knitr::include_graphics("./assets/prebuild_ready.png", dpi = 144)
 
 Each time a change is detected inside .devcontainer folder, the [propagation job](./.github/workflows/propagate.yml) will be trigger (see doc [lock_and_prop](lock_and_prop.Rmd))
 
-### Improvment ideas
+### Improvement ideas
 
-We can see that every .devcontainer.json files have the same structure. the only variant is the based docker image dependending on the R version.
+We can see that every .devcontainer.json files have the same structure. the only variant is the based docker image depending on the R version.
 We could define an action in our CI/CD workflow to auto-generate these .devcontainer files based on `renv/profile` folder.
