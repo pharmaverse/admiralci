@@ -97,7 +97,7 @@ jobs:
           path: ./extension-repo
           token: ${{ secrets.PHARMAVERSE_BOT }}
 
-      - name: Update renv.lock/.Rprofile/.devcontainers files in ${{ matrix.repos.name }}
+      - name: Update renv.lock/.Rprofile/.devcontainer files in ${{ matrix.repos.name }}
         run: |
           cd extension-repo && git status
           # If it'll be required to create PR_BRANCH_NAME, it has to be branched off
