@@ -63,7 +63,7 @@ The process is implemented to generate `renv.lock` file automatically. It will b
 Note that this propagate process also propagate .devcontainer files which are configuration files for codespaces (see [Codespaces](codespaces.Rmd))
 
 ```{r, echo = FALSE}
-knitr::include_graphics(".assets/prop.png", dpi = 144)
+knitr::include_graphics("./assets/prop.png", dpi = 144)
 ```
 
 
