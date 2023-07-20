@@ -205,6 +205,12 @@ This workflow controls the propagation process for delivering updated
 has been developed for this process found at [Lock File Updates and
 Propagation](https://pharmaverse.github.io/admiralci/index.html#lock-file-updates-and-propagation)
 
+### [`docker image build`](./.github/workflows/push-docker-image.yml)
+
+This workflow is pushing a docker image inside admiralci ghcr (github container registry). It's triggered each time a change is detected inside `renv.lock` files.
+A docker image is produced for each R versions (defined under `renv/profiles` folder). This image will contain every system dependencies required + `renv.lock` files packages.
+This workflow mainly uses the action `insightsengineering/r-image-creator`, which is a generic action to create `rocker/rstudio` based docker images.
+
 ## How to use these workflows?
 
 ### Reuse (recommended)

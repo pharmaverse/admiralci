@@ -12,7 +12,7 @@
 		},
 		"ghcr.io/rocker-org/devcontainer-features/renv-cache:latest": {}
 	},
-	"postCreateCommand": "R -q -e 'renv::activate(profile = \"4.3\"); renv::restore()'",
+	"postCreateCommand": "R -q -e 'renv::activate(profile = \"4.3\"); renv::restore()'", // TODO: test without - not needed, renv already installed
 
 	"customizations": {
 		"vscode": {
