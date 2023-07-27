@@ -20,7 +20,7 @@
 			"installZsh": true,
 			"configureZshAsDefaultShell": true,
 			"installOhMyZsh": true,
-			"username": "none",
+			"username": "rstudio",
 			"upgradePackages": false
 				
 		},
@@ -31,7 +31,7 @@
 	
 	"postCreateCommand": {
 		"renv": "R -q -e 'renv::activate(profile = \"4.2\"); renv::restore(); staged.dependencies::install_deps(staged.dependencies::dependency_table(project = \".\", verbose = 1), verbose = 1);'",
-		"rstudio": "jq --arg folder \"$(pwd)\" '. + { \"initial_working_directory\": $folder }' .devcontainer/rstudio-prefs.json > ~/.config/rstudio/rstudio-prefs.json"
+		"rstudio": "jq --arg folder \"$(pwd)/\" '. + { \"initial_working_directory\": $folder }' .devcontainer/rstudio-prefs.json > ~/.config/rstudio/rstudio-prefs.json"
 	},
 
 	"customizations": {
