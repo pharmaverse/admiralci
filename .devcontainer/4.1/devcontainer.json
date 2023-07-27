@@ -20,7 +20,7 @@
 			"installZsh": true,
 			"configureZshAsDefaultShell": true,
 			"installOhMyZsh": true,
-			"username": "rstudio",
+			"username": "none",
 			"upgradePackages": false
 				
 		},
