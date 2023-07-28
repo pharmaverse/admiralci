@@ -1,12 +1,13 @@
 {
 	// https://containers.dev/implementors/json_reference/
-	"name": "Admiral R-4.2 (RStudio) container",
-	"image": "ghcr.io/pharmaverse/admiralci-4.2:latest",
+	"name": "Admiral R-4.3 (RStudio) container",
+	"image": "ghcr.io/pharmaverse/admiralci-4.3:latest",
 	// Install Dev Container Features. More info: https://containers.dev/features
 	"containerEnv": {
 		"ROOT": "true",
 		"PASSWORD": "rstudio",
-		"DISABLE_AUTH": "true"
+		"DISABLE_AUTH": "true",
+        "DOCKER_CONTAINER_CONTEXT": ""
 	},
 	"features": {
 		"ghcr.io/rocker-org/devcontainer-features/r-rig:1": {
@@ -22,7 +23,6 @@
 			"installOhMyZsh": true,
 			"username": "rstudio",
 			"upgradePackages": false
-				
 		},
 		"ghcr.io/mikaello/devcontainer-features/modern-shell-utils:1": {}
 	},
@@ -30,7 +30,7 @@
 	"overrideCommand": false,
 	
 	"postCreateCommand": {
-		"renv": "R -q -e 'renv::activate(profile = \"4.2\"); renv::restore(); staged.dependencies::install_deps(staged.dependencies::dependency_table(project = \".\", verbose = 1), verbose = 1);'",
+		"renv": "R -q -e 'renv::activate(profile = \"4.3\"); renv::restore(); staged.dependencies::install_deps(staged.dependencies::dependency_table(project = \".\", verbose = 1), verbose = 1);'",
 		"rstudio": "jq --arg folder \"$(pwd)/\" '. + { \"initial_working_directory\": $folder }' .devcontainer/rstudio-prefs.json > ~/.config/rstudio/rstudio-prefs.json"
 	},
 
