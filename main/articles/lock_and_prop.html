@@ -41,6 +41,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/docker_and_codespaces.html">Codespaces</a>
     <a class="dropdown-item" href="../articles/lock_and_prop.html">Lock File Updates and Propagation</a>
     <a class="dropdown-item" href="../articles/tweak-page-hooks.html">Custom pkgdown tweak page hooks</a>
   </div>
@@ -48,13 +49,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/.git">.git</a> </div></li>
-<!-- end dropdown for versions -->
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -168,7 +162,7 @@ This ensures that developers working on <code>{admiral.test}</code> and
 <a href="https://pharmaverse.github.io/admiralonco/" class="external-link">admiralonco</a> have the same common environment as those
 working on <a href="https://pharmaverse.github.io/admiraldev/main/" class="external-link">admiraldev</a> and
 <code>{admiralvaccines}</code>.</p>
-<p>The file that does the propagation process is called <a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/renv.yml" class="external-link"><code>renv.yml</code></a>
+<p>The file that does the propagation process is called <a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/propagate.yml" class="external-link"><code>propagate.yml</code></a>
 located in the <code>.github/workflows</code> folder of the <a href="https://github.com/pharmaverse/admiralci/" class="external-link">admiralci
 repository</a>.</p>
 <p>The process is implemented to generate <code>renv.lock</code> file
@@ -195,7 +189,9 @@ reviewer has a special shield symbol next to their name. This person is
 a codeowner of the <code>common.yml</code> and is alerted whenever a
 change is made to this file. You can read more about codeowners on <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" class="external-link">About
 Code Owners</a> in GitHub Documentation</p>
-<p><img src="prop.png"><!-- --></p>
+<p>Note that this propagate process also propagate .devcontainer files
+which are configuration files for codespaces (see <a href="codespaces.Rmd">Codespaces</a>)</p>
+<p><img src="assets/prop.png"><!-- --></p>
 <div class="section level4">
 <h4 id="r-version-updates-and-lock-files">R Version Updates and Lock Files<a class="anchor" aria-label="anchor" href="#r-version-updates-and-lock-files"></a>
 </h4>

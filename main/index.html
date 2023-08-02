@@ -43,6 +43,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/docker_and_codespaces.html">Codespaces</a>
     <a class="dropdown-item" href="articles/lock_and_prop.html">Lock File Updates and Propagation</a>
     <a class="dropdown-item" href="articles/tweak-page-hooks.html">Custom pkgdown tweak page hooks</a>
   </div>
@@ -50,13 +51,6 @@
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/.git">.git</a> </div></li>
-<!-- end dropdown for versions -->
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -193,9 +187,15 @@
 </div>
 <div class="section level3">
 <h3 id="renv-propagation">
-<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/renv.yml"><code>renv propagation</code></a><a class="anchor" aria-label="anchor" href="#renv-propagation"></a>
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/propagate.yml"><code>renv propagation</code></a><a class="anchor" aria-label="anchor" href="#renv-propagation"></a>
 </h3>
 <p>This workflow controls the propagation process for delivering updated <code>renv.lock</code> files across the family of admiral repositories. A vignette has been developed for this process found at <a href="https://pharmaverse.github.io/admiralci/index.html#lock-file-updates-and-propagation" class="external-link">Lock File Updates and Propagation</a></p>
+</div>
+<div class="section level3">
+<h3 id="docker-image-build">
+<a href="https://github.com/pharmaverse/admiralci/blob/HEAD/.github/workflows/push-docker-image.yml"><code>docker image build</code></a><a class="anchor" aria-label="anchor" href="#docker-image-build"></a>
+</h3>
+<p>This workflow is pushing a docker image inside admiralci ghcr (github container registry). It’s triggered each time a change is detected inside <code>renv.lock</code> files. A docker image is produced for each R versions (defined under <code>renv/profiles</code> folder). This image will contain every system dependencies required + <code>renv.lock</code> files packages. This workflow mainly uses the action <code>insightsengineering/r-image-creator</code>, which is a generic action to create <code>rocker/rstudio</code> based docker images.</p>
 </div>
 </div>
 <div class="section level2">
