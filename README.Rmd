@@ -158,7 +158,7 @@ This workflow allows you to monitor the current status of checks on CRAN, if you
 
 Usually CRAN sends out email notifications if errors are encountered during their checks but only individual package owners are notified and a stringent deadline of 2 weeks is given to remediate the errors on CRAN. To mitigate the risk of the package being kicked off CRAN, this workflow provides transparency and visibility to all project collaborators by creating a GitHub issue so that the errors can be remediated before the deadline has passed.
 
-### [`renv.yml`](./.github/workflows/renv.yml)
+### [`propagate.yml`](./.github/workflows/propagate.yml)
 
 This workflow controls the propagation process for delivering updated `renv.lock` files across the family of admiral repositories.  A vignette has been developed for this process found at `r dyn_link("Lock File Updates and Propagation", admiralci_homepage, "index.html#lock-file-updates-and-propagation")`
 

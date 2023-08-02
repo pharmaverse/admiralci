@@ -2,7 +2,7 @@
 # This is a workflow that is specific to admiralci
 # It's not inteded to be used by other projects
 
-name: Propagate renv.lock
+name: Propagate renv.lock, Rprofile and .devcontainer files
 
 on:
   pull_request:
@@ -12,6 +12,7 @@ on:
       - renv.lock
       - renv/**
       - .Rprofile
+      - .devcontainer/*
 
 jobs:
   integrity:
@@ -41,7 +42,7 @@ jobs:
 
   propagation:
     if: github.event.pull_request.draft == false
-    name: Propagate renv.lock
+    name: Propagate renv.lock, Rprofile and .devcontainer files
     runs-on: ubuntu-latest
     needs: integrity
     env:
@@ -96,7 +97,7 @@ jobs:
           path: ./extension-repo
           token: ${{ secrets.PHARMAVERSE_BOT }}
 
-      - name: Update renv.lock in ${{ matrix.repos.name }}
+      - name: Update renv.lock/.Rprofile/.devcontainer files in ${{ matrix.repos.name }}
         run: |
           cd extension-repo && git status
           # If it'll be required to create PR_BRANCH_NAME, it has to be branched off
@@ -116,6 +117,9 @@ jobs:
           rm -rf renv && cp -r ../renv .
           # ALso update the `.Rprofile` file in the repository
           cp ../.Rprofile .
+          # Update .devcontainer config files
+          rm -rf .devcontainer
+          cp -r ../.devcontainer .
           # Also update the R_VERSION setting in workflows to match
           # what's available in the renv.lock file, but skip R patch version
           R_VERSION=$(cat ../renv.lock | jq -r '.R.Version' | grep -oE '^[0-9]+\.[0-9]+')
@@ -124,8 +128,8 @@ jobs:
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: renv update from ${{ github.repository }}
-          file_pattern: 'renv.lock renv/* .github/workflows/* .Rprofile'
+          commit_message: renv / codespaces update from ${{ github.repository }}
+          file_pattern: 'renv.lock renv/* .github/workflows/* .Rprofile .devcontainer/*'
           repository: extension-repo
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com

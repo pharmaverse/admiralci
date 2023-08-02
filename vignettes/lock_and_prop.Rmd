@@ -49,7 +49,7 @@ The first step for requesting an update for a R package in the `renv.lock` file 
 Through GitHub Actions we have developed the ability to **propagate** updated lock files with our preferred versions of R and R packages throughout the family of admiral packages.  This ensures that developers working on `{admiral.test}` and `{admiralonco}` have the same common environment as those working on `{admiraldev}` and `{admiralvaccines}`. 
 
 
-The file that does the propagation process is called [`renv.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/renv.yml) located in the `.github/workflows` folder of the [admiralci repository](https://github.com/pharmaverse/admiralci/). 
+The file that does the propagation process is called [`propagate.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/propagate.yml) located in the `.github/workflows` folder of the [admiralci repository](https://github.com/pharmaverse/admiralci/). 
 
 The process is implemented to generate `renv.lock` file automatically. It will be done for all supported R releases that need to be compatible with admiral. The propagation occurs in the following steps:
 
@@ -60,9 +60,10 @@ The process is implemented to generate `renv.lock` file automatically. It will b
 
 **Note:** In `[1]` you will see that one reviewer has a special shield symbol next to their name.  This person is a codeowner of the `common.yml` and is alerted whenever a change is made to this file.  You can read more about codeowners on [About Code Owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) in GitHub Documentation
 
+Note that this propagate process also propagate .devcontainer files which are configuration files for codespaces (see [Codespaces](codespaces.Rmd))
 
 ```{r, echo = FALSE}
-knitr::include_graphics("./prop.png", dpi = 144)
+knitr::include_graphics("./assets/prop.png", dpi = 144)
 ```
 
 
