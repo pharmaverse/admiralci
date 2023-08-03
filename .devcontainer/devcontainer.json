@@ -28,10 +28,7 @@
 	"init": true,
 	"overrideCommand": false,
 	
-	"postCreateCommand": {
-		"renv": "R -q -e 'renv::activate(profile = \"4.3\"); renv::restore(); staged.dependencies::install_deps(staged.dependencies::dependency_table(project = \".\", verbose = 1), verbose = 1);'",
-		"rstudio": "jq --arg folder \"$(pwd)/\" '. + { \"initial_working_directory\": $folder }' .devcontainer/rstudio-prefs.json > ~/.config/rstudio/rstudio-prefs.json"
-	},
+	"postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
 
 	"customizations": {
 		"vscode": {
@@ -68,7 +65,7 @@
 		"8787": {
 			"label": "Rstudio",
 			"requireLocalPort": true,
-			"onAutoForward": "ignore"
+			"onAutoForward": "openBrowser"
 		}
 	},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root
