@@ -30,10 +30,12 @@ This article will go over the following:
 
 Codespaces are development environments hosted in the cloud. These environment are running on virtual machines and can be customized.
 For `admiral` we setup custom codespaces with all admiral dependencies installed (system dependencies, renv.lock files packages, staged dependencies from `staged_dependencies.yaml` file).
-Then every contributors of admiral can use these codespaces and run Rstudio in their web browsers as a development environment, without having to install locally every dependencies, 
+Then every contributors of admiral can use these codespaces and run Rstudio in their web browsers as a development environment, without having to install locally every dependencies,
 and without any compatibility problem with their local machines / operating system.
 
 ### How to use codespaces
+
+#### Create a codespace
 
 On the main repository, go under `<> Code` menu -> `Codespaces` -> `...` -> `+ New with options`.
 
@@ -48,6 +50,21 @@ knitr::include_graphics("./assets/create_codespaces_2.png", dpi = 144)
 ```
 
 Go under `Dev container configuration` drop-down menu, and select the codespaces wished (you can choose between several R versions).
+Note: Pressing directly `+` button will automatically create codespace for the latest R version available (`4.2`).
+
+#### Accessing Rstudio
+
+To access Rstudio you need to go under vscode PORTS section :
+
+```{r, echo = FALSE}
+knitr::include_graphics("./assets/codespaces_rstudio_forward_port.png", dpi = 144)
+```
+
+Go on the row with port `8787` and open the url in a new browser.
+
+Known issues:
+  - Sometimes ports are not automatically forwarded at the codespace creation. If you don't see `8787` port, then you need to manually add it (using "Add Port" button).
+  - The Rstudio server can takes some times to set-up after the codespace creation, so it might be not available right after the creation, and user might have to wait some minutes. We added a bash script `.devcontainer/codespaces_rstudio_status.sh` to check rstudio server status but it still an experimental feature.
 
 ### Usage limit / Pricing
 
@@ -110,7 +127,7 @@ knitr::include_graphics("./assets/prebuild_ready.png", dpi = 144)
 
 ### Propagation
 
-Each time a change is detected inside .devcontainer folder, the [propagation job](./.github/workflows/propagate.yml) will be trigger (see doc [lock_and_prop](lock_and_prop.Rmd))
+Each time a change is detected inside .devcontainer folder, the [propagation job](./.github/workflows/propagate.yml) will be trigger (see doc [lock_and_prop](lock_and_prop))
 
 ### Improvement ideas
 
