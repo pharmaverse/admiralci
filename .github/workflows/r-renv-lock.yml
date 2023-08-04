@@ -115,6 +115,7 @@ jobs:
           install_min_version <- function(pkg, version) {
             upgrade <- try(packageVersion(pkg) >= version, silent = TRUE)
             if (!isTRUE(upgrade)) {
+              message("Upgrade `", pkg, "` to `", version, "`")
               remotes::install_version(pkg, version = version, upgrade = "never")
             }
           }
@@ -133,6 +134,7 @@ jobs:
           renv_install_suggests("admiral.test")
 
           # Install dependencies
+          renv::install(".", repos = options("repos"))
           renv::install(repos = options("repos"))
 
           if (legacy) {
