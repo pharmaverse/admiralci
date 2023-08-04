@@ -176,8 +176,8 @@ jobs:
           install_min_version("dplyr","1.1.1")
           remotes::install_version("roxygen2", version = "7.2.3", upgrade = "never")
 
-          renv::snapshot(force = TRUE, prompt = FALSE)
           renv::settings$snapshot.type("custom")
+          renv::snapshot(force = TRUE, prompt = FALSE)
           if (identical(renv_profile, "4.1")) {
             file.copy(renv::paths$lockfile(), "renv.lock", overwrite = TRUE)
           }
