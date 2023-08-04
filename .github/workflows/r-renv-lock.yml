@@ -53,7 +53,7 @@ jobs:
           use-public-rspm: true
 
       - name: Install system dependencies
-        run: sudo apt update && sudo apt install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev -y
+        run: sudo apt update && sudo apt install libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev libgit2-dev -y
 
       - name: Collect dependencies
         run: |
