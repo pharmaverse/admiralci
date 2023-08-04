@@ -57,6 +57,8 @@ jobs:
 
       - name: Collect dependencies
         run: |
+          Sys.setenv("RENV_CONFIG_SANDBOX_ENABLED" = FALSE)
+          Sys.setenv("RENV_CONFIG_AUTO_SNAPSHOT" = FALSE)
           source("renv/activate.R")
           lock_gen_version <- "0.1.10"
           legacy <- identical(Sys.getenv("R_RELEASE_LAGACY"), "true")
