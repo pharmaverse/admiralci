@@ -26,7 +26,7 @@ options(renv.snapshot.filter = .get_dependencies)
 
 .renv_profile <- paste(R.version$major, substr(R.version$minor, 1, 1), sep = ".")
 if (!file.exists("./renv/profile")) {
-  if (renv_profile %in% c("4.1", "4.2", "4.3")) {
+  if (.renv_profile %in% c("4.1", "4.2", "4.3")) {
     message("Set renv profile to `", .renv_profile, "`")
     Sys.setenv("RENV_PROFILE" = .renv_profile)
   } else {
