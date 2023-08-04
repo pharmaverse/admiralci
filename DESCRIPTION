@@ -30,7 +30,5 @@ Suggests:
     usethis,
     readxl,
     devtools,
-    rstudioapi,
-    spelling,
-    styler
+    rstudioapi
 VignetteBuilder: knitr
