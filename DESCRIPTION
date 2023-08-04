@@ -25,5 +25,12 @@ Suggests:
     styler,
     covr,
     xml2,
-    purrr
+    purrr,
+    languageserver,
+    usethis,
+    readxl,
+    devtools,
+    rstudioapi,
+    spelling,
+    styler
 VignetteBuilder: knitr
