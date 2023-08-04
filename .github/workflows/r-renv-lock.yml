@@ -186,7 +186,7 @@ jobs:
           if (identical(renv_profile, "4.1")) {
             file.copy(renv::paths$lockfile(), "renv.lock", overwrite = TRUE)
           }
-        shell: Rscript {0}
+        shell: Rscript --vanilla {0}
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
