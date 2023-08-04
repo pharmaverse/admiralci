@@ -40,8 +40,9 @@ if (!file.exists("./renv/profile")) {
 }
 
 if (Sys.getenv("GITHUB_ACTIONS") != "") {
+  options(repos = c(CRAN = "https://packagemanager.posit.co/cran/latest"))
   Sys.setenv("RENV_AUTOLOADER_ENABLED" = FALSE)
 }
 Sys.setenv("RENV_CONFIG_SANDBOX_ENABLED" = FALSE)
 Sys.setenv("RENV_CONFIG_AUTO_SNAPSHOT" = FALSE)
-source("renv/activate.R")
+# source("renv/activate.R")
