@@ -134,7 +134,7 @@ jobs:
           renv_install_suggests("admiral.test")
 
           # Install dependencies
-          renv::install(".", repos = options("repos"))
+          renv::settings$snapshot.type("explicit")
           renv::install(repos = options("repos"))
 
           if (legacy) {
