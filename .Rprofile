@@ -46,3 +46,4 @@ if (Sys.getenv("GITHUB_ACTIONS") != "") {
 Sys.setenv("RENV_CONFIG_SANDBOX_ENABLED" = FALSE)
 Sys.setenv("RENV_CONFIG_AUTO_SNAPSHOT" = FALSE)
 source("renv/activate.R")
+.libPaths(c(Sys.getenv("R_LIBS"), .libPaths()))
