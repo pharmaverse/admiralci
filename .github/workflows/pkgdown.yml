@@ -141,6 +141,51 @@ jobs:
       - name: Install package
         run: renv::install(".", dependencies = "no-deps")
         shell: Rscript {0}
+        
+      - name: Add script to fix rdrr.io links for pharmaverse packages
+        uses: "DamianReeves/write-file-action@v1.2"
+        with:
+          path: ./.Rprofile
+          write-mode: append
+          contents: |
+            tweak_rdrr_url <- function(...) {
+              html <- ..1
+
+              links <- xml2::xml_find_all(html, ".//a")
+              if (length(links) == 0) {
+                return(invisible())
+              }
+
+              hrefs <- xml2::xml_attr(links, "href")
+              needs_tweak <- grepl("^https://rdrr.io/pkg/", hrefs) & xml2::url_parse(hrefs)$scheme == "https"
+
+              fix_links <- function(x) {
+                pattern <- "/pkg/(\\w+)/man/(\\w+)\\.html"
+
+                matches <- stringr::str_match(x, pattern)
+                package_name <- matches[2]
+                function_name <- matches[3]
+
+                if (!(grepl("^admiral", package_name) || package_name %in% c("matatools", "matacore"))) {
+                    return(x)
+                }
+
+                sprintf("https://pharmaverse.github.io/%s/pre-release/reference/%s.html", package_name, function_name)
+              }
+
+              if (any(needs_tweak)) {
+                purrr::walk2(
+                  links[needs_tweak],
+                  purrr::map(hrefs[needs_tweak], fix_links),
+                  xml2::xml_set_attr,
+                  attr = "href"
+                )
+              }
+
+              invisible()
+            }
+            
+            setHook("UserHook::admiralci::tweak_page", tweak_rdrr_url)
 
       - name: Publish documentation
         run: |
