@@ -186,6 +186,7 @@ jobs:
             }
             
             setHook("UserHook::admiralci::tweak_page", tweak_rdrr_url)
+            print("Tweak rdrr.io links for admiral pharmaverse packages.")
 
       - name: Publish documentation
         run: |
