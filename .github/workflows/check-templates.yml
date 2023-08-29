@@ -229,6 +229,8 @@ jobs:
         with:
           ref: main
           repository: ${{ env.repo }}
+          with:
+            fetch-depth: 2
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -241,10 +243,15 @@ jobs:
       - name: Check templates changes
         id: changes
         run: |
-          diffs=$(git diff "${{ env.templates_data_folder }}")
-          diff_files=$(git diff --name-only)
-          echo "diff=$diff" >> $GITHUB_OUTPUT
-          if [ -z "$diffs" ]; then echo "No changes detected after running templates. Stop here"; else echo "Changes detected, new PR will be created"; echo "list of files with new updates: $diff_files"; fi
+          head_data_folder=$(git ls-tree HEAD~1 | grep data)
+          if [ -z "$head_data" ]
+          then
+            echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
+            diff_files=$(ls "${{ env.templates_data_folder }}")
+          else
+            diff_files=$(git diff --name-only "${{ env.templates_data_folder }}")
+          echo "diff=$diff_files" >> $GITHUB_OUTPUT
+          if [ -z "$diff_files" ]; then echo "No changes detected after running templates. Stop here"; else echo "Changes detected, new PR will be created"; echo "list of files with new updates: $diff_files"; fi
 
       # if diff detected, push changes
       - name: Commit and push changes in {{ env.repo }}
