@@ -196,7 +196,21 @@ jobs:
               stop(err_msg, call. = FALSE)
             }
           }
-        shell: Rscript {0} # TODO: add other formats than RDS
+        shell: Rscript {0}
+
+      - name: Add other data formats
+        run: |
+          library(readxl)
+          folder_path <- file.path("${{ github.workspace }}", "tmp")
+          rds_files <- list.files(path = folder_path, pattern = "\\.rds$", full.names = TRUE)
+
+          for (rds_file in rds_files) {
+
+            csv_file <- gsub("\\.rds$", ".csv", rds_file)
+            data <- readRDS(rds_file)
+            write.csv(data, file = csv_file, row.names = FALSE)
+          }
+        shell: Rscript {0}
 
       - name: Debug
         run: |
@@ -226,8 +240,7 @@ jobs:
       - name: Check templates changes
         id: changes
         run: |
-          mkdir -p "${{ env.templates_data_folder }}"
-          mv "${{ github.workspace }}/tmp" "${{ github.workspace }}/data"
+          mv -f "${GITHUB_WORKSPACE}/tmp" "${GITHUB_WORKSPACE}/data"
           diffs=$(git diff "${{ env.templates_data_folder }}")
           echo "diff=$diff" >> $GITHUB_OUTPUT
           if [ -z "$diffs" ]; then echo "No changes detected after running templates. Stop here"; else echo "Changes detected, new PR will be created"; fi
