@@ -234,6 +234,7 @@ jobs:
       - name: Add safe directory
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+          git ls-tree origin/main | grep data # DEBUG
         shell: bash
 
       - name: Download a single artifact
@@ -248,7 +249,7 @@ jobs:
         id: changes
         run: |
           echo "step2"
-          head_data_folder=$(git ls-tree HEAD~1 | grep data)
+          head_data_folder=$(git ls-tree origin/main | grep data)
           echo "step1"
           if [ -z "$head_data" ]
           then {
