@@ -257,9 +257,9 @@ jobs:
           if [ -z "${{ steps.check_exists.outputs.head_data_folder}}" ]
           then {
             echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
-            diff_files=$(ls "${{ env.templates_data_folder }}")
+            diff_files=$(ls "${{ github.workspace }}/data")
           } else {
-            diff_files=$(git diff --name-only "${{ env.templates_data_folder }}")
+            diff_files=$(git diff --name-only data)
           }
           fi
           echo "diff=$diff_files" >> $GITHUB_OUTPUT
