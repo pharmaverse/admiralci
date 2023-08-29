@@ -18,6 +18,42 @@ on:
       - devel
       - pre-release
 
+env:
+  # branch name for PR
+  pr:
+    source-branch: update_templates_data
+    repo: pharmaverseadam
+    target-branch: main
+  # data folder name for templates
+  templates_data_folder: ./data/
+  # repositories variables for PRs
+  admiralonco:
+    reviewers: |-
+      bundfussr
+      cicdguy
+  admiraldev:
+    reviewers: |-
+      bms63
+      cicdguy
+  admiraltemplate:
+    reviewers: |-
+      bms63
+      cicdguy
+      bundfussr
+  admiralophtha:
+    reviewers: |-
+      cicdguy
+  admiral:
+    reviewers: |-
+      dgrassellyb
+  admiral.test:
+    reviewers: |-
+      bms63
+      bundfussr
+  admiralvaccine:
+    reviewers: |-
+      bms63
+
 name: Check Templates
 
 concurrency:
@@ -139,7 +175,6 @@ jobs:
           R CMD build --no-build-vignettes --no-manual .
           R CMD INSTALL *.tar.gz
 
-      # take this script but trigger on changes (main inst/templates file - generate )
       - name: Run Template Scripts
         run: |
           desc <- read.dcf("DESCRIPTION")
@@ -166,6 +201,7 @@ jobs:
           }
         shell: Rscript {0} # TODO: add other formats than RDS
 
+      # store templates data as artifacts
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -173,12 +209,11 @@ jobs:
           path: |
             ./inst/templates/tmp
 
-      # create branch on pharmaverseadam
       - name: Checkout repo (PR) 🛎
         uses: actions/checkout@v3
         with:
           ref: main
-          repository: pharmaverse/pharmaverseadam
+          repository: ${{ env.pr.repo }}
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -186,28 +221,30 @@ jobs:
         with:
           name: data_templates
 
-      # todo: stop here if no changes detected
+      # detect diffs om templates data
       - name: Check templates changes
         id: changes
         run: |
-          mkdir -p ./data
-          cp -r "${{steps.download.outputs.download-path}}/." ./data
-          diffs=$(git diff ./data)
+          mkdir -p "${{ env.templates_data_folder }}"
+          cp -r "${{steps.download.outputs.download-path}}/." "${{ env.templates_data_folder }}"
+          diffs=$(git diff "${{ env.templates_data_folder }}")
           echo "diff=$diff" >> $GITHUB_OUTPUT
+          if [ -z "$diffs" ]; then echo "No changes detected after running templates. Stop here"; else echo "Changes detected, new PR will be created"; fi
 
-      - name: Commit and push changes in pharmaverseadam
+      # if diff detected, push changes
+      - name: Commit and push changes in {{ env.pr.repo }}
         if: ${{ steps.changes.outputs.diff != '' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: templates data updates from ${{ github.repository }}
           file_pattern: 'data/*'
-          repository: pharmaverseadam
+          repository: "{{ env.pr.repo }}"
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
-          branch: update_data_folder # todo change PR name ? (question also for propagate jobs, do we have sometimes branches / pr conflict?)
+          branch: "{{ env.pr.source-branch }}"
           create_branch: true
 
-      - name: Create Pull Request in pharmaverseadam # TODO: create seperated action for this ? (duplicated code also for propagate)
+      - name: Create Pull Request
         if: ${{ steps.changes.outputs.diff != '' }}
         uses: actions/github-script@v6
         with:
@@ -215,7 +252,7 @@ jobs:
           script: |
             // Look for any open PRs
             const repo_owner = "${{ github.repository_owner }}";
-            const repo_name = "${{ matrix.repos.name }}";
+            const repo_name = "${{ env.pr.repo }}";
             const result = await github.rest.pulls.list({
               owner: repo_owner,
               repo: repo_name,
@@ -224,7 +261,7 @@ jobs:
             let create_new_pr = true;
             for (const pr of result.data) {
               // Look for distinct PR branch name
-              if (pr.head.ref === "${{ env.PR_BRANCH_NAME }}@${{ matrix.repos.target-branch }}") {
+              if (pr.head.ref === "${{ env.pr.source-branch }}") {
                 console.log("PR with head ref " + pr.head.ref + " already exists");
                 create_new_pr = false;
                 break;
@@ -235,19 +272,19 @@ jobs:
             if (create_new_pr) {
               console.log("Creating a new PR");
               const result2 = await github.rest.pulls.create({
-                title: 'Propagate renv.lock from ${{ github.repository }}',
+                title: 'Templates data updates from ${{ github.repository }}',
                 owner: repo_owner,
                 repo: repo_name,
-                head: '${{ env.PR_BRANCH_NAME }}@${{ matrix.repos.target-branch }}',
-                base: '${{ matrix.repos.target-branch }}',
+                head: '${{ env.pr.source-branch }}',
+                base: '${{ env.pr.target-branch }}',
                 body: [
                   'This PR has been automatically generated by ',
-                  'renv.lock propagation workflow from ${{ github.repository }}.',
+                  'check-templates workflow from ${{ github.repository }}.',
                   '\n\nPlease review the changes.'
                 ].join('')
               });
               // Assign reviewers to the PR
-              const reviewer_list = `${{ matrix.repos.reviewers }}`.split("\n");
+              const reviewer_list = `${{ env[format('{0}.reviewers', github.repository)] }}`
               console.log(reviewer_list);
               const result3 = await github.rest.pulls.requestReviewers({
                 owner: repo_owner,
