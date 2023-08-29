@@ -239,7 +239,7 @@ jobs:
       - name: Check if data folder exists
         id: check_exists
         run: |
-          head_data_folder=$(git ls-tree HEAD | grep data)
+          head_data_folder=$(ls | grep data)
           echo "head_data_folder=$head_data_folder" >> $GITHUB_OUTPUT
 
       - name: Download a single artifact
