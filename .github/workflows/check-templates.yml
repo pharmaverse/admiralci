@@ -173,6 +173,7 @@ jobs:
 
       - name: Run Template Scripts
         run: |
+          remotes::install_github("pharmaverse/pharmaversesdtm", ref = "devel") # TODO:del (install manually pharmaversesdtm)
           desc <- read.dcf("DESCRIPTION")
           package_name <- as.character(desc[, "Package"])
           templates <- list.files(
