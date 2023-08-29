@@ -229,8 +229,7 @@ jobs:
         with:
           ref: main
           repository: ${{ env.repo }}
-          with:
-            fetch-depth: 2
+          fetch-depth: 2
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
