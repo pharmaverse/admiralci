@@ -28,19 +28,19 @@ env:
   templates_data_folder: ./data/
   # repositories variables for PRs
   admiralonco:
-    reviewers: bundfussr,cicdguy,manciniedoardo
+    reviewers: "bundfussr,cicdguy,manciniedoardo"
   admiraldev:
-    reviewers: bms63,cicdguy,manciniedoardo
+    reviewers: "bms63,cicdguy,manciniedoardo"
   admiraltemplate:
-    reviewers: bms63,cicdguy,bundfussr,manciniedoardo
+    reviewers: "bms63,cicdguy,bundfussr,manciniedoardo"
   admiralophtha:
-    reviewers: cicdguy,manciniedoardo
+    reviewers: "cicdguy,manciniedoardo"
   admiral:
-    reviewers: dgrassellyb,cicdguy
+    reviewers: "dgrassellyb,cicdguy"
   admiral.test:
-    reviewers: bms63,bundfussr,manciniedoardo
+    reviewers: "bms63,bundfussr,manciniedoardo"
   admiralvaccine:
-    reviewers: bms63,manciniedoardo
+    reviewers: "bms63,manciniedoardo"
 
 name: Check Templates
 
