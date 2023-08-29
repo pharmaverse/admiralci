@@ -200,8 +200,8 @@ jobs:
 
       - name: Debug
         run: |
-          ls ./inst/templates
-          ls ./inst/templates/tmp
+          ls "${GITHUB_WORKSPACE}"
+          ls "${GITHUB_WORKSPACE}/tmp"
 
       # store templates data as artifacts
       - name: Archive production artifacts
@@ -209,7 +209,7 @@ jobs:
         with:
           name: data_templates
           path: |
-            ./inst/templates/tmp
+            "${GITHUB_WORKSPACE}/tmp"
 
       - name: Checkout repo (PR) 🛎
         uses: actions/checkout@v3
