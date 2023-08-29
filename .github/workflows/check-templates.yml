@@ -231,11 +231,16 @@ jobs:
           repository: ${{ env.repo }}
           fetch-depth: 2
 
-      - name: Add safe directory
+      - name: Add safe directory # TODO: try without
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
-          git ls-tree origin/main | grep data # DEBUG
         shell: bash
+      
+      - name: Check if data folder exists
+        id: check_exists
+        run: |
+          head_data_folder=$(git ls-tree HEAD | grep data)
+          echo "head_data_folder=$head_data_folder" >> $GITHUB_OUTPUT
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -248,10 +253,7 @@ jobs:
       - name: Check templates changes
         id: changes
         run: |
-          echo "step2"
-          head_data_folder=$(git ls-tree origin/main | grep data)
-          echo "step1"
-          if [ -z "$head_data" ]
+          if [ -z "${{ steps.check_exists.outputs.head_data_folder}}" ]
           then {
             echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
             diff_files=$(ls "${{ env.templates_data_folder }}")
