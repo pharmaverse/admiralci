@@ -22,37 +22,25 @@ env:
   # branch name for PR
   pr:
     source-branch: update_templates_data
-    repo: pharmaverseadam
+    repo: pharmaverse/pharmaverseadam
     target-branch: main
   # data folder name for templates
   templates_data_folder: ./data/
   # repositories variables for PRs
   admiralonco:
-    reviewers: |-
-      bundfussr
-      cicdguy
+    reviewers: ["bundfussr", "cicdguy", "manciniedoardo"]
   admiraldev:
-    reviewers: |-
-      bms63
-      cicdguy
+    reviewers: ["bms63", "cicdguy", "manciniedoardo"]
   admiraltemplate:
-    reviewers: |-
-      bms63
-      cicdguy
-      bundfussr
+    reviewers: ["bms63", "cicdguy,bundfussr", "manciniedoardo"]
   admiralophtha:
-    reviewers: |-
-      cicdguy
+    reviewers: ["cicdguy", "manciniedoardo"]
   admiral:
-    reviewers: |-
-      dgrassellyb
+    reviewers: ["dgrassellyb", "cicdguy"]
   admiral.test:
-    reviewers: |-
-      bms63
-      bundfussr
+    reviewers: ["bms63", "bundfussr", "manciniedoardo"]
   admiralvaccine:
-    reviewers: |-
-      bms63
+    reviewers: ["bms63", "manciniedoardo"]
 
 name: Check Templates
 
@@ -284,7 +272,7 @@ jobs:
                 ].join('')
               });
               // Assign reviewers to the PR
-              const reviewer_list = `${{ env[format('{0}.reviewers', github.repository)] }}`
+              const reviewer_list = `${{ fromJSON(env[format('{0}.reviewers', github.repository)]) }}`
               console.log(reviewer_list);
               const result3 = await github.rest.pulls.requestReviewers({
                 owner: repo_owner,
