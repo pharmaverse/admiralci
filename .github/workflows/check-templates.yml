@@ -227,7 +227,7 @@ jobs:
         id: changes
         run: |
           mkdir -p "${{ env.templates_data_folder }}"
-          cp -r "${{steps.download.outputs.download-path}}/." "${{ env.templates_data_folder }}"
+          mv "${{ github.workspace }}/tmp" "${{ github.workspace }}/data"
           diffs=$(git diff "${{ env.templates_data_folder }}")
           echo "diff=$diff" >> $GITHUB_OUTPUT
           if [ -z "$diffs" ]; then echo "No changes detected after running templates. Stop here"; else echo "Changes detected, new PR will be created"; fi
