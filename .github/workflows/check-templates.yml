@@ -235,15 +235,16 @@ jobs:
         id: download
         with:
           name: data_templates
+          working-directory: ${{ github.workspace }}/data
 
       # detect diffs om templates data
       - name: Check templates changes
         id: changes
         run: |
-          mv -f "${GITHUB_WORKSPACE}/tmp" "${GITHUB_WORKSPACE}/data"
           diffs=$(git diff "${{ env.templates_data_folder }}")
+          diff_files=$(git diff --name-only)
           echo "diff=$diff" >> $GITHUB_OUTPUT
-          if [ -z "$diffs" ]; then echo "No changes detected after running templates. Stop here"; else echo "Changes detected, new PR will be created"; fi
+          if [ -z "$diffs" ]; then echo "No changes detected after running templates. Stop here"; else echo "Changes detected, new PR will be created"; echo "list of files with new updates: $diff_files"; fi
 
       # if diff detected, push changes
       - name: Commit and push changes in {{ env.repo }}
