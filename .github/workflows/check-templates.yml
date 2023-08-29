@@ -24,23 +24,32 @@ env:
     source-branch: update_templates_data
     repo: pharmaverse/pharmaverseadam
     target-branch: main
+    reviewers: >
+      {
+        "admiralonco": {
+          "reviewers": ["bundfussr", "cicdguy", "manciniedoardo"]
+        },
+        "admiraldev": {
+          "reviewers": ["bms63", "cicdguy", "manciniedoardo"]
+        },
+        "admiraltemplate": {
+          "reviewers": ["bms63", "cicdguy", "bundfussr", "manciniedoardo"]
+        },
+        "admiralophtha": {
+          "reviewers": ["cicdguy", "manciniedoardo"]
+        },
+        "admiral": {
+          "reviewers": ["dgrassellyb", "cicdguy"]
+        },
+        "admiral.test": {
+          "reviewers": ["bms63", "bundfussr", "manciniedoardo"]
+        },
+        "admiralvaccine": {
+          "reviewers": ["bms63", "manciniedoardo"]
+        }
+      }
   # data folder name for templates
   templates_data_folder: ./data/
-  # repositories variables for PRs
-  admiralonco:
-    reviewers: "bundfussr,cicdguy,manciniedoardo"
-  admiraldev:
-    reviewers: "bms63,cicdguy,manciniedoardo"
-  admiraltemplate:
-    reviewers: "bms63,cicdguy,bundfussr,manciniedoardo"
-  admiralophtha:
-    reviewers: "cicdguy,manciniedoardo"
-  admiral:
-    reviewers: "dgrassellyb,cicdguy"
-  admiral.test:
-    reviewers: "bms63,bundfussr,manciniedoardo"
-  admiralvaccine:
-    reviewers: "bms63,manciniedoardo"
 
 name: Check Templates
 
@@ -272,13 +281,12 @@ jobs:
                 ].join('')
               });
               // Assign reviewers to the PR
-              let reviewer_list = `${{ env[format('{0}.reviewers', github.repository)] }}`
-              reviewer_list = reviewer_list.split(',')
-              console.log(reviewer_list);
+              let reviewers_dict = JSON.parse("${{ env.pr.reviewers }}");
+              console.log(reviewers_dict);
               const result3 = await github.rest.pulls.requestReviewers({
                 owner: repo_owner,
                 repo: repo_name,
                 pull_number: result2.data.number,
-                reviewers: reviewer_list
+                reviewers: reviewers_dict["{{ github.repository }}"].reviewers
               });
             }
