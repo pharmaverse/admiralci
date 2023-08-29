@@ -208,8 +208,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: data_templates
-          path: |
-            "${GITHUB_WORKSPACE}/tmp"
+          path: ${{ github.workspace }}/tmp
 
       - name: Checkout repo (PR) 🛎
         uses: actions/checkout@v3
