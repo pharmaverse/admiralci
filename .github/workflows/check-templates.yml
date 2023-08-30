@@ -202,20 +202,22 @@ jobs:
         run: |
           library(readxl)
           folder_path <- file.path("${{ github.workspace }}", "tmp")
+          subfolder_path <- file.path(folder_path, "data")
+          dir.create(subfolder_path)
           rds_files <- list.files(path = folder_path, pattern = "\\.rds$", full.names = TRUE)
 
           for (rds_file in rds_files) {
+            filename <- basename(rds_file)
 
-            csv_file <- gsub("\\.rds$", ".csv", rds_file)
+            csv_file <- gsub("\\.rds$", ".csv", filename)
             data <- readRDS(rds_file)
-            write.csv(data, file = csv_file, row.names = FALSE)
+            write.csv(data, file = file.path(subfolder_path, csv_file), row.names = FALSE)
+
+            # move rds files into subfolder data
+            file.copy(rds_file, file.path(subfolder_path, filename))
+            file.remove(rds_file)
           }
         shell: Rscript {0}
-
-      - name: Debug
-        run: |
-          ls "${GITHUB_WORKSPACE}"
-          ls "${GITHUB_WORKSPACE}/tmp"
 
       # store templates data as artifacts
       - name: Archive production artifacts
@@ -248,7 +250,6 @@ jobs:
         id: download
         with:
           name: data_templates
-          working-directory: ${{ github.workspace }}/data
 
       # detect diffs om templates data
       - name: Check templates changes
@@ -334,3 +335,10 @@ jobs:
                 reviewers: reviewers_dict["{{ github.repository }}"].reviewers
               });
             }
+
+      - name: debug step end
+        if: always()
+        run: | 
+          ls "${GITHUB_WORKSPACE}"
+          git ls-tree HEAD
+          ls "${GITHUB_WORKSPACE}/data"
