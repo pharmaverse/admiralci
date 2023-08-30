@@ -78,7 +78,6 @@ jobs:
         shell: bash
 
   check_templates:
-    secrets: inherit
     name: Verify
     if: >
       !contains(github.event.commits[0].message, '[skip check_templates]')
