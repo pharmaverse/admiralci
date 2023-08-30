@@ -198,7 +198,7 @@ jobs:
           }
         shell: Rscript {0}
 
-      - name: Add other data formats and zip data
+      - name: Add other data formats
         run: |
           library(readxl)
           library(zip)
@@ -211,16 +211,19 @@ jobs:
             data <- readRDS(rds_file)
             write.csv(data, file = csv_file, row.names = FALSE)
           }
-          zip(file.path(folder_path, "data.zip"), files = list.files(folder_path, full.names = TRUE))
-
         shell: Rscript {0}
+
+      # zip templates data
+      - name: zip templates data
+        run: |
+          zip -r "${GITHUB_WORKSPACE}/data.zip" "${GITHUB_WORKSPACE}/tmp"
 
       # store templates data as artifacts
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
           name: data_templates
-          path: ${{ github.workspace }}/tmp/data.zip
+          path: ${{ github.workspace }}/data.zip
 
       - name: Checkout repo (PR) 🛎
         uses: actions/checkout@v3
