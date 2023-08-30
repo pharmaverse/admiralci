@@ -233,6 +233,7 @@ jobs:
           ref: main
           repository: ${{ env.repo }}
           fetch-depth: 2
+          token: ${{ secrets.PHARMAVERSE_BOT }}
 
       - name: Add safe directory # TODO: try without
         run: |
