@@ -259,20 +259,21 @@ jobs:
             diff_files=$(git diff --name-only data)
           }
           fi
-          echo "diff=$diff_files" >> $GITHUB_OUTPUT
           if [ -z "$diff_files" ]
           then {
             echo "No changes detected after running templates. Stop here"
+            echo "diff=false" >> $GITHUB_OUTPUT
           } else {
             echo "Changes detected, new PR will be created"
             echo "list of files with new updates: $diff_files"
+            echo "diff=true" >> $GITHUB_OUTPUT
           }
           fi
         shell: bash {0}
 
       # if diff detected, push changes
       - name: Commit and push changes in {{ env.repo }}
-        if: ${{ steps.changes.outputs.diff != '' }}
+        if: ${{ steps.changes.outputs.diff == 'true' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: templates data updates from ${{ github.repository }}
@@ -284,7 +285,7 @@ jobs:
           create_branch: true
 
       - name: Create Pull Request
-        if: ${{ steps.changes.outputs.diff != '' }}
+        if: ${{ steps.changes.outputs.diff == 'true' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.PHARMAVERSE_BOT }}
@@ -337,7 +338,5 @@ jobs:
         if: always()
         run: | 
           ls "${GITHUB_WORKSPACE}"
-          ls "${{ github.workspace }}"
           git ls-tree HEAD
-          ls "${{ github.workspace }}/data" || true
           ls "${GITHUB_WORKSPACE}/data" || true
