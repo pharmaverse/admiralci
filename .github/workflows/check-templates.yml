@@ -202,7 +202,9 @@ jobs:
         run: |
           library(readxl)
           library(zip)
-          folder_path <- file.path("${{ github.workspace }}", "tmp")
+          print(file.path("${{ github.workspace }}", "tmp"))
+          print(Sys.getenv("GITHUB_WORKSPACE"), "tmp"))
+          folder_path <- file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp")
           rds_files <- list.files(path = folder_path, pattern = "\\.rds$", full.names = TRUE)
 
           for (rds_file in rds_files) {
@@ -216,7 +218,7 @@ jobs:
       # zip templates data
       - name: zip templates data
         run: |
-          zip -r "${GITHUB_WORKSPACE}/data.zip" "${GITHUB_WORKSPACE}/tmp"
+          zip -j "${GITHUB_WORKSPACE}/data.zip" "${GITHUB_WORKSPACE}/tmp/*"
 
       # store templates data as artifacts
       - name: Archive production artifacts
@@ -248,7 +250,7 @@ jobs:
         id: changes
         run: |
           head_data_folder=$(git ls-tree HEAD | grep data) # check if data folder exists on remote main branch
-          unzip "${GITHUB_WORKSPACE}/data.zip"
+          unzip "${GITHUB_WORKSPACE}/data.zip" -d data
           if [ -z "${head_data_folder}" ]
           then {
             echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
