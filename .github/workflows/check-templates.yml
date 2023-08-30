@@ -204,7 +204,7 @@ jobs:
           library(zip)
           print(file.path("${{ github.workspace }}", "tmp"))
           print(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"))
-          folder_path <- file.path("${{ github.workspace }}", "tmp")
+          folder_path <- file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp")
           rds_files <- list.files(path = folder_path, pattern = "\\.rds$", full.names = TRUE)
 
           for (rds_file in rds_files) {
@@ -218,7 +218,7 @@ jobs:
       # zip templates data
       - name: zip templates data
         run: |
-          zip -j "$GITHUB_WORKSPACE/data.zip" "$GITHUB_WORKSPACE/tmp/*"
+          find "$GITHUB_WORKSPACE/tmp" -type f \( -name "*.rds" -o -name "*.csv" \) -exec zip -j "$GITHUB_WORKSPACE/data.zip" {} \;
 
       # store templates data as artifacts
       - name: Archive production artifacts
