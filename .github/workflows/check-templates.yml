@@ -198,25 +198,21 @@ jobs:
           }
         shell: Rscript {0}
 
-      - name: Add other data formats
+      - name: Add other data formats and zip data
         run: |
           library(readxl)
+          library(zip)
           folder_path <- file.path("${{ github.workspace }}", "tmp")
-          subfolder_path <- file.path(folder_path, "data")
-          dir.create(subfolder_path)
           rds_files <- list.files(path = folder_path, pattern = "\\.rds$", full.names = TRUE)
 
           for (rds_file in rds_files) {
-            filename <- basename(rds_file)
 
-            csv_file <- gsub("\\.rds$", ".csv", filename)
+            csv_file <- gsub("\\.rds$", ".csv", rds_file)
             data <- readRDS(rds_file)
-            write.csv(data, file = file.path(subfolder_path, csv_file), row.names = FALSE)
-
-            # move rds files into subfolder data
-            file.copy(rds_file, file.path(subfolder_path, filename))
-            file.remove(rds_file)
+            write.csv(data, file = csv_file, row.names = FALSE)
           }
+          zip(file.path(folder_path, "data.zip"), files = list.files(folder_path, full.names = TRUE))
+
         shell: Rscript {0}
 
       # store templates data as artifacts
@@ -224,7 +220,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: data_templates
-          path: ${{ github.workspace }}/tmp
+          path: ${{ github.workspace }}/tmp/data.zip
 
       - name: Checkout repo (PR) 🛎
         uses: actions/checkout@v3
@@ -237,13 +233,6 @@ jobs:
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
         shell: bash
-      
-      - name: Check if data folder exists
-        id: check_exists
-        run: 
-          head_data_folder=$(ls | grep data)
-          echo "head_data_folder=$head_data_folder" >> $GITHUB_OUTPUT
-        shell: bash {0}
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -255,7 +244,9 @@ jobs:
       - name: Check templates changes
         id: changes
         run: |
-          if [ -z "${{ steps.check_exists.outputs.head_data_folder}}" ]
+          head_data_folder=$(git ls-tree HEAD | grep data) # check if data folder exists on remote main branch
+          unzip "${GITHUB_WORKSPACE}/data.zip"
+          if [ -z "${head_data_folder}" ]
           then {
             echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
             diff_files=$(ls "${GITHUB_WORKSPACE}/data")
@@ -272,6 +263,7 @@ jobs:
             echo "list of files with new updates: $diff_files"
           }
           fi
+        shell: bash {0}
 
       # if diff detected, push changes
       - name: Commit and push changes in {{ env.repo }}
