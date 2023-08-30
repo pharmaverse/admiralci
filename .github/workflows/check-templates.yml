@@ -278,10 +278,10 @@ jobs:
         with:
           commit_message: templates data updates from ${{ github.repository }}
           file_pattern: 'data/*'
-          repository: "{{ env.repo }}"
+          repository: "${{ env.repo }}"
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
-          branch: "{{ env.source-branch }}"
+          branch: "${{ env.source-branch }}"
           create_branch: true
 
       - name: Create Pull Request
