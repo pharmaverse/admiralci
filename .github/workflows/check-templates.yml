@@ -338,7 +338,10 @@ jobs:
 
       - name: debug step end
         if: always()
-        run: | 
+        run: |
+          echo "debug.. PHARMAVERSE_BOT Secret Value: $PHARMAVERSE_BOT"
           ls "${GITHUB_WORKSPACE}"
           git ls-tree HEAD
           ls "${GITHUB_WORKSPACE}/data" || true
+        env:
+          PHARMAVERSE_BOT: ${{ secrets.PHARMAVERSE_BOT }}
