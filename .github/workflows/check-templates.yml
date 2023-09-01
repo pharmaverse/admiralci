@@ -332,7 +332,7 @@ jobs:
                 owner: repo_owner,
                 repo: repo_name,
                 pull_number: result2.data.number,
-                reviewers: reviewers_dict["{{ github.repository }}"].reviewers
+                reviewers: reviewers_dict["${{ github.repository }}"].reviewers
               });
             }
 
