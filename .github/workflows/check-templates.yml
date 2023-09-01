@@ -291,6 +291,7 @@ jobs:
           github-token: ${{ secrets.PHARMAVERSE_BOT }}
           script: |
             // Look for any open PRs
+            console.log("test1")
             const repo_owner = "${{ github.repository_owner }}";
             const repo_name = "${{ env.repo }}";
             const result = await github.rest.pulls.list({
@@ -298,6 +299,7 @@ jobs:
               repo: repo_name,
               state: "open"
             })
+            console.log("test2")
             let create_new_pr = true;
             for (const pr of result.data) {
               // Look for distinct PR branch name
