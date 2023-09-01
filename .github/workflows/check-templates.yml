@@ -21,7 +21,7 @@ on:
 env:
   # branch name for PR
   source-branch: update_templates_data
-  repo: pharmaverse/pharmaverseadam
+  repo: pharmaverseadam
   target-branch: main
   reviewers: >
     {
@@ -231,7 +231,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: main
-          repository: ${{ env.repo }}
+          repository: "${{ github.repository_owner }}/${{ env.repo }}"
           fetch-depth: 2
           token: ${{ secrets.PHARMAVERSE_BOT }}
 
