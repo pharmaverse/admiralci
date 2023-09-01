@@ -28,20 +28,11 @@ env:
       "admiralonco": {
         "reviewers": ["bundfussr", "cicdguy", "manciniedoardo"]
       },
-      "admiraldev": {
-        "reviewers": ["bms63", "cicdguy", "manciniedoardo"]
-      },
-      "admiraltemplate": {
-        "reviewers": ["bms63", "cicdguy", "bundfussr", "manciniedoardo"]
-      },
       "admiralophtha": {
         "reviewers": ["cicdguy", "manciniedoardo"]
       },
       "admiral": {
         "reviewers": ["dgrassellyb", "cicdguy"]
-      },
-      "admiral.test": {
-        "reviewers": ["bms63", "bundfussr", "manciniedoardo"]
       },
       "admiralvaccine": {
         "reviewers": ["bms63", "manciniedoardo"]
@@ -198,20 +189,28 @@ jobs:
           }
         shell: Rscript {0}
 
-      - name: Add other data formats
+      - name: Add other data formats and suffixes
         run: |
           library(readxl)
           library(zip)
           print(file.path("${{ github.workspace }}", "tmp"))
           print(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"))
           folder_path <- file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp")
-          rds_files <- list.files(path = folder_path, pattern = "\\.rds$", full.names = TRUE)
+          rds_files <- list.files(path = folder_path, pattern = "\\.rds$")
 
           for (rds_file in rds_files) {
             print(sprintf("converting file %s", rds_file))
-            csv_file <- gsub("\\.rds$", ".csv", rds_file)
-            data <- readRDS(rds_file)
-            write.csv(data, file = csv_file, row.names = FALSE)
+            data <- readRDS(file.path(folder_path, rds_file))
+            suffix <- gsub("admiral", "", "${{ github.repository }}")
+            if (nchar(suffix) == 0) {
+              rds_file_w_suffix <- gsub("\\.rds$", sprintf("_%s.rds", suffix), rds_file)
+              csv_file <- gsub("\\.rds$", sprintf("_%s.csv", suffix), rds_file)
+              file.rename(file.path(folder_path, rds_file), file.path(folder_path, rds_file_w_suffix))
+            }
+            else {
+              csv_file <- gsub("\\.rds$", ".csv", rds_file)
+            }
+            write.csv(data, file = file.path(folder_path, csv_file), row.names = FALSE)
           }
         shell: Rscript {0}
 
