@@ -327,13 +327,13 @@ jobs:
               let rev = process.env.reviewers;
               let reviewers_dict = JSON.parse(rev);
               console.log(reviewers_dict);
-              let repo_name_full = "${{ github.repository }}";
-              let repo_name = repo_name_full.split('/').pop();
+              let current_repo_name_full = "${{ github.repository }}";
+              let current_repo_name = current_repo_name_full.split('/').pop();
               const result3 = await github.rest.pulls.requestReviewers({
                 owner: repo_owner,
-                repo: repo_name,
+                repo: current_repo_name,
                 pull_number: result2.data.number,
-                reviewers: reviewers_dict[repo_name]["reviewers"]
+                reviewers: reviewers_dict[current_repo_name]["reviewers"]
               });
             }
 
