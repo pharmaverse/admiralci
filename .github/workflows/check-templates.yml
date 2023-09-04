@@ -291,10 +291,10 @@ jobs:
           script: |
             // Look for any open PRs
             const repo_owner = "${{ github.repository_owner }}";
-            const repo_name = "${{ env.repo }}";
+            const target_repo_name = "${{ env.repo }}";
             const result = await github.rest.pulls.list({
               owner: repo_owner,
-              repo: repo_name,
+              repo: target_repo_name,
               state: "open"
             })
             console.log("test2")
@@ -314,7 +314,7 @@ jobs:
               const result2 = await github.rest.pulls.create({
                 title: 'Templates data updates from ${{ github.repository }}',
                 owner: repo_owner,
-                repo: repo_name,
+                repo: target_repo_name,
                 head: '${{ env.source-branch }}',
                 base: '${{ env.target-branch }}',
                 body: [
@@ -331,7 +331,7 @@ jobs:
               let current_repo_name = current_repo_name_full.split('/').pop();
               const result3 = await github.rest.pulls.requestReviewers({
                 owner: repo_owner,
-                repo: current_repo_name,
+                repo: target_repo_name,
                 pull_number: result2.data.number,
                 reviewers: reviewers_dict[current_repo_name]["reviewers"]
               });
