@@ -196,19 +196,19 @@ jobs:
           print(file.path("${{ github.workspace }}", "tmp"))
           print(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"))
           folder_path <- file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp")
-          rds_files <- list.files(path = folder_path, pattern = "\\.rds$")
+          rda_files <- list.files(path = folder_path, pattern = "\\.rda$")
 
-          for (rds_file in rds_files) {
-            print(sprintf("converting file %s", rds_file))
-            data <- readRDS(file.path(folder_path, rds_file))
+          for (rda_file in rda_files) {
+            print(sprintf("converting file %s", rda_file))
+            data <- load(file.path(folder_path, rda_file))
             suffix <- gsub("admiral", "", "${{ github.repository }}")
             if (nchar(suffix) == 0) {
-              rds_file_w_suffix <- gsub("\\.rds$", sprintf("_%s.rds", suffix), rds_file)
-              csv_file <- gsub("\\.rds$", sprintf("_%s.csv", suffix), rds_file)
-              file.rename(file.path(folder_path, rds_file), file.path(folder_path, rds_file_w_suffix))
+              rda_file_w_suffix <- gsub("\\.rda$", sprintf("_%s.rda", suffix), rda_file)
+              csv_file <- gsub("\\.rda$", sprintf("_%s.csv", suffix), rda_file)
+              file.rename(file.path(folder_path, rda_file), file.path(folder_path, rda_file_w_suffix))
             }
             else {
-              csv_file <- gsub("\\.rds$", ".csv", rds_file)
+              csv_file <- gsub("\\.rda$", ".csv", rda_file)
             }
             write.csv(data, file = file.path(folder_path, csv_file), row.names = FALSE)
           }
@@ -217,7 +217,7 @@ jobs:
       # zip templates data
       - name: zip templates data
         run: |
-          find "$GITHUB_WORKSPACE/tmp" -type f \( -name "*.rds" -o -name "*.csv" \) -exec zip -j "$GITHUB_WORKSPACE/data.zip" {} \;
+          find "$GITHUB_WORKSPACE/tmp" -type f \( -name "*.rda" -o -name "*.csv" \) -exec zip -j "$GITHUB_WORKSPACE/data.zip" {} \;
 
       # store templates data as artifacts
       - name: Archive production artifacts
