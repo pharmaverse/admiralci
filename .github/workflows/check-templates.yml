@@ -249,12 +249,12 @@ jobs:
       - name: Check templates changes
         id: changes
         run: |
-          head_data_folder=$(git ls-tree HEAD | grep data) # check if data folder exists on remote main branch
-          unzip "${GITHUB_WORKSPACE}/data.zip" -d "${GITHUB_WORKSPACE}/data"
+          head_data_folder=$(git ls-tree -r HEAD | grep inst/extdata) # check if data folder exists on remote main branch
+          unzip "${GITHUB_WORKSPACE}/data.zip" -d "${GITHUB_WORKSPACE}/inst/extdata/"
           if [ -z "${head_data_folder}" ]
           then {
             echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
-            diff_files=$(ls "${GITHUB_WORKSPACE}/data")
+            diff_files=$(ls "${GITHUB_WORKSPACE}/inst/extdata")
           } else {
             diff_files=$(git diff --name-only data)
           }
@@ -277,7 +277,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: templates data updates from ${{ github.repository }}
-          file_pattern: 'data/*'
+          file_pattern: 'inst/extdata/*'
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
           branch: "${{ env.source-branch }}"
@@ -342,4 +342,4 @@ jobs:
         run: |
           ls "${GITHUB_WORKSPACE}"
           git ls-tree HEAD
-          ls "${GITHUB_WORKSPACE}/data" || true
+          ls "${GITHUB_WORKSPACE}/inst/extdata" || true
