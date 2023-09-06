@@ -193,6 +193,10 @@ jobs:
         run: |
           library(readxl)
           library(zip)
+          loadRData <- function(fileName){
+            load(fileName)
+            get(ls()[ls() != "fileName"])
+          }
           print(file.path("${{ github.workspace }}", "tmp"))
           print(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"))
           folder_path <- file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp")
@@ -200,7 +204,7 @@ jobs:
 
           for (rda_file in rda_files) {
             print(sprintf("converting file %s", rda_file))
-            data <- load(file.path(folder_path, rda_file))
+            data <- loadRData(file.path(folder_path, rda_file))
             suffix <- gsub("admiral", "", "${{ github.repository }}")
             if (nchar(suffix) == 0) {
               rda_file_w_suffix <- gsub("\\.rda$", sprintf("_%s.rda", suffix), rda_file)
