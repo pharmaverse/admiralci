@@ -253,15 +253,20 @@ jobs:
       - name: Check templates changes
         id: changes
         run: |
-          head_data_folder=$(git ls-tree -r HEAD | grep inst/extdata) # check if data folder exists on remote main branch
+          head_data_folder=$(git ls-tree -r HEAD data) # check if data folder exists on remote main branch
           unzip "${GITHUB_WORKSPACE}/data.zip" -d "${GITHUB_WORKSPACE}/inst/extdata/"
+          # move every rda files inside data folder
+          for rda_file in inst/extdata/*.rda; do
+            filename=$(basename "$rda_file")
+            mv "$rda_file" "data/$filename"
+          done
           if [ -z "${head_data_folder}" ]
           then {
             echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
-            diff_files=$(ls "${GITHUB_WORKSPACE}/inst/extdata")
+            diff_files=$(ls "${GITHUB_WORKSPACE}/data")
           } else {
-            git add inst/extdata
-            diff_files=$(git status | grep 'inst/extdata/.*\.rda$')
+            git add data
+            diff_files=$(git status | grep 'data/.*\.rda$')
           }
           fi
           if [ -z "$diff_files" ]
@@ -280,7 +285,7 @@ jobs:
         id: branch
         run: |
           repo_name=$(basename "${{ github.repository }}")
-          echo "source-branch=${{ env.source-branch }}_${repo_name}" >> $GITHUB_OUTPUT
+          echo "source-branch=${{ env.source-branch }}_${repo_name}@devel" >> $GITHUB_OUTPUT
         shell: bash {0}
 
 
@@ -290,7 +295,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: templates data updates from ${{ github.repository }}
-          file_pattern: 'inst/extdata/*'
+          file_pattern: 'inst/extdata/* data/*'
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
           branch: "${{ steps.branch.outputs.source-branch }}"
