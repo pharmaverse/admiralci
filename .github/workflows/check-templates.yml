@@ -205,8 +205,8 @@ jobs:
           for (rda_file in rda_files) {
             print(sprintf("converting file %s", rda_file))
             data <- loadRData(file.path(folder_path, rda_file))
-            suffix <- gsub("admiral", "", "${{ github.repository }}")
-            if (nchar(suffix) == 0) {
+            suffix <- gsub("pharmaverse/admiral", "", "${{ github.repository }}")
+            if (nchar(suffix) > 0) {
               rda_file_w_suffix <- gsub("\\.rda$", sprintf("_%s.rda", suffix), rda_file)
               csv_file <- gsub("\\.rda$", sprintf("_%s.csv", suffix), rda_file)
               file.rename(file.path(folder_path, rda_file), file.path(folder_path, rda_file_w_suffix))
