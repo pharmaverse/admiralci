@@ -261,7 +261,7 @@ jobs:
             diff_files=$(ls "${GITHUB_WORKSPACE}/inst/extdata")
           } else {
             git add inst/extdata
-            diff_files=$(git diff --name-only inst/extdata)
+            diff_files=$(git status | grep 'inst/extdata/.*\.rda$')
           }
           fi
           if [ -z "$diff_files" ]
