@@ -256,6 +256,7 @@ jobs:
           head_data_folder=$(git ls-tree -r HEAD data) # check if data folder exists on remote main branch
           unzip "${GITHUB_WORKSPACE}/data.zip" -d "${GITHUB_WORKSPACE}/inst/extdata/"
           # move every rda files inside data folder
+          mkdir -p data
           for rda_file in inst/extdata/*.rda; do
             filename=$(basename "$rda_file")
             mv "$rda_file" "data/$filename"
