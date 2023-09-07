@@ -260,7 +260,8 @@ jobs:
             echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
             diff_files=$(ls "${GITHUB_WORKSPACE}/inst/extdata")
           } else {
-            diff_files=$(git diff --name-only data)
+            git add inst/extdata
+            diff_files=$(git diff --name-only inst/extdata)
           }
           fi
           if [ -z "$diff_files" ]
