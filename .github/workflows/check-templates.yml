@@ -339,6 +339,12 @@ jobs:
           fi
         shell: bash {0}
 
+      - name: Generate man pages
+        run: |
+          Rscript -e "roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))"
+          git add man
+        shell: bash {0}
+
       - name: set source-branch name
         id: branch
         run: |
