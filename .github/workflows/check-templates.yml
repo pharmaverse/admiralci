@@ -293,11 +293,15 @@ jobs:
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
         shell: bash
 
-      - name: Download a single artifact
+      - name: Download data artifacts
         uses: actions/download-artifact@v3
-        id: download
         with:
           name: data_templates
+
+      - name: Download doc artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: doc_templates
 
       # detect diffs om templates data
       - name: Check templates changes
