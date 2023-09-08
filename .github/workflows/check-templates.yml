@@ -242,10 +242,10 @@ jobs:
                 sprintf("#' @format A data frame with %s columns:", ncol(data)),
                 "#'   \\describe{",
                 paste(sapply(names(data), function(col_name) {
-                  paste("#'     \\item{", col_name, "}{col_name column}")
+                  paste(sprintf("#'     \\item{ %s }{%s}", col_name, col_name))
                 }, USE.NAMES = FALSE), collapse="\n"),
                 "#'   }",
-                "#'", sprintf("#' @source Generated from ${{ github.repository_name }}."),
+                "#'", sprintf("#' @source Generated from ${{ github.repository }}."),
                 "#' @references None",
                 "#'", sprintf("#' @examples\n#' load(%s)", dataset_name),
                 sep = '\n'
@@ -317,8 +317,10 @@ jobs:
             echo "data folder not existing on main branch yet - init mode (all templates data files will be pushed)"
             diff_files=$(ls "${GITHUB_WORKSPACE}/data")
           } else {
-            git add data
-            diff_files=$(git status | grep 'data/.*\.rda$')
+            git add data R
+            diff_files_data=$(git status data | grep 'data/.*\.rda$')
+            diff_files_doc=$(git status doc | grep 'R/.*\.R$')
+            diff_files="${diff_files_data}${diff_files_doc}"
           }
           fi
           if [ -z "$diff_files" ]
@@ -367,7 +369,6 @@ jobs:
               repo: target_repo_name,
               state: "open"
             })
-            console.log("test2")
             let create_new_pr = true;
             for (const pr of result.data) {
               // Look for distinct PR branch name
@@ -396,7 +397,6 @@ jobs:
               // Assign reviewers to the PR
               let rev = process.env.reviewers;
               let reviewers_dict = JSON.parse(rev);
-              console.log(reviewers_dict);
               let current_repo_name_full = "${{ github.repository }}";
               let current_repo_name = current_repo_name_full.split('/').pop();
               const result3 = await github.rest.pulls.requestReviewers({
