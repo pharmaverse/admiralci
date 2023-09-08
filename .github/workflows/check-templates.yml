@@ -248,7 +248,8 @@ jobs:
                 "#'", sprintf("#' @source Generated from ${{ github.repository }}."),
                 "#' @references None",
                 "#'", sprintf("#' @examples\n#' load(%s)", dataset_name),
-                sep = '\n'
+                sep = '\n',
+                "\"dataset_name\""
               )
 
               doc_dir <- "datasets_doc"
