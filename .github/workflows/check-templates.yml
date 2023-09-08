@@ -247,7 +247,7 @@ jobs:
                 "#'   }",
                 "#'", sprintf("#' @source Generated from ${{ github.repository }}."),
                 "#' @references None",
-                "#'", sprintf("#' @examples\n#' load(\"%s.rda\")", dataset_name),
+                "#'", sprintf("#' @examples\n#' load(\"./data/%s.rda\")", dataset_name),
                 sep = '\n',
                 sprintf("\"%s\"", dataset_name)
               )
