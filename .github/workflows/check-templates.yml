@@ -249,7 +249,7 @@ jobs:
                 "#' @references None",
                 "#'", sprintf("#' @examples\n#' load(%s)", dataset_name),
                 sep = '\n',
-                "\"dataset_name\""
+                sprintf("\"%s\"", dataset_name)
               )
 
               doc_dir <- "datasets_doc"
