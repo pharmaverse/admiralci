@@ -233,23 +233,22 @@ jobs:
               # create associated documentation inside R folder
               dataset_name <- gsub("\\.rda$", "", rda_file_renamed)
               doc_string <- paste(
-                '#', sprintf('Dataset %s', dataset_name),
-                '#',
-                sprintf('%s dataset', dataset_name),
-                '#',
-                sprintf('@name %s', dataset_name),
-                '# @docType data',
-                '# @format A data frame with', ncol(data), 'columns:',
-                '   \\describe{',
-                sapply(names(data), function(col_name) {
-                  paste('#     \\item{', col_name, '}{Description goes here}')
-                }, USE.NAMES = FALSE),
-                '#   }',
-                sprintf('# @source Generated from ${{ github.repository_name }}.'),
-                '# @references None',
-                sprintf('# @examples\n# load(%s)', dataset_name),
-                '',
-                collapse = '\n'
+                sprintf("#' Dataset %s", dataset_name),
+                "#'",
+                sprintf("#' %s dataset", dataset_name),
+                "#'",
+                sprintf("#' @name %s", dataset_name),
+                "#' @docType data",
+                sprintf("#' @format A data frame with %s columns:", ncol(data)),
+                "#'   \\describe{",
+                paste(sapply(names(data), function(col_name) {
+                  paste("#'     \\item{", col_name, "}{col_name column}")
+                }, USE.NAMES = FALSE), collapse="\n"),
+                "#'   }",
+                "#'", sprintf("#' @source Generated from ${{ github.repository_name }}."),
+                "#' @references None",
+                "#'", sprintf("#' @examples\n#' load(%s)", dataset_name),
+                sep = '\n'
               )
 
               doc_dir <- "datasets_doc"
