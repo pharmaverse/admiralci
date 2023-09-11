@@ -36,16 +36,16 @@ env:
   reviewers: >
     {
       "admiralonco": {
-        "reviewers": ["bundfussr", "cicdguy", "manciniedoardo"]
+        "reviewers": ["bundfussr", "cicdguy", "manciniedoardo", "dgrassellyb"]
       },
       "admiralophtha": {
-        "reviewers": ["cicdguy", "manciniedoardo"]
+        "reviewers": ["cicdguy", "manciniedoardo", "dgrassellyb"]
       },
       "admiral": {
         "reviewers": ["dgrassellyb", "cicdguy"]
       },
       "admiralvaccine": {
-        "reviewers": ["bms63", "manciniedoardo"]
+        "reviewers": ["bms63", "manciniedoardo", "dgrassellyb"]
       }
     }
   # data folder name for templates
