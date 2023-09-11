@@ -241,7 +241,7 @@ jobs:
               print(rda_var)
               print(get(rda_var))
               assign(rda_var, data)
-              save(get(rda_var), file = file.path(folder_path, sprintf("%s.rda", rda_var)), compress = "bzip2")
+              do.call(save, list(rda_var, file = file.path(folder_path, sprintf("%s.rda", rda_var)), compress = "bzip2"))
 
               # create associated documentation inside R folder
               dataset_name <- gsub("\\.rda$", "", rda_file_renamed)
