@@ -367,6 +367,12 @@ jobs:
           git add man
         shell: bash {0}
 
+      - name: Update spellchecks list
+        if: inputs.push-templates-data
+        run: |
+          spelling::update_wordlist(pkg=".", confirm=FALSE)
+        shell: Rscript {0}
+
       - name: set source-branch name
         if: inputs.push-templates-data
         id: branch
@@ -382,7 +388,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: templates data updates from ${{ github.repository }}
-          file_pattern: 'inst/extdata/* data/* R/*'
+          file_pattern: 'inst/extdata/* data/* R/* inst/WORDLIST'
           commit_user_name: pharmaverse-bot
           commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
           branch: "${{ steps.branch.outputs.source-branch }}"
