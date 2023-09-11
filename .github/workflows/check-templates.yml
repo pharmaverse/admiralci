@@ -236,6 +236,11 @@ jobs:
               }
               write.csv(data, file = file.path(folder_path, csv_file), row.names = FALSE)
 
+              # rename content of rda file
+              rda_var <- gsub("\\.rda$", "", rda_file)
+              assign(rda_var, data)
+              save(get(rda_var), file = file.path(folder_path, "folder_path.rda"), compress = "bzip2")
+
               # create associated documentation inside R folder
               dataset_name <- gsub("\\.rda$", "", rda_file_renamed)
               doc_string <- paste(
