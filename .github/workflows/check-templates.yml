@@ -36,16 +36,16 @@ env:
   reviewers: >
     {
       "admiralonco": {
-        "reviewers": ["bundfussr", "cicdguy", "manciniedoardo", "dgrassellyb"]
+        "reviewers": ["bundfussr", "manciniedoardo"]
       },
       "admiralophtha": {
-        "reviewers": ["cicdguy", "manciniedoardo", "dgrassellyb"]
+        "reviewers": ["manciniedoardo"]
       },
       "admiral": {
-        "reviewers": ["dgrassellyb", "cicdguy"]
+        "reviewers": ["manciniedoardo", "bms63"]
       },
       "admiralvaccine": {
-        "reviewers": ["bms63", "manciniedoardo", "dgrassellyb"]
+        "reviewers": ["bms63", "manciniedoardo"]
       }
     }
   # data folder name for templates
@@ -174,7 +174,6 @@ jobs:
 
       - name: Run Template Scripts
         run: |
-          remotes::install_github("pharmaverse/pharmaversesdtm", ref = "devel") # TODO:del (install manually pharmaversesdtm)
           desc <- read.dcf("DESCRIPTION")
           package_name <- as.character(desc[, "Package"])
           templates <- list.files(
@@ -305,7 +304,7 @@ jobs:
           fetch-depth: 2
           token: ${{ secrets.PHARMAVERSE_BOT }}
 
-      - name: Add safe directory # TODO: try without
+      - name: Add safe directory
         if: inputs.push-templates-data
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
@@ -445,10 +444,3 @@ jobs:
                 reviewers: reviewers_dict[current_repo_name]["reviewers"]
               });
             }
-
-      - name: debug step end
-        if: always()
-        run: |
-          ls "${GITHUB_WORKSPACE}"
-          git ls-tree HEAD
-          ls "${GITHUB_WORKSPACE}/inst/extdata" || true
