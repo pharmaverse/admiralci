@@ -372,7 +372,7 @@ jobs:
 
       # if diff detected, push changes
       - name: Commit and push changes in {{ env.repo }}
-        if: ${{ inputs.push-templates-data == 'true' && steps.changes.outputs.diff == 'true' }}
+        if: ${{ inputs.push-templates-data && steps.changes.outputs.diff == 'true' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: templates data updates from ${{ github.repository }}
@@ -383,7 +383,7 @@ jobs:
           create_branch: true
 
       - name: Create Pull Request
-        if: ${{ inputs.push-templates-data == 'true' && steps.changes.outputs.diff == 'true' }}
+        if: ${{ inputs.push-templates-data && steps.changes.outputs.diff == 'true' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.PHARMAVERSE_BOT }}
