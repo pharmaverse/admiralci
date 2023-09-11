@@ -237,7 +237,9 @@ jobs:
               write.csv(data, file = file.path(folder_path, csv_file), row.names = FALSE)
 
               # rename content of rda file
-              rda_var <- gsub("\\.rda$", "", rda_file)
+              rda_var <- gsub("\\.rda$", "", rda_file_renamed)
+              print(rda_var)
+              print(get(rda_var))
               assign(rda_var, data)
               save(get(rda_var), file = file.path(folder_path, sprintf("%s.rda", rda_var)), compress = "bzip2")
 
