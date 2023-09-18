@@ -45,7 +45,7 @@ env:
         "reviewers": ["manciniedoardo", "bms63"]
       },
       "admiralvaccine": {
-        "reviewers": ["bms63", "manciniedoardo"]
+        "reviewers": ["ahasoplakus", "arjoon-r", "manciniedoardo"]
       }
     }
   # data folder name for templates
