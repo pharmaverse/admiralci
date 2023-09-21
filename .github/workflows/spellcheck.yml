@@ -10,6 +10,11 @@ on:
         default: '4.1'
         required: false
         type: string
+      exclude:
+        description: 'List of paths to exclude (comma seperated list)'
+        default: ''
+        required: false
+        type: string
   push:
     branches:
       - main
@@ -97,3 +102,4 @@ jobs:
         uses: insightsengineering/r-spellcheck-action@v3
         with:
           additional_options: ""
+          exclude: "${{ inputs.exclude }}"
