@@ -54,17 +54,17 @@ Note: Pressing directly `+` button will automatically create codespace for the l
 
 #### Accessing Rstudio
 
-To access Rstudio you need to go under vscode PORTS section :
+To open rstudio in your browser, type `rstudio` on your current terminal. This script will wait until rstudio server is ready, and display the url in the terminal.
+
+Known issue:
+
+Sometimes ports are not automatically forwarded at the codespace creation. If you have some problems trying to access rstudio url, check the PORTS section on vscode :
 
 ```{r, echo = FALSE}
 knitr::include_graphics("./assets/codespaces_rstudio_forward_port.png", dpi = 144)
 ```
 
-Go on the row with port `8787` and open the url in a new browser.
-
-Known issues:
-  - Sometimes ports are not automatically forwarded at the codespace creation. If you don't see `8787` port, then you need to manually add it (using "Add Port" button).
-  - The Rstudio server can takes some times to set-up after the codespace creation, so it might be not available right after the creation, and user might have to wait some minutes. We added a bash script `.devcontainer/codespaces_rstudio_status.sh` to check rstudio server status but it still an experimental feature.
+If you don't see `8787` port, then you need to manually add it (using "Add Port" button).
 
 ### Usage limit / Pricing
 

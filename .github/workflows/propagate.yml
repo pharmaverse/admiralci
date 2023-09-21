@@ -57,7 +57,7 @@ jobs:
               bundfussr
               cicdguy
           - name: admiraldev
-            target-branch: devel
+            target-branch: main
             reviewers: |-
               bms63
               cicdguy
@@ -72,7 +72,7 @@ jobs:
             reviewers: |-
               cicdguy
           - name: admiral
-            target-branch: devel
+            target-branch: main
             reviewers: |-
               cicdguy
               bms63
