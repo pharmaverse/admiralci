@@ -49,13 +49,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://pharmaverse.github.io/admiralci/.git">.git</a> </div></li>
-<!-- end dropdown for versions -->
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -139,18 +132,16 @@ automatically create codespace for the latest R version available
 <div class="section level5">
 <h5 id="accessing-rstudio">Accessing Rstudio<a class="anchor" aria-label="anchor" href="#accessing-rstudio"></a>
 </h5>
-<p>To access Rstudio you need to go under vscode PORTS section :</p>
+<p>To open rstudio in your browser, type <code>rstudio</code> on your
+current terminal. This script will wait until rstudio server is ready,
+and display the url in the terminal.</p>
+<p>Known issue:</p>
+<p>Sometimes ports are not automatically forwarded at the codespace
+creation. If you have some problems trying to access rstudio url, check
+the PORTS section on vscode :</p>
 <p><img src="assets/codespaces_rstudio_forward_port.png"><!-- --></p>
-<p>Go on the row with port <code>8787</code> and open the url in a new
-browser.</p>
-<p>Known issues: - Sometimes ports are not automatically forwarded at
-the codespace creation. If you don’t see <code>8787</code> port, then
-you need to manually add it (using “Add Port” button). - The Rstudio
-server can takes some times to set-up after the codespace creation, so
-it might be not available right after the creation, and user might have
-to wait some minutes. We added a bash script
-<code>.devcontainer/codespaces_rstudio_status.sh</code> to check rstudio
-server status but it still an experimental feature.</p>
+<p>If you don’t see <code>8787</code> port, then you need to manually
+add it (using “Add Port” button).</p>
 </div>
 </div>
 <div class="section level4">
