@@ -11,10 +11,12 @@ on:
     branches:
       - main
       - devel
+      - patch
   pull_request:
     branches:
       - main
       - devel
+      - patch
 
 name: R CMD Check
 

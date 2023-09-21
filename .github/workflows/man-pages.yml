@@ -12,11 +12,13 @@ on:
       - main
       - devel
       - pre-release
+      - patch
   pull_request:
     branches:
       - main
       - devel
       - pre-release
+      - patch
 
 name: Man Pages
 

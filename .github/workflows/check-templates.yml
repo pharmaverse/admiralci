@@ -22,11 +22,13 @@ on:
       - main
       - devel
       - pre-release
+      - patch
   pull_request:
     branches:
       - main
       - devel
       - pre-release
+      - patch
 
 env:
   # branch name for PR
