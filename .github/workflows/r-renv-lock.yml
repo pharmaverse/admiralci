@@ -99,7 +99,7 @@ jobs:
                 ))
               )
             )
-            packages[!(packages %in% c("admiral", "admiraldev", "admiralci", "admiral.test", getwd()))]
+            packages[!(packages %in% c("admiral", "admiraldev", "admiralci", "admiral.test", "pharmaversesdtm", getwd()))]
           }
 
           options(renv.snapshot.filter = .get_dependencies)
@@ -108,7 +108,7 @@ jobs:
             loc_path <- find.package("admiraldev", lib.loc = .libPaths(), quiet = TRUE)
             suggests <-
               renv:::renv_dependencies_discover_description(loc_path, fields = "Suggests")[["Package"]]
-            suggests <- suggests[!(suggests %in% c("admiral", "admiraldev", "admiralci", "admiral.test"))]
+            suggests <- suggests[!(suggests %in% c("admiral", "admiraldev", "admiralci", "admiral.test", "pharmaversesdtm"))]
             renv::install(suggests, repos = options("repos"))
           }
 
@@ -126,12 +126,12 @@ jobs:
           renv::install("openpharma/staged.dependencies", repos = options("repos"))
 
           # Packages from stage dependencies to ignore
-          renv::settings$ignored.packages(c("admiral", "admiraldev", "admiral.test", "admiralci"))
+          renv::settings$ignored.packages(c("admiral", "admiraldev", "admiral.test", "admiralci", "pharmaversesdtm"))
 
-          renv::install("pharmaverse/admiral.test@devel", repos = options("repos"))
+          renv::install("pharmaverse/pharmaversesdtm@devel", repos = options("repos"))
           renv::install("pharmaverse/admiraldev@devel", repos = options("repos"))
           renv_install_suggests("admiraldev")
-          renv_install_suggests("admiral.test")
+          renv_install_suggests("pharmaversesdtm")
 
           # Install dependencies
           renv::settings$snapshot.type("explicit")

@@ -46,7 +46,7 @@ The first step for requesting an update for a R package in the `renv.lock` file 
 
 ## Propagation Process
 
-Through GitHub Actions we have developed the ability to **propagate** updated lock files with our preferred versions of R and R packages throughout the family of admiral packages.  This ensures that developers working on `{admiral.test}` and `{admiralonco}` have the same common environment as those working on `{admiraldev}` and `{admiralvaccines}`. 
+Through GitHub Actions we have developed the ability to **propagate** updated lock files with our preferred versions of R and R packages throughout the family of admiral packages.  This ensures that developers working on `{pharmaversesdtm}` and `{admiralonco}` have the same common environment as those working on `{admiraldev}` and `{admiralvaccines}`. 
 
 
 The file that does the propagation process is called [`propagate.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/propagate.yml) located in the `.github/workflows` folder of the [admiralci repository](https://github.com/pharmaverse/admiralci/). 
