@@ -77,7 +77,7 @@ jobs:
               cicdguy
               bms63
               bundfussr
-          - name: admiral.test
+          - name: pharmaversesdtm
             target-branch: devel
             reviewers: |-
               bms63
