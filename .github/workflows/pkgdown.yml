@@ -170,7 +170,7 @@ jobs:
                     return(x)
                 }
 
-                sprintf("https://pharmaverse.github.io/%s/pre-release/reference/%s.html", package_name, function_name)
+                sprintf("https://pharmaverse.github.io/%s/main/reference/%s.html", package_name, function_name)
               }
 
               if (any(needs_tweak)) {
