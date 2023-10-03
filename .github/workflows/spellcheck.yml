@@ -20,11 +20,13 @@ on:
       - main
       - devel
       - pre-release
+      - patch
   pull_request:
     branches:
       - main
       - devel
       - pre-release
+      - patch
 
 concurrency:
   group: spelling-${{ github.event.pull_request.number || github.ref }}
