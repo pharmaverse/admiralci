@@ -37,6 +37,7 @@ jobs:
           - {r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
           - {r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
           - {r: '4.3', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
+          - {r: 'devel', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
