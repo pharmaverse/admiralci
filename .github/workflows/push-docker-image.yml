@@ -71,6 +71,7 @@ jobs:
       - name: Print message
         run: |
           echo "updating docker image for renv ${{ matrix.value }}"
+          exit 1 # TODO: del (for testing)
 
       - name: Set image specs
         id: image_specs
