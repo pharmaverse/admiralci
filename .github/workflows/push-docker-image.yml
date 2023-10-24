@@ -47,6 +47,7 @@ jobs:
             renv_list="${{ steps.changed-files.outputs.all_changed_files }}"
           fi
           renv_list=$(echo $renv_list | sed 's/ /", "/g')
+          renv_list="$renv_list devel" # adding devel conf
           echo "renv=[\"$renv_list\"]" >> $GITHUB_OUTPUT
 
   deploy-image:
@@ -76,20 +77,39 @@ jobs:
         id: image_specs
         run: |
           package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          r_version=$(basename $(dirname ${{ matrix.value }})) # TODO: check here if legacy renv (if yes, delete _legacy suffix and add _legacy suffix to docker im?)
+          if [ "${{ matrix.value }}" == "devel" ]{
+            r_version="devel"
+          }
+          else {
+            r_version=$(basename $(dirname ${{ matrix.value }})) # TODO: check here if legacy renv (if yes, delete _legacy suffix and add _legacy suffix to docker im?)
+            renv=$(echo "${{ matrix.value }}" | tr -d '"')
+            echo "renv_lock_path=$renv" >> $GITHUB_OUTPUT
+          }
           echo "r_version=$r_version" >> $GITHUB_OUTPUT
           echo "image_name=$package_name-$r_version" >> $GITHUB_OUTPUT
-          renv=$(echo "${{ matrix.value }}" | tr -d '"')
-          echo "renv_lock_path=$renv" >> $GITHUB_OUTPUT
 
       - name: Call deploy docker image action for every renv
-        uses: insightsengineering/r-image-creator@v1
+        uses: insightsengineering/r-image-creator@create_image_from_description
+        if: ${{ matrix.value }} != 'devel'
         with:
           image-name: "${{ steps.image_specs.outputs.image_name }}"
           tag-latest: true
           base-image: "rocker/rstudio:${{ steps.image_specs.outputs.r_version }}"
           sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
           renv-lock-file: "${{ steps.image_specs.outputs.renv_lock_path }}"
+          repository-owner: ${{ github.repository_owner }}
+          repo-user: ${{ github.actor }}  # pharmaverse-bot
+          repo-token: "${{ secrets.GITHUB_TOKEN }}" # ${{ secrets.PHARMAVERSE_BOT }}
+      
+      - name: Call deploy docker image action for every renv
+        uses: insightsengineering/r-image-creator@create_image_from_description
+        if: ${{ matrix.value }} == 'devel'
+        with:
+          image-name: "${{ steps.image_specs.outputs.image_name }}"
+          tag-latest: true
+          base-image: "rocker/rstudio:${{ steps.image_specs.outputs.r_version }}"
+          sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
+          description-file: "./DESCRIPTION"
           repository-owner: ${{ github.repository_owner }}
           repo-user: ${{ github.actor }}  # pharmaverse-bot
           repo-token: "${{ secrets.GITHUB_TOKEN }}" # ${{ secrets.PHARMAVERSE_BOT }}

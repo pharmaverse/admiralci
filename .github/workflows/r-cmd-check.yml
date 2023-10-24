@@ -37,6 +37,7 @@ jobs:
           - {r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
           - {r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
           - {r: '4.3', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
+          - {r: 'devel', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'} # not needed for devel ?
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -86,22 +87,30 @@ jobs:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_FORCE_SUGGESTS_: false
         run: |
-          if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
+          script=$(cat <<EOF
           options(crayon.enabled = TRUE)
-          check_error_on <- "${{ inputs.error-on }}"
-          if (check_error_on == "") {
-            check_error_on <- "note"
+          check_error_on <- '${{ inputs.error-on }}'
+          if (check_error_on == '') {
+            check_error_on <- 'note'
           }
           rcmdcheck::rcmdcheck(
-            args = c("--no-manual", "--as-cran"),
+            args = c('--no-manual', '--as-cran'),
             error_on = check_error_on,
-            check_dir = "check"
+            check_dir = 'check'
           )
-        shell: Rscript {0}
+          EOF
+          )
+
+          if [ ${{ matrix.config.r }} == "devel" ]; then
+            Rscript --vanilla --no-renv -e $script
+          else
+            Rscript {0} -e $script
+          fi
+        shell: bash
 
       - name: Upload check results
         if: failure()
         uses: actions/upload-artifact@main
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+          name: r${{ matrix.config.r }}-results
           path: check
