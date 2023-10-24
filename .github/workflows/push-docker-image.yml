@@ -89,7 +89,7 @@ jobs:
           echo "image_name=$package_name-$r_version" >> $GITHUB_OUTPUT
 
       - name: Call deploy docker image action for every renv
-        uses: insightsengineering/r-image-creator@create_image_from_description
+        uses: insightsengineering/r-image-creator@feature/create_image_from_description
         if: ${{ matrix.value }} != 'devel'
         with:
           image-name: "${{ steps.image_specs.outputs.image_name }}"
@@ -102,7 +102,7 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}" # ${{ secrets.PHARMAVERSE_BOT }}
       
       - name: Call deploy docker image action for every renv
-        uses: insightsengineering/r-image-creator@create_image_from_description
+        uses: insightsengineering/r-image-creator@feature/create_image_from_description
         if: ${{ matrix.value }} == 'devel'
         with:
           image-name: "${{ steps.image_specs.outputs.image_name }}"
