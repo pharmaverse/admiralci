@@ -99,12 +99,12 @@ jobs:
             check_dir = 'check'
           )"
 
-          if [ ${{ matrix.config.r }} == "devel" ]; then
-            # deactivate renv for devel checks
-            script="
-            renv::deactivate()
-            $script"
-          fi
+          # if [ ${{ matrix.config.r }} == "devel" ]; then
+          #   # deactivate renv for devel checks
+          #   script="
+          #   renv::deactivate()
+          #   $script"
+          # fi
 
           echo "$script" > checks.R
 
