@@ -101,12 +101,13 @@ jobs:
 
           if [ ${{ matrix.config.r }} == "devel" ]; then
             # deactivate renv for devel checks
-            script="renv::deactivate()
+            script="
+            renv::deactivate()
             $script"
-            Rscript --vanilla -e $script
-          else
-            Rscript --vanilla -e $script
+            echo "$script" > checks.R
           fi
+
+          Rscript --vanilla checks.R
         shell: bash
 
       - name: Upload check results
