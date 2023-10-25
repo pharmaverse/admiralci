@@ -102,9 +102,15 @@ jobs:
           )
 
           if [ ${{ matrix.config.r }} == "devel" ]; then
-            Rscript --vanilla --no-renv -e $script
+            # deactivate renv for devel checks
+            script=$(cat <<EOF
+            renv::deactivate()
+            $script
+            EOF
+            )
+            Rscript --vanilla -e $script
           else
-            Rscript {0} -e $script
+            Rscript --vanilla -e $script
           fi
         shell: bash
 
