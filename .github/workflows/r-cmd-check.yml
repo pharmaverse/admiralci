@@ -99,16 +99,13 @@ jobs:
             check_dir = 'check'
           )"
 
-          # if [ ${{ matrix.config.r }} == "devel" ]; then
-          #   # deactivate renv for devel checks
-          #   script="
-          #   renv::deactivate()
-          #   $script"
-          # fi
+          if [ ${{ matrix.config.r }} == "devel" ]; then
+            R -e "install.packages('rcmdcheck')"
+          fi
 
           echo "$script" > checks.R
 
-          Rscript --vanilla checks.R
+          Rscript checks.R
         shell: bash
 
       - name: Upload check results
