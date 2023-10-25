@@ -87,7 +87,7 @@ jobs:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_FORCE_SUGGESTS_: false
         run: |
-          script=$(cat <<EOF
+          script="
           options(crayon.enabled = TRUE)
           check_error_on <- '${{ inputs.error-on }}'
           if (check_error_on == '') {
@@ -97,17 +97,12 @@ jobs:
             args = c('--no-manual', '--as-cran'),
             error_on = check_error_on,
             check_dir = 'check'
-          )
-          EOF
-          )
+          )"
 
           if [ ${{ matrix.config.r }} == "devel" ]; then
             # deactivate renv for devel checks
-            script=$(cat <<EOF
-            renv::deactivate()
-            $script
-            EOF
-            )
+            script="renv::deactivate()
+            $script"
             Rscript --vanilla -e $script
           else
             Rscript --vanilla -e $script
