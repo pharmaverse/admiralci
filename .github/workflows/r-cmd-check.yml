@@ -104,8 +104,9 @@ jobs:
             script="
             renv::deactivate()
             $script"
-            echo "$script" > checks.R
           fi
+
+          echo "$script" > checks.R
 
           Rscript --vanilla checks.R
         shell: bash
