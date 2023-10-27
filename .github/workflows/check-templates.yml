@@ -188,9 +188,16 @@ jobs:
               system(cmd)
               # move produced rda file to another location
               subdirectories <- list.dirs("/tmp", full.names = TRUE)
+              print("subdirectories")
+              print(subdirectories)
               rda_files <- list.files(subdirectories, pattern = "\\.rda$", recursive = TRUE, full.names = TRUE)
+              print("rda_files")
+              print(rda_files)
               if (length(rda_files) > 0) {
                 current_rda_file <- rda_files[1]
+                print("other traces")
+                print(current_rda_file)
+                print(file.path(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"), basename(current_rda_file)))
                 file.copy(current_rda_file, file.path(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"), basename(current_rda_file)))
                 file.remove(current_rda_file)
               }
