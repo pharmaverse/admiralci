@@ -207,6 +207,7 @@ jobs:
           # copy data from tmp folder
           mkdir -p "$GITHUB_WORKSPACE/tmp/"
           cp -r "${folder_id}/." "$GITHUB_WORKSPACE/tmp/"
+        shell: bash
 
       - name: Add other data formats and suffixes, exclude data
         if: inputs.push-templates-data
