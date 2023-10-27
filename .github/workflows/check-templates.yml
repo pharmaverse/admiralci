@@ -200,7 +200,9 @@ jobs:
 
       - name: Get temp dir
         run: |
-          folder_id=$(dirname $(find /tmp/ 2>/dev/null | grep .rda | head -n 1))
+          find /tmp/ 2>/dev/null | grep .rda
+          rda_files=$(find /tmp/ 2>/dev/null | grep .rda | head -n 1)
+          folder_id=$(dirname $rda_files)
           echo "folder id: $folder_id"
           # copy data from tmp folder
           cp -r "/tmp/${folder_id}/." "$GITHUB_WORKSPACE/tmp/"
