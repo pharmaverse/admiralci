@@ -198,6 +198,13 @@ jobs:
           }
         shell: Rscript {0}
 
+      - name: Get temp dir
+        run: |
+          folder_id=$(dirname $(find /tmp/ 2>/dev/null | grep .rda | head -n 1))
+          echo "folder id: $folder_id"
+          # copy data from tmp folder
+          cp -r "/tmp/${folder_id}/." "$GITHUB_WORKSPACE/tmp/"
+
       - name: Add other data formats and suffixes, exclude data
         if: inputs.push-templates-data
         run: |
