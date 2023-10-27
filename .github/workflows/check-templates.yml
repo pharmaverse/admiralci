@@ -186,21 +186,21 @@ jobs:
             exit_codes <- purrr::map_chr(templates, function(file) {
               cmd <- sprintf("Rscript --vanilla %s", file)
               system(cmd)
-              # move produced rda file to another location
-              subdirectories <- list.dirs("/tmp", full.names = TRUE)
-              print("subdirectories")
-              print(subdirectories)
-              rda_files <- list.files(subdirectories, pattern = "\\.rda$", recursive = TRUE, full.names = TRUE)
-              print("rda_files")
-              print(rda_files)
-              if (length(rda_files) > 0) {
-                current_rda_file <- rda_files[1]
-                print("other traces")
-                print(current_rda_file)
-                print(file.path(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"), basename(current_rda_file)))
-                file.copy(current_rda_file, file.path(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"), basename(current_rda_file)))
-                file.remove(current_rda_file)
-              }
+              # # move produced rda file to another location
+              # subdirectories <- list.dirs("/tmp", full.names = TRUE)
+              # print("subdirectories")
+              # print(subdirectories)
+              # rda_files <- list.files(subdirectories, pattern = "\\.rda$", recursive = TRUE, full.names = TRUE)
+              # print("rda_files")
+              # print(rda_files)
+              # if (length(rda_files) > 0) {
+              #   current_rda_file <- rda_files[1]
+              #   print("other traces")
+              #   print(current_rda_file)
+              #   print(file.path(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"), basename(current_rda_file)))
+              #   file.copy(current_rda_file, file.path(file.path(Sys.getenv("GITHUB_WORKSPACE"), "tmp"), basename(current_rda_file)))
+              #   file.remove(current_rda_file)
+              # }
             })
             if (any(exit_codes == 1L)) {
               failed_scripts <- basename(templates)[which(exit_codes == 1L)]
@@ -212,6 +212,13 @@ jobs:
             }
           }
         shell: Rscript {0}
+      
+      - name: Test tmp folder
+        run: |
+          ls /tmp/
+          find /tmp/
+          ls /tmp/templates_data
+          cp -r /tmp/templates_data/. "$GITHUB_WORKSPACE/tmp"
 
       - name: Add other data formats and suffixes, exclude data
         if: inputs.push-templates-data
