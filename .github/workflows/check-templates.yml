@@ -405,7 +405,7 @@ jobs:
           echo "source-branch=$source_br" >> $GITHUB_OUTPUT
           echo "branch-exists=$branch_exists" >> $GITHUB_OUTPUT
           warn_msg="WARNING:: the branch $source_br already exists in pharmaverseadam, please merge it and delete it, and re-execute this job"
-          if [ ${{ steps.changes.outputs.diff }} == 'true' ] && [ "$branch_exists" == 'true' ]; then echo "$warn_msg"; fi
+          if [ '${{ steps.changes.outputs.diff }}' == 'true' ] && [ '$branch_exists' == 'true' ]; then echo "$warn_msg"; fi
         shell: bash {0}
 
       # if diff detected, push changes
