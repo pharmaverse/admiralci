@@ -201,6 +201,7 @@ jobs:
       - name: Get temp dir
         run: |
           find /tmp/ 2>/dev/null
+          ls -al /tmp
           echo "debug1"
           find /tmp/ 2>/dev/null | grep .rda
           echo "debug2"
