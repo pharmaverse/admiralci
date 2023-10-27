@@ -30,37 +30,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  get_r_version:
-    name: Get R version
-    runs-on: ubuntu-latest
-    if: >
-      !contains(github.event.commits[0].message, '[skip coverage]')
-    outputs:
-      r-version: ${{ steps.normalizer.outputs.R_VERSION }}
-    steps:
-      - name: Normalize inputs
-        id: normalizer
-        run: |
-          R_VERSION="${{ inputs.r-version }}"
-          if [ "$R_VERSION" == "" ]
-          then {
-            R_VERSION="4.1"
-          }
-          fi
-          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
-        shell: bash
   coverage:
     name: Test Coverage
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/pharmaverse/admiralci-${{needs.get_r_version.outputs.r-version}}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     if: >
       !contains(github.event.commits[0].message, '[skip coverage]')
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       coverage-percent: ${{ steps.set-coverage-percentage.outputs.coverage-percentage }}
-    needs: get_r_version
     steps:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
