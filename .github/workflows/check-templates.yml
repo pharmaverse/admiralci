@@ -200,8 +200,12 @@ jobs:
 
       - name: Get temp dir
         run: |
+          find /tmp/ 2>/dev/null
+          echo "debug1"
           find /tmp/ 2>/dev/null | grep .rda
+          echo "debug2"
           rda_files=$(find /tmp/ 2>/dev/null | grep .rda | head -n 1)
+          echo "debug3"
           folder_id=$(dirname $rda_files)
           echo "folder id: $folder_id"
           # copy data from tmp folder
