@@ -205,7 +205,8 @@ jobs:
           folder_id=$(dirname $rda_files)
           echo "folder id: $folder_id"
           # copy data from tmp folder
-          cp -r "/tmp/${folder_id}/." "$GITHUB_WORKSPACE/tmp/"
+          mkdir -p "$GITHUB_WORKSPACE/tmp/"
+          cp -r "${folder_id}/." "$GITHUB_WORKSPACE/tmp/"
 
       - name: Add other data formats and suffixes, exclude data
         if: inputs.push-templates-data
