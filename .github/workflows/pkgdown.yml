@@ -1,5 +1,39 @@
 on:
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
+      skip-multiversion-docs:
+        description: 'Skip creation of multi-version docs'
+        default: false
+        required: false
+        type: boolean
+      multiversion-docs-landing-page:
+        description: 'Ref to use for the multiversion docs landing page'
+        default: main
+        required: false
+        type: string
+      latest-tag-alt-name:
+        description: "An alternate name to use for 'latest-tag' for multiversion pkgdown docs"
+        default: ""
+        required: false
+        type: string
+      branches-or-tags-to-list:
+        description: |
+          Which branches or tags should be listed under the
+          'Versions' dropdown menu on the landing page?
+          This input should be a regular expression in R.
+        required: false
+        default: >-
+          ^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$
+        type: string
   workflow_call:
     inputs:
       r-version:
@@ -31,12 +65,6 @@ on:
         default: >-
           ^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$
         type: string
-
-  push:
-    branches:
-      - main
-      - devel
-      - pre-release
 
 name: Documentation
 

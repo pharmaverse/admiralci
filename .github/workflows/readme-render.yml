@@ -1,14 +1,22 @@
 name: Render README
 
 on:
-  push:
-    branches:
-      - main
-      - devel
-      - pre-release
-    paths:
-      - README.Rmd
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
+      skip-md-formatting:
+        description: 'Skip markdown auto-formatting'
+        default: false
+        required: false
+        type: boolean
   workflow_call:
     inputs:
       r-version:

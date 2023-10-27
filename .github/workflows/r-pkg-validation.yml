@@ -2,6 +2,16 @@ name: R Package Validation report
 
 on:
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
   workflow_call:
     inputs:
       r-version:

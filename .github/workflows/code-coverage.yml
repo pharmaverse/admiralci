@@ -1,5 +1,20 @@
 on:
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
+      skip-coverage-badges:
+        description: 'Skip code coverage badge creation'
+        default: false
+        required: false
+        type: boolean
   workflow_call:
     inputs:
       r-version:
@@ -12,16 +27,6 @@ on:
         default: false
         required: false
         type: boolean
-  push:
-    branches:
-      - main
-      - devel
-      - pre-release
-  pull_request:
-    branches:
-      - main
-      - devel
-      - pre-release
 
 name: Code Coverage
 

@@ -1,5 +1,15 @@
 on:
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
   workflow_call:
     inputs:
       r-version:
@@ -7,16 +17,6 @@ on:
         default: '4.1'
         required: false
         type: string
-  push:
-    branches:
-      - main
-      - devel
-      - pre-release
-  pull_request:
-    branches:
-      - main
-      - devel
-      - pre-release
 
 name: Man Pages
 

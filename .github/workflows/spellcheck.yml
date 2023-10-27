@@ -3,6 +3,21 @@ name: Spelling
 
 on:
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
+      exclude:
+        description: 'List of paths to exclude (comma seperated list)'
+        default: ''
+        required: false
+        type: string
   workflow_call:
     inputs:
       r-version:
@@ -15,16 +30,6 @@ on:
         default: ''
         required: false
         type: string
-  push:
-    branches:
-      - main
-      - devel
-      - pre-release
-  pull_request:
-    branches:
-      - main
-      - devel
-      - pre-release
 
 concurrency:
   group: spelling-${{ github.event.pull_request.number || github.ref }}
