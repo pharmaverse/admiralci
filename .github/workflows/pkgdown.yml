@@ -149,7 +149,7 @@ jobs:
       - name: Install package
         run: renv::install(".", dependencies = "no-deps")
         shell: Rscript {0}
-        
+
       - name: Add script to fix rdrr.io links for pharmaverse packages
         uses: "DamianReeves/write-file-action@v1.2"
         with:
@@ -192,7 +192,7 @@ jobs:
 
               invisible()
             }
-            
+
             setHook("UserHook::admiralci::tweak_page", tweak_rdrr_url)
             print("Tweak rdrr.io links for admiral pharmaverse packages.")
 
