@@ -31,6 +31,10 @@ on:
         default: >-
           ^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$
         type: string
+    secrets:
+      GITHUB_PAT:
+        required: false
+        description: GitHub API access token, which might be needed for downstream ops or rendering.
 
   push:
     branches:
