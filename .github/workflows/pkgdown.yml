@@ -235,6 +235,8 @@ jobs:
             clean = TRUE
           )
           EOF
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
   multi-version-docs:
     name: Multi-version docs
