@@ -52,7 +52,7 @@ jobs:
         # Run all steps in this job for the following repositories.
         repos:
           - name: admiralonco
-            target-branch: devel
+            target-branch: main
             reviewers: |-
               bundfussr
               cicdguy
@@ -68,7 +68,7 @@ jobs:
               cicdguy
               bundfussr
           - name: admiralophtha
-            target-branch: devel
+            target-branch: main
             reviewers: |-
               cicdguy
           - name: admiral
@@ -78,12 +78,12 @@ jobs:
               bms63
               bundfussr
           - name: pharmaversesdtm
-            target-branch: devel
+            target-branch: main
             reviewers: |-
               bms63
               bundfussr
           - name: admiralvaccine
-            target-branch: devel
+            target-branch: main
             reviewers: |-
               bms63
     steps:
