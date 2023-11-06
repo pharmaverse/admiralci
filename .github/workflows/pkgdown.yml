@@ -1,5 +1,39 @@
 on:
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
+      skip-multiversion-docs:
+        description: 'Skip creation of multi-version docs'
+        default: false
+        required: false
+        type: boolean
+      multiversion-docs-landing-page:
+        description: 'Ref to use for the multiversion docs landing page'
+        default: main
+        required: false
+        type: string
+      latest-tag-alt-name:
+        description: "An alternate name to use for 'latest-tag' for multiversion pkgdown docs"
+        default: ""
+        required: false
+        type: string
+      branches-or-tags-to-list:
+        description: |
+          Which branches or tags should be listed under the
+          'Versions' dropdown menu on the landing page?
+          This input should be a regular expression in R.
+        required: false
+        default: >-
+          ^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$
+        type: string
   workflow_call:
     inputs:
       r-version:
@@ -36,12 +70,6 @@ on:
         required: false
         description: GitHub API access token, which might be needed for downstream ops or rendering.
 
-  push:
-    branches:
-      - main
-      - devel
-      - pre-release
-
 name: Documentation
 
 concurrency:
@@ -49,35 +77,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  get_r_version:
-    name: Get R version
-    runs-on: ubuntu-latest
-    if: >
-      !contains(github.event.commits[0].message, '[skip docs]')
-    outputs:
-      r-version: ${{ steps.normalizer.outputs.R_VERSION }}
-    steps:
-      - name: Normalize inputs
-        id: normalizer
-        run: |
-          R_VERSION="${{ inputs.r-version }}"
-          if [ "$R_VERSION" == "" ]
-          then {
-            R_VERSION="4.1"
-          }
-          fi
-          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
-        shell: bash
   pkgdown:
     name: pkgdown
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ needs.get_r_version.outputs.r-version }}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     if: >
       !contains(github.event.commits[0].message, '[skip docs]')
-    needs: get_r_version
     steps:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
