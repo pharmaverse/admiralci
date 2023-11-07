@@ -28,4 +28,4 @@
 ^staged_dependencies.yaml$
 ^README.Rmd$
 ^.devcontainer
-^Version contains large components|^\*NOTE\*:
+^Version contains large components \(\d+\.\d+\.\d+\.\d+\)|^\*NOTE\*:
