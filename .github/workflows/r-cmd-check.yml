@@ -98,7 +98,7 @@ jobs:
               }
             }
           }
-          cat(paste("maintenance_version=", maintenance_version), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
+          cat(sprintf("maintenance_version=%s", maintenance_version), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
         shell: Rscript {0}
 
       - name: Check
@@ -106,7 +106,7 @@ jobs:
           _R_CHECK_FORCE_SUGGESTS_: false
         run: |
           if ("${{steps.check_version.outputs.maintenance_version}}" == "T"){
-            Sys.setenv(_R_CHECK_CRAN_INCOMING_REMOTE_ = TRUE) # we do not check if package is suitable for publication on CRAN in case of maintenance version
+            Sys.setenv("_R_CHECK_CRAN_INCOMING_REMOTE_" = TRUE)
           }
           if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
           options(crayon.enabled = TRUE)
