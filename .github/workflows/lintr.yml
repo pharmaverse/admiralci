@@ -1,5 +1,20 @@
 on:
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
+      lint-all-files:
+        description: 'Lint all files every time'
+        default: 'false'
+        required: false
+        type: string
   workflow_call:
     inputs:
       r-version:
@@ -12,16 +27,6 @@ on:
         default: 'false'
         required: false
         type: string
-  push:
-    branches:
-      - main
-      - devel
-      - pre-release
-  pull_request:
-    branches:
-      - main
-      - devel
-      - pre-release
 
 name: Lint
 
@@ -30,35 +35,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  get_r_version:
-    name: Get R version
-    runs-on: ubuntu-latest
-    if: >
-      !contains(github.event.commits[0].message, '[skip lint]')
-    outputs:
-      r-version: ${{ steps.normalizer.outputs.R_VERSION }}
-    steps:
-      - name: Normalize inputs
-        id: normalizer
-        run: |
-          R_VERSION="${{ inputs.r-version }}"
-          if [ "$R_VERSION" == "" ]
-          then {
-            R_VERSION="4.1"
-          }
-          fi
-          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
-        shell: bash
   lint:
     name: Lint
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/pharmaverse/admiralci-${{needs.get_r_version.outputs.r-version}}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     if: >
       !contains(github.event.commits[0].message, '[skip lint]')
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-    needs: get_r_version
     steps:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names

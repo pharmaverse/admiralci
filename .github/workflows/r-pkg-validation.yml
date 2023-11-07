@@ -2,6 +2,16 @@ name: R Package Validation report
 
 on:
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: 'The version of R to use'
+        default: '4.1'
+        required: false
+        type: choice
+        options:
+          - '4.1'
+          - '4.2'
+          - '4.3'
   workflow_call:
     inputs:
       r-version:
@@ -13,28 +23,11 @@ on:
     types: [published]
 
 jobs:
-  get_r_version:
-    name: Get R version
-    runs-on: ubuntu-latest
-    outputs:
-      r-version: ${{ steps.normalizer.outputs.R_VERSION }}
-    steps:
-      - name: Normalize inputs
-        id: normalizer
-        run: |
-          R_VERSION="${{ inputs.r-version }}"
-          if [ "$R_VERSION" == "" ]
-          then {
-            R_VERSION="4.1"
-          }
-          fi
-          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
-        shell: bash
   r-pkg-validation:
     name: Generate
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/pharmaverse/admiralci-${{needs.get_r_version.outputs.r-version}}:latest"
+      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     # Set Github token permissions
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +36,6 @@ jobs:
       contents: write
       packages: write
       deployments: write
-    needs: get_r_version
     steps:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
