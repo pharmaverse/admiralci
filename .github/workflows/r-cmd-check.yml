@@ -82,32 +82,31 @@ jobs:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       #####################c#####################
 
-      - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_REMOTE_: false
-          _R_CHECK_FORCE_SUGGESTS_: false
+      - name: Check Version
+        id: check_version
         run: |
-          description_old <- readLines("DESCRIPTION")
-          description_dat <- description_old
+          maintenance_version="F"
+          description_dat <- readLines("DESCRIPTION")
           for (i in seq_along(description_dat)) {
             if (grepl("^Version:", description_dat[i])) {
               current_version <- sub("^Version: ", "", description_dat[i])
               version_parts <- strsplit(current_version, "\\.")[[1]]
-              
               # check if maintenance version - if yes, temp update the DESCRIPTION for rcmdchecks
               if (length(version_parts) == 4) {
                 print("Maintenance version detected (format X.Y.Z.M with M >= 9000)")
-                version_parts <- version_parts[1:3]
+                maintenance_version="T"
               }
-              
-              new_version <- paste(version_parts, collapse = ".")
-              description_dat[i] <- paste("Version: ", new_version)
             }
           }
-          
-          # Write the updated DESCRIPTION file back
-          #writeLines(description_dat, con = "DESCRIPTION")
-        
+          cat(paste("maintenance_version=", maintenance_version), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
+
+      - name: Check
+        env:
+          _R_CHECK_FORCE_SUGGESTS_: false
+        run: |
+          if ( "${{ steps.check_version.outputs.maintenance_version }}" == "T" ){
+            Sys.setenv(_R_CHECK_CRAN_INCOMING_REMOTE_ = TRUE) # we do not check if package is suitable for publication on CRAN in case of maintenance version
+          }
           if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
           options(crayon.enabled = TRUE)
           check_error_on <- "${{ inputs.error-on }}"
@@ -119,9 +118,6 @@ jobs:
             error_on = check_error_on,
             check_dir = "check"
           )
-
-          # Write back initial description file
-          writeLines(description_dat, con = "DESCRIPTION")
         shell: Rscript {0}
 
       - name: Upload check results
