@@ -1,7 +1,7 @@
 Package: admiralci
 Type: Package
 Title: ADaM in R Asset Library - CI/CD Workflows
-Version: 0.0.1
+Version: 0.0.1.9001
 Authors@R: c(
     person("Open", "Source", email = "admiralci@pharmaverse.com", role = c("aut", "cre")))
 Description: A set of common CI/CD workflows originally designed and developed for
