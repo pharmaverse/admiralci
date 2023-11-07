@@ -105,7 +105,7 @@ jobs:
         env:
           _R_CHECK_FORCE_SUGGESTS_: false
         run: |
-          if ( "${{ steps.check_version.outputs.maintenance_version }}" == "T" ){
+          if ("${{steps.check_version.outputs.maintenance_version}}" == "T"){
             Sys.setenv(_R_CHECK_CRAN_INCOMING_REMOTE_ = TRUE) # we do not check if package is suitable for publication on CRAN in case of maintenance version
           }
           if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
