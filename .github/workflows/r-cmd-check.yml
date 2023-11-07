@@ -103,10 +103,11 @@ jobs:
 
       - name: Check
         env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_FORCE_SUGGESTS_: false
         run: |
           if ("${{steps.check_version.outputs.maintenance_version}}" == "T"){
-            Sys.setenv("_R_CHECK_CRAN_INCOMING_REMOTE_" = TRUE)
+            Sys.setenv("_R_CHECK_CRAN_INCOMING_" = TRUE)
           }
           if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
           options(crayon.enabled = TRUE)
