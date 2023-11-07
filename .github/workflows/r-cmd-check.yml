@@ -99,6 +99,7 @@ jobs:
             }
           }
           cat(paste("maintenance_version=", maintenance_version), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
+        shell: Rscript {0}
 
       - name: Check
         env:
