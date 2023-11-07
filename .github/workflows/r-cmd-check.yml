@@ -106,7 +106,7 @@ jobs:
           }
           
           # Write the updated DESCRIPTION file back
-          writeLines(description_dat, con = description_file_path)
+          writeLines(description_dat, con = "DESCRIPTION")
         
           if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
           options(crayon.enabled = TRUE)
@@ -121,7 +121,7 @@ jobs:
           )
 
           # Write back initial description file
-          writeLines(description_dat, con = description_file_path)
+          writeLines(description_dat, con = "DESCRIPTION")
         shell: Rscript {0}
 
       - name: Upload check results
