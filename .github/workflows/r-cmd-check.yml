@@ -106,6 +106,8 @@ jobs:
           echo "$script" > checks.R
 
           Rscript checks.R
+
+          rm -f checks.R
         shell: bash
 
       - name: Upload check results
