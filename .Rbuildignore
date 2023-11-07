@@ -28,3 +28,4 @@
 ^staged_dependencies.yaml$
 ^README.Rmd$
 ^.devcontainer
+^Version contains large components|^*NOTE*:
