@@ -8,6 +8,8 @@ on:
     paths:
       - 'renv/profiles/**/renv.lock'
   workflow_dispatch: # give possibility to run it manually
+  schedule:
+    - cron: '0 0 * * *' # Run every day at midnight UTC
 
 permissions: write-all
 env:
@@ -50,6 +52,7 @@ jobs:
           echo "renv=[\"$renv_list\"]" >> $GITHUB_OUTPUT
 
   deploy-image:
+    if: github.event_name != 'schedule'
     needs: [ get_renv_list ]
     runs-on: ubuntu-latest
     strategy:
@@ -96,7 +99,6 @@ jobs:
 
   deploy-image-devel:
     runs-on: ubuntu-latest
-
     # Token permissions
     permissions:
       contents: read
