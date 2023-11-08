@@ -365,13 +365,18 @@ jobs:
         id: branch
         run: |
           repo_name=$(basename "${{ github.repository }}")
-          echo "source-branch=${{ env.source-branch }}_${repo_name}@devel" >> $GITHUB_OUTPUT
+          source_br="${{ env.source-branch }}_${repo_name}"
+          source_grep=$(git branch -a | grep $source_br)
+          if [ -z $source_grep ]; then branch_exists=false; else branch_exists=true; fi
+          echo "source-branch=$source_br" >> $GITHUB_OUTPUT
+          echo "branch-exists=$branch_exists" >> $GITHUB_OUTPUT
+          warn_msg="WARNING:: the branch $source_br already exists in pharmaverseadam, please merge it and delete it, and re-execute this job"
+          if [ '${{ steps.changes.outputs.diff }}' == 'true' ] && [ '$branch_exists' == 'true' ]; then echo "$warn_msg"; fi
         shell: bash {0}
-
 
       # if diff detected, push changes
       - name: Commit and push changes in {{ env.repo }}
-        if: ${{ inputs.push-templates-data && steps.changes.outputs.diff == 'true' }}
+        if: ${{ inputs.push-templates-data && steps.changes.outputs.diff == 'true' && steps.branch.outputs.branch-exists == 'false' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: templates data updates from ${{ github.repository }}
@@ -382,7 +387,7 @@ jobs:
           create_branch: true
 
       - name: Create Pull Request
-        if: ${{ inputs.push-templates-data && steps.changes.outputs.diff == 'true' }}
+        if: ${{ inputs.push-templates-data && steps.changes.outputs.diff == 'true' && steps.branch.outputs.branch-exists == 'false' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.PHARMAVERSE_BOT }}

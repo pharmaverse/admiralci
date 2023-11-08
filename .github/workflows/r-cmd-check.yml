@@ -37,6 +37,7 @@ jobs:
           - {r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
           - {r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
           - {r: '4.3', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
+          - {r: 'devel', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'} # not needed for devel ?
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -81,11 +82,33 @@ jobs:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       #####################c#####################
 
+      - name: Check Version
+        id: check_version
+        run: |
+          maintenance_version="F"
+          description_dat <- readLines("DESCRIPTION")
+          for (i in seq_along(description_dat)) {
+            if (grepl("^Version:", description_dat[i])) {
+              current_version <- sub("^Version: ", "", description_dat[i])
+              version_parts <- strsplit(current_version, "\\.")[[1]]
+              # check if maintenance version - if yes, temp update the DESCRIPTION for rcmdchecks
+              if (length(version_parts) == 4) {
+                print("Maintenance version detected (format X.Y.Z.M with M >= 9000)")
+                maintenance_version="T"
+              }
+            }
+          }
+          cat(sprintf("maintenance_version=%s", maintenance_version), file = Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
+        shell: Rscript {0}
+
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_FORCE_SUGGESTS_: false
         run: |
+          if ("${{steps.check_version.outputs.maintenance_version}}" == "T"){
+            Sys.setenv("_R_CHECK_CRAN_INCOMING_SKIP_LARGE_VERSION_" = TRUE)
+          }
           if (!requireNamespace("rcmdcheck", quietly = TRUE)) install.packages("rcmdcheck")
           options(crayon.enabled = TRUE)
           check_error_on <- "${{ inputs.error-on }}"
@@ -103,5 +126,5 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@main
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+          name: r${{ matrix.config.r }}-results
           path: check
