@@ -365,7 +365,7 @@ jobs:
         id: branch
         run: |
           repo_name=$(basename "${{ github.repository }}")
-          source_br="${{ env.source-branch }}_${repo_name}@devel"
+          source_br="${{ env.source-branch }}_${repo_name}"
           source_grep=$(git branch -a | grep $source_br)
           if [ -z $source_grep ]; then branch_exists=false; else branch_exists=true; fi
           echo "source-branch=$source_br" >> $GITHUB_OUTPUT
