@@ -9,7 +9,7 @@ on:
       - 'renv/profiles/**/renv.lock'
   workflow_dispatch: # give possibility to run it manually
   schedule:
-    - cron: '0 0 * * 3,7' # Run every day at midnight UTC  15 09 * * 5,6,0
+    - cron: '0 0 * * 3,7' # Run every day at midnight UTC
 
 permissions: write-all
 env:
