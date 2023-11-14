@@ -117,7 +117,7 @@ jobs:
             ))
             cat("────────────────────────────────────────\n")
             cat("⚠️ Here is the complete git diff for the files that changed:\n")
-            system("git diff")
+            system("git diff .")
             cat("────────────────────────────────────────\n")
             cat(paste("ℹ️ Version of styler used in this workflow:", packageVersion("styler")))
             quit(status = length(problems))
