@@ -28,7 +28,7 @@ The intention of the `renv.lock` file is to create a harmonized development envi
 
 Unfortunately, this adoption of a `renv.lock` file also creates a few barriers for our development process.  First, if we **lock** in a version of R and R packages then we can not quickly adopt the latest and greatest of updates from new releases.  Second, how does a team decide to update a certain package or version of R and who gets to make that final call? Finally, when do we make updates to the lock file. Hopefully, the below will provide some guidance around these issues.  Please note, these process might change over time and admiral developers are encouraged to stay up to date with the latest processes and participate in the discussion.
 
-**Note:** Through GitHub Actions we continuously test admiral's integration with the latest 3 snapshots of dependent R packages on CRAN that are closest in date to latest 3 versions of R.  Please see [GitHub Actions/Workflows]( https://pharmaverse.github.io/admiraldev/devel/articles/pr_review_guidance.html#github-actionsworkflows) on the `{admiraldev}` site for more information on this process.
+**Note:** Through GitHub Actions we continuously test admiral's integration with the latest 3 snapshots of dependent R packages on CRAN that are closest in date to latest 3 versions of R.  Please see [GitHub Actions/Workflows]( https://pharmaverse.github.io/admiraldev/articles/pr_review_guidance.html#github-actionsworkflows) on the `{admiraldev}` site for more information on this process.
 
 ### R Package Updates and Lock Files
 
