@@ -15,6 +15,11 @@ on:
         default: 'false'
         required: false
         type: string
+      latest-lintr:
+        description: 'Latest lintr CRAN release'
+        default: 'false'
+        required: false
+        type: string 
   workflow_call:
     inputs:
       r-version:
@@ -27,6 +32,11 @@ on:
         default: 'false'
         required: false
         type: string
+      latest-lintr:
+        description: 'Latest lintr CRAN release'
+        default: 'false'
+        required: false
+        type: string 
 
 name: Lint
 
@@ -90,6 +100,12 @@ jobs:
           enable-check: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install latest release of lintr
+        run: |
+          install.packages("lintr", repos = "https://packagemanager.posit.co/cran/latest/")
+        shell: Rscript {0}
+        if: ${{ inputs.latest-lintr == 'true' }}
       ##################### END boilerplate steps #####################
 
       - name: Changed files
