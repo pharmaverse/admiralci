@@ -19,7 +19,12 @@ on:
         description: 'Latest lintr CRAN release'
         default: 'false'
         required: false
-        type: string 
+        type: string
+      install-package:
+        description: 'Install package locally.'
+        default: 'false'
+        required: false
+        type: string
   workflow_call:
     inputs:
       r-version:
