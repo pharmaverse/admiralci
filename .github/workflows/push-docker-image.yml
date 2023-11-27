@@ -129,8 +129,8 @@ jobs:
           sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
           description-file: "DESCRIPTION"
           repository-owner: ${{ github.repository_owner }}
-          repo-user: ${{ github.actor }}  # pharmaverse-bot
-          repo-token: "${{ secrets.GITHUB_TOKEN }}" # ${{ secrets.PHARMAVERSE_BOT }}
+          repo-user: "pharmaverse-bot"
+          repo-token: "${{ secrets.PHARMAVERSE_BOT }}"
 
 
 # refacto todo: image-name, sysdeps on get-renv-list job
