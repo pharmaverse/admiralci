@@ -120,7 +120,7 @@ jobs:
           tag-latest: true
           base-image: "rocker/rstudio:devel"
           sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
-          description-file: "https://github.com/pharmaverse/admiral/DESCRIPTION"
+          description-file: "https://raw.githubusercontent.com/pharmaverse/admiral/main/DESCRIPTION"
           repository-owner: ${{ github.repository_owner }}
           repo-user: "pharmaverse-bot"
           repo-token: "${{ secrets.PHARMAVERSE_BOT }}"
