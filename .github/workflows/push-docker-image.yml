@@ -121,8 +121,8 @@ jobs:
           base-image: "rocker/rstudio:devel"
           sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
           description-file: "https://raw.githubusercontent.com/pharmaverse/admiral/main/DESCRIPTION"
-          repository-owner: ${{ github.actor }}
-          repo-user: "pharmaverse-bot"
+          repository-owner: ${{ github.repository_owner }}
+          repo-user: ${{ github.actor }} 
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
   store_deps:
