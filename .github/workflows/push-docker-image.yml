@@ -125,6 +125,27 @@ jobs:
           repo-user: "pharmaverse-bot"
           repo-token: "${{ secrets.PHARMAVERSE_BOT }}"
 
+  store_deps:
+    name: Store Deps
+    runs-on: ubuntu-latest
+    needs: [ deploy-image-devel ]
+    container:
+      image: "ghcr.io/pharmaverse/admiralci-devel:latest"
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      ##################### BEGIN boilerplate steps #####################
+      - name: Store deps into csv file
+        id: branch-name
+        run: |
+          installed_packages <- as.data.frame(installed.packages())
+          write.csv(installed_packages, "/workspace/deps.csv", row.names = FALSE)
+        shell: Rscript {0}
+      - name: Upload deps.csv artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps
+          path: "/workspace/deps.csv"
 
 # refacto todo: image-name, sysdeps on get-renv-list job
 
