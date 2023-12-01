@@ -28,3 +28,4 @@
 ^staged_dependencies.yaml$
 ^README.Rmd$
 ^.devcontainer
+^install_devel_deps.R
