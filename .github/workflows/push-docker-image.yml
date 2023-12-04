@@ -105,29 +105,40 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Set image specs
-        id: image_specs
-        run: |
-          package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          echo "image_name=$package_name-devel" >> $GITHUB_OUTPUT
     
       - name: Call deploy docker image action devel
         uses: insightsengineering/r-image-creator@v1
         with:
-          image-name: "${{ steps.image_specs.outputs.image_name }}"
+          image-name: "admiralci-devel"
           tag-latest: true
           base-image: "rocker/rstudio:devel"
           sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
-          description-file: "./DESCRIPTION"
+          description-file: "https://raw.githubusercontent.com/pharmaverse/admiral/main/DESCRIPTION"
           repository-owner: ${{ github.repository_owner }}
-          repo-user: ${{ github.actor }}  # pharmaverse-bot
-          repo-token: "${{ secrets.GITHUB_TOKEN }}" # ${{ secrets.PHARMAVERSE_BOT }}
+          repo-user: ${{ github.actor }} 
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
+  store_deps:
+    name: Store Deps
+    runs-on: ubuntu-latest
+    needs: [ deploy-image-devel ]
+    container:
+      image: "ghcr.io/pharmaverse/admiralci-devel:latest"
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      ##################### BEGIN boilerplate steps #####################
+      - name: Store deps into csv file
+        id: branch-name
+        run: |
+          installed_packages <- as.data.frame(installed.packages())
+          write.csv(installed_packages, "/workspace/deps.csv", row.names = FALSE)
+        shell: Rscript {0}
+      - name: Upload deps.csv artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps
+          path: "/workspace/deps.csv"
 
 # refacto todo: image-name, sysdeps on get-renv-list job
 
