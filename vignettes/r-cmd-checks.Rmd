@@ -1,0 +1,70 @@
+---
+title: "R CMD CHECKS"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{R CMD CHECKS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+# R CMD Check Workflow
+
+This GitHub Actions workflow performs R CMD checks on specified R versions and repositories. The checks are triggered by manual dispatch, pushes to the `main` or `devel` branches, and pull requests targeting these branches.
+
+## Workflow Structure
+
+The workflow consists of a single job: `R-CMD-check`.
+
+### `R-CMD-check` Job
+
+This job runs R CMD checks on different R versions, leveraging specified CRAN repositories. The job is conditioned not to run if the commit message contains '[skip r-cmd-check]'. The checks are performed in parallel for each specified R version, using [Matrix Strategy](#matrix)
+
+
+#### Inputs
+
+- `error-on`: Input for the 'error_on' parameter in `rcmdcheck::rcmdcheck()`. Defaults to 'note'.
+
+#### Steps
+
+1. **Get branch names:** Extracts branch names.
+2. **Checkout repo:** Checks out the repository based on the event type (push or pull request).
+3. **Restore cache:** Restores cached dependencies.
+4. **Run Staged dependencies:** Executes staged dependencies action.
+5. **Check Version:** Determines if the package has a maintenance version.
+6. **Check:** Performs R CMD checks using `rcmdcheck::rcmdcheck()`.
+7. **Upload check results:** Uploads check results as an artifact in case of failure.
+
+### Concurrency
+
+Concurrency settings are specified to manage concurrent workflow runs effectively.
+
+## Inputs
+
+### Triggers
+
+- `workflow_dispatch`: Allows manual triggering of the workflow.
+- `workflow_call`: Triggered by a workflow call event.
+- `push`: Triggered on pushes to the `main` or `devel` branches.
+- `pull_request`: Triggered on pull requests targeting the `main` or `devel` branches.
+
+### Matrix
+
+- The workflow runs on admiralci docker images (depending on the matrix element r version).
+- R versions and CRAN repositories are specified in the matrix for parallel execution.
+
+```
+matrix:
+  config:
+    - {r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
+    - {r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
+    - {r: '4.3', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
+    - {r: 'devel', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
+```
+
+Note: We will change soon the `repos` element to use CRAN repo (https://cran.r-project.org/)
+
+## Permissions
+
+- `write-all`: Provides write permissions for various operations.

@@ -1,0 +1,63 @@
+---
+title: "Check Templates"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Check Templates}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Check Templates Workflow
+
+This GitHub Actions workflow is designed to check templates in an R package. It utilizes a matrix strategy to test different versions of R.
+
+## Inputs
+
+### `r-version`
+
+- **Description**: The version of R to use for testing.
+- **Default**: '4.1'
+- **Options**: '4.1', '4.2', '4.3'
+- **Required**: No
+
+## Workflow Triggers
+
+This workflow is triggered in two ways:
+
+1. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event. When triggered manually, you can specify the R version to use.
+
+2. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event. The R version is an input for this event.
+
+## Workflow Setup
+
+- **Name**: Check Templates
+- **Concurrency**: Templates are checked concurrently based on the branch or pull request number.
+
+## Job: `check_templates`
+
+This job verifies templates in the R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+
+### Steps
+
+#### Boilerplate Steps
+
+These steps perform initial setup, such as checking out the repository, normalizing inputs, and restoring the cache.
+
+1. **Get branch names**: Retrieves branch names for further processing.
+2. **Checkout repo (PR)**: Checks out the repository for pull requests.
+3. **Checkout repository**: Checks out the repository for non-pull request events.
+4. **Add safe directory**: Adds a safe directory to the configuration.
+5. **Normalize inputs**: Normalizes input values, including determining the R version and branch.
+
+#### Staged Dependencies
+
+These steps handle staged dependencies, including cache restoration and running the staged dependencies action.
+
+6. **Restore cache**: Restores the cache for staged dependencies.
+7. **Run Staged dependencies**: Runs the staged dependencies action.
+
+#### Install and Run Templates
+
+8. **Install package**: Builds and installs the R package.
+9. **Run Template Scripts**: Reads the package description, identifies template scripts, and executes them. If any script fails, the workflow stops and provides an error message.

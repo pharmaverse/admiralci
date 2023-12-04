@@ -1,0 +1,50 @@
+---
+title: "Links"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Links}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Check URLs Workflow
+
+This GitHub Actions workflow checks URLs in documentation files. It runs on the main, devel, and pre-release branches for push events and specified pull request events.
+
+## Workflow Triggers
+
+This workflow is triggered in the following ways:
+
+1. **Push Events**: Triggered on pushes to the main, devel, and pre-release branches.
+
+2. **Pull Request Events**: Triggered on pull requests when opened, synchronized, reopened, or ready for review for the main, devel, and pre-release branches.
+
+3. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event.
+
+4. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event.
+
+## Workflow Setup
+
+- **Concurrency**: URL check jobs are organized by the pull request number or branch.
+- **Cancel-in-progress**: Allows canceling in-progress URL check jobs.
+
+## Job: `links`
+
+This job validates URLs in documentation files. It runs on Ubuntu 20.04.
+
+### Steps
+
+1. **Checkout repo**: Checks out the repository.
+
+2. **Check URLs in docs**: Uses the lycheeverse/lychee-action to check URLs in documentation files. It excludes private URLs, GitHub repository URLs, and additional specified patterns.
+
+   - **Parameters**:
+     - `fail`: true (Fails the workflow if broken links are found)
+     - `jobSummary`: true (Provides a summary of link check results)
+     - `format`: markdown (Outputs results in markdown format)
+     - `output`: links-results.md (Saves link check results to a file)
+     - `args`: Additional arguments for link checking (includes exclusion patterns and file extensions)
+   
+   - **Environment Variables**:
+     - `GITHUB_TOKEN`: GitHub token for authentication.

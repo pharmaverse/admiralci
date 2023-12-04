@@ -1,0 +1,59 @@
+---
+title: "Cran Status"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Cran Status}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# CRAN Status Workflow
+
+This GitHub Actions workflow checks the CRAN status of an R package. It can create an issue if specified statuses ('NOTE', 'WARN', 'ERROR') are reported on the check report.
+Note : this workflow is using [insightEngineering Cran Status Monitor](https://github.com/insightsengineering/cran-status-monitor) action.
+
+## Inputs
+
+### `issue-assignees`
+
+- **Description**: Whom should the issue be assigned to if errors are encountered in the CRAN status checks? This is a comma-separated string of GitHub usernames. If undefined or empty, no assignments are made.
+- **Default**: ''
+- **Required**: No
+- **Type**: string
+
+### `statuses`
+
+- **Description**: Create an issue if one or more of the following statuses are reported on the check report. This is a comma-separated string of statuses. Allowed statuses are 'NOTE', 'WARN', and 'ERROR'.
+- **Default**: 'ERROR'
+- **Required**: No
+- **Type**: string
+
+### `path`
+
+- **Description**: Path to the R package root, if the package is not at the top level of the repository.
+- **Default**: '.'
+- **Required**: No
+- **Type**: string
+
+## Workflow Triggers
+
+This workflow is triggered in two ways:
+
+1. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event. When triggered manually, you can specify the issue-assignees, statuses, and path.
+
+2. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event. The issue-assignees, statuses, and path are inputs for this event.
+
+## Workflow Setup
+
+- **Permissions**: write-all
+- **Concurrency**: CRAN status jobs are organized by the pull request number or branch.
+- **Cancel-in-progress**: Allows canceling in-progress CRAN status jobs.
+
+## Job: `cran-status`
+
+This job checks the CRAN status of an R package. It runs on the latest version of Ubuntu and uses the rocker/tidyverse:latest Docker container.
+
+### Steps
+
+1. **Run CRAN Status Action**: Runs the CRAN Status Action with specified inputs.
