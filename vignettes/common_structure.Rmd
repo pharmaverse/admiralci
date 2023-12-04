@@ -1,0 +1,72 @@
+# Common structure of the workflows
+
+## R-version input
+
+For most of the workflows, we need to select a specific R version to load the associated `renv` profile.
+That's why most of the actions have a `r-version` input (by default set-up to `4.1`) :
+
+```{yml}
+inputs:
+    r-version:
+    description: 'The version of R to use'
+    default: '4.1'
+    required: false
+    type: string
+```
+
+## Use of `admiralci` docker images
+
+Once the `r-version` is picked, the worfklows will run inside a docker container instance. Indeed, `admiralci` contains an action `push-docker-image`, to be able to build `rocker:rstudio` images
+for each available versions of `R` (versions specified in `renv/profiles`, see [renv profiles conf](get_started#renv-profiles-configuration-handling-several-r-versions)). 
+At the building step of these docker images, every dependencies specified in the `renv.lock` files are installed.
+A total of 4 images are created :
+- `admiralci-4.1`
+- `admiralci-4.2`
+- `admiralci-4.3`
+- `admiralci-devel`
+
+These images and store them in admiralci ghcr (Github Container Registry - Place to store docker images), and are then reused to execute the workflows in docker container instances like this :
+
+```{yml}
+container:
+    image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
+```
+
+(More more details on docker images creation process and how they're used, please read [Docker images and codespaces](docker_and_codespaces)) section.
+
+## Checkout repository
+
+This action is used to checkout on the right repository. This is a step commonly used in github actions to be able to access a repository tree.
+
+```{yml}
+- name: Checkout repository
+  uses: actions/checkout@v3
+```
+
+## Staged dependencies
+
+The staged dependencies action allow to install every necessary upstream dependencies for `admiral` package, suche as :
+- `pharmaversesdtm` (SDTM test data)
+- `admiraldev` (utilities functions for the Admiral package family)
+
+(note that these dependencies are refered inside `staged_dependencies.yml` file)
+
+For more details about staged.dependencies, please visit these links :
+
+- [Staged Dependencies Package](https://github.com/openpharma/staged.dependencies)
+- [Staged Dependencies Action](https://github.com/insightsengineering/staged-dependencies-action) (Github action to use Staged Dependencies package through github workflows)
+
+```{yml}
+- name: Run Staged dependencies
+    uses: insightsengineering/staged-dependencies-action@v1
+    with:
+        run-system-dependencies: false
+        renv-restore: false
+    env:
+        GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Note : the user can specify some parameters depending on the use case :
+- run-system-dependencies : install or not sys dependencies
+- renv-restore : restore or not renv.lock dependencies
+(and many other options you can find on Staged Dependencies Action documentation).
