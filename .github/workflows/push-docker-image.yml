@@ -125,7 +125,7 @@ jobs:
           repo-user: ${{ github.actor }} 
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           repos: ${{ steps.image_specs.outputs.r_repos }}
-          packages: "DT,R.cache,R.methodsS3,R.oo,R.utils,backports,cellranger,collections,covr,crosstalk,cyclocomp,diffdf,git2r,hunspell,languageserver,lazyeval,lintr,progress,readxl,rematch,renv,rex,spelling,staged.dependencies,styler,xmlparsedata""
+          packages: "DT,R.cache,R.methodsS3,R.oo,R.utils,backports,cellranger,collections,covr,crosstalk,cyclocomp,diffdf,git2r,hunspell,languageserver,lazyeval,lintr,progress,readxl,rematch,renv,rex,spelling,staged.dependencies,styler,xmlparsedata"
 
   store_deps:
     name: Store Deps
