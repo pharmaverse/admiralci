@@ -26,24 +26,20 @@ jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
     container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ matrix.config.r }}:latest"
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+      image: "ghcr.io/pharmaverse/admiralci-${{ matrix.r_version }}:latest"
+    name: (${{ matrix.r_version }})
     if: >
       !contains(github.event.commits[0].message, '[skip r-cmd-check]')
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - {r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
-          - {r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
-          - {r: '4.3', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
-          - {r: 'devel', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'} # not needed for devel ?
+        r_version: ['4.1', '4.2', '4.3', 'devel']
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: true
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      R_REPOS: ${{ matrix.config.repos }}
+      R_REPOS: "https://cran.r-project.org"
 
     steps:
       ##################### BEGIN boilerplate steps #####################
@@ -77,7 +73,7 @@ jobs:
           run-system-dependencies: false
           renv-restore: false
           enable-check: false
-          cran-repos: "CRAN=${{ matrix.config.repos }}"
+          cran-repos: "$R_REPOS"
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       #####################c#####################
@@ -126,5 +122,5 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@main
         with:
-          name: r${{ matrix.config.r }}-results
+          name: r${{ matrix.r_version }}-results
           path: check

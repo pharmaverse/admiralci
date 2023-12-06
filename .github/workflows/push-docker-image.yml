@@ -14,6 +14,7 @@ on:
 permissions: write-all
 env:
   REGISTRY: ghcr.io
+  R_REPOS: "https://cran.r-project.org"
 
 concurrency:
   group: deploy-docker-image-${{ github.event.pull_request.number || github.ref }}
@@ -96,6 +97,7 @@ jobs:
           repository-owner: ${{ github.repository_owner }}
           repo-user: ${{ github.actor }}  # pharmaverse-bot
           repo-token: "${{ secrets.GITHUB_TOKEN }}" # ${{ secrets.PHARMAVERSE_BOT }}
+          repos: "$R_REPOS"
 
   deploy-image-devel:
     runs-on: ubuntu-latest
@@ -117,6 +119,7 @@ jobs:
           repository-owner: ${{ github.repository_owner }}
           repo-user: ${{ github.actor }} 
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repos: "$R_REPOS"
 
   store_deps:
     name: Store Deps
