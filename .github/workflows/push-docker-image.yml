@@ -111,12 +111,6 @@ jobs:
       - name: Set image specs
         id: image_specs
         run: |
-          package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          r_version=$(basename $(dirname ${{ matrix.value }})) # TODO: check here if legacy renv (if yes, delete _legacy suffix and add _legacy suffix to docker im?)
-          renv=$(echo "${{ matrix.value }}" | tr -d '"')
-          echo "renv_lock_path=$renv" >> $GITHUB_OUTPUT
-          echo "r_version=$r_version" >> $GITHUB_OUTPUT
-          echo "image_name=$package_name-$r_version" >> $GITHUB_OUTPUT
           echo "r_repos=$R_REPOS" >> $GITHUB_OUTPUT
 
       - name: Call deploy docker image action devel
