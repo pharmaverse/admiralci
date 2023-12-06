@@ -109,7 +109,7 @@ jobs:
     steps:
     
       - name: Call deploy docker image action devel
-        uses: insightsengineering/r-image-creator@v1
+        uses: insightsengineering/r-image-creator@rework_r_repos
         with:
           image-name: "admiralci-devel"
           tag-latest: true
