@@ -49,7 +49,7 @@ jobs:
       - name: Call deploy docker image action ${{ matrix.tags }}
         uses: insightsengineering/r-image-creator@rework_r_repos
         with:
-          image-name: "admiralci-devel"
+          image-name: "${{ steps.image_specs.outputs.image_name }}"
           tag-latest: true
           base-image: "rocker/rstudio:${{ matrix.tags }}"
           sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
