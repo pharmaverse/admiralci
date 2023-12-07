@@ -43,7 +43,7 @@ jobs:
         id: image_specs
         run: |
           package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          echo "image_name=$package_name-$r_version" >> $GITHUB_OUTPUT
+          echo "image_name=$package_name-${{ matrix.tags }}" >> $GITHUB_OUTPUT
           echo "r_repos=$R_REPOS" >> $GITHUB_OUTPUT
 
       - name: Call deploy docker image action ${{ matrix.tags }}
