@@ -3,13 +3,12 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'latest'
         required: false
         type: choice
         options:
-          - '4.1'
-          - '4.2'
-          - '4.3'
+          - devel
+          - latest
       skip-coverage-badges:
         description: 'Skip code coverage badge creation'
         default: false
@@ -19,7 +18,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'latest'
         required: false
         type: string
       skip-coverage-badges:

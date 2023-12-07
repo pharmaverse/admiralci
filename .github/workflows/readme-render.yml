@@ -5,13 +5,12 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'latest'
         required: false
         type: choice
         options:
-          - '4.1'
-          - '4.2'
-          - '4.3'
+          - devel
+          - latest
       skip-md-formatting:
         description: 'Skip markdown auto-formatting'
         default: false
@@ -21,7 +20,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'latest'
         required: false
         type: string
       skip-md-formatting:
