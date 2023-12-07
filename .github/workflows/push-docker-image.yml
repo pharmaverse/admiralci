@@ -77,7 +77,7 @@ jobs:
       - name: Store deps into csv file - image ${{ matrix.tags }}
         run: |
           installed_packages <- as.data.frame(installed.packages())
-          write.csv(installed_packages, "/workspace/deps.csv", row.names = FALSE)
+          write.csv(installed_packages, "/workspace/deps-${{ matrix.tags }}.csv", row.names = FALSE)
         shell: Rscript {0}
 
       - name: Upload deps.csv artifact
@@ -85,6 +85,15 @@ jobs:
         with:
           name: deps
           path: "/workspace/deps-${{ matrix.tags }}.csv"
+
+      # - name: Upload SBOM to release 🔼
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #     file: "/workspace/deps-${{ matrix.tags }}.csv"
+      #     asset_name: "Dependencies list of docker image admiralci-${{ matrix.tags }}:latest"
+      #     tag: "latest"
+      #     overwrite: true
 
 # refacto todo: image-name, sysdeps on get-renv-list job
 
