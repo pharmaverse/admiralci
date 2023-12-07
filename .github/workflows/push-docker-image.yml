@@ -63,6 +63,7 @@ jobs:
   store_deps:
     name: Store Deps
     runs-on: ubuntu-latest
+    needs: ["deploy-image"]
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.tags }}:latest"
     strategy:
