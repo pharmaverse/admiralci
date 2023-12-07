@@ -10,19 +10,31 @@ permissions: write-all
 env:
   REGISTRY: ghcr.io
   R_REPOS: "https://cran.r-project.org"
+  OLD_RELEASE: "4.3"
 
 concurrency:
   group: deploy-docker-image-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
+  get_old_release:
+    runs-on: ubuntu-latest
+    outputs:
+      oldrel: ${{ steps.oldrelease.outputs.oldrelease }}
+
+    steps:
+      - name: get old release
+        id: oldrelease
+        run:
+          echo "oldrelease=${{ env.OLD_RELEASE }}" >> $GITHUB_OUTPUT
 
   deploy-image:
     runs-on: ubuntu-latest
+    needs: [ "get_old_release" ]
     strategy:
       fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
       matrix:
-        tags: ["devel", "latest"]
+        tags: ["devel", "latest", "${{ needs.get_old_release.outputs.oldrel }}"]
 
     # Token permissions
     permissions:
@@ -43,8 +55,11 @@ jobs:
         id: image_specs
         run: |
           package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          echo "image_name=$package_name-${{ matrix.tags }}" >> $GITHUB_OUTPUT
+          image_name="$package_name-${{ matrix.tags }}"
           echo "r_repos=$R_REPOS" >> $GITHUB_OUTPUT
+          r_version="${{ matrix.tags }}"
+          if [ "$r_version" == "${{ env.OLD_RELEASE }}" ]; then image_name="$package_name-oldrel"; fi # TODO: del temporary -test suffix for testing
+          echo "image_name=$image_name" >> $GITHUB_OUTPUT
 
       - name: Call deploy docker image action ${{ matrix.tags }}
         uses: insightsengineering/r-image-creator@rework_r_repos
@@ -63,13 +78,13 @@ jobs:
   store_deps:
     name: Store Deps
     runs-on: ubuntu-latest
-    needs: ["deploy-image"]
+    needs: [ "get_old_release", "deploy-image" ]
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.tags }}:latest"
     strategy:
       fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
       matrix:
-        tags: ["devel", "latest"]
+        tags: ["devel", "latest", "${{ needs.get_old_release.outputs.oldrel }}"]
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -86,14 +101,14 @@ jobs:
           name: deps
           path: "/workspace/deps-${{ matrix.tags }}.csv"
 
-      # - name: Upload SBOM to release 🔼
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #     file: "/workspace/deps-${{ matrix.tags }}.csv"
-      #     asset_name: "Dependencies list of docker image admiralci-${{ matrix.tags }}:latest"
-      #     tag: "latest"
-      #     overwrite: true
+      - name: Upload SBOM to release 🔼
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          file: "/workspace/deps-${{ matrix.tags }}.csv"
+          asset_name: "Dependencies list of docker image admiralci-${{ matrix.tags }}:latest"
+          tag: "latest"
+          overwrite: true
 
 # refacto todo: image-name, sysdeps on get-renv-list job
 

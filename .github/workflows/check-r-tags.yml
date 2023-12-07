@@ -1,0 +1,30 @@
+---
+name: Check R tags
+
+on:
+  workflow_dispatch: # give possibility to run it manually
+  schedule:
+    - cron: '0 0 * * Sun' # Run every sunday at midnight UTC
+
+permissions: write-all
+env:
+  REGISTRY: ghcr.io
+  R_REPOS: "https://cran.r-project.org"
+  OLD_RELEASE: "4.3"
+
+concurrency:
+  group: check-r-tags-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-r-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List rocker/rstudio tags
+        run: |
+          versions=$(curl -s "https://registry.hub.docker.com/v2/repositories/rocker/rstudio/tags/" | grep -o '"name": *"[^"]*' | grep -o '[^"]*$')
+          r_version=$(echo "$versions" | grep -oE '^[0-9]+\.[0-9]+$' | sort -r | head -n 1)
+          if [ $r_version != ${{ env.OLD_RELEASE }} ]
+            echo "NEW RELEASE DETECTED - please update OLD_RELEASE env variable to $r_version in the workflows (this one and push-docker-image)"
+            exit 1
+          fi
