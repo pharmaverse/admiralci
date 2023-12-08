@@ -198,12 +198,6 @@ workflow provides transparency and visibility to all project
 collaborators by creating a GitHub issue so that the errors can be
 remediated before the deadline has passed.
 
-### [`renv propagation`](./.github/workflows/propagate.yml)
-
-This workflow controls the propagation process for delivering updated
-`renv.lock` files across the family of admiral repositories. A vignette
-has been developed for this process found at [Lock File Updates and
-Propagation](https://pharmaverse.github.io/admiralci/index.html#lock-file-updates-and-propagation)
 
 ### [`docker image build`](./.github/workflows/push-docker-image.yml)
 
