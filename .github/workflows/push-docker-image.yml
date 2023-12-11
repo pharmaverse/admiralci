@@ -55,7 +55,7 @@ jobs:
         id: image_specs
         run: |
           package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          image_name="$package_name-${{ matrix.tags }}"
+          if [ "${{ matrix.tags }}" == "latest" ]; then image_name="$package_name-release"; else image_name="$package_name-${{ matrix.tags }}"; fi
           echo "r_repos=$R_REPOS" >> $GITHUB_OUTPUT
           r_version="${{ matrix.tags }}"
           if [ "$r_version" == "${{ env.OLD_RELEASE }}" ]; then image_name="$package_name-oldrel"; fi # TODO: del temporary -test suffix for testing

@@ -5,7 +5,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: 'latest'
+        default: 'release'
         required: false
         type: choice
         options:
@@ -15,7 +15,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: 'latest'
+        default: 'release'
         required: false
         type: string
   release:
