@@ -62,7 +62,7 @@ jobs:
           echo "image_name=$image_name" >> $GITHUB_OUTPUT
 
       - name: Call deploy docker image action ${{ matrix.tags }}
-        uses: insightsengineering/r-image-creator@rework_r_repos
+        uses: insightsengineering/r-image-creator@v1
         with:
           image-name: "${{ steps.image_specs.outputs.image_name }}"
           tag-latest: true
