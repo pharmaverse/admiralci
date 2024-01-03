@@ -76,6 +76,11 @@ jobs:
           cran-repos: "$R_REPOS"
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies from DESCRIPTION
+        run: |
+          devtools::install(force = TRUE, dependencies = TRUE)
+        shell: Rscript {0}
       #####################c#####################
 
       - name: Check Version
@@ -87,7 +92,7 @@ jobs:
             if (grepl("^Version:", description_dat[i])) {
               current_version <- sub("^Version: ", "", description_dat[i])
               version_parts <- strsplit(current_version, "\\.")[[1]]
-              # check if maintenance version - if yes, temp update the DESCRIPTION for rcmdchecks
+              # check if maintenance version
               if (length(version_parts) == 4) {
                 print("Maintenance version detected (format X.Y.Z.M with M >= 9000)")
                 maintenance_version="T"
