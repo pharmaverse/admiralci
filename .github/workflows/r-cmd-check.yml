@@ -94,7 +94,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: deps
-          path: "/workspace/deps.csv"
+          path: "/workspace/deps-${{ matrix.r_version }}.csv"
 
       - name: Check Version
         id: check_version
