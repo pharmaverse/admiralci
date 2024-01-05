@@ -89,7 +89,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      ##################### BEGIN boilerplate steps #####################
       - name: Store deps into csv file - image ${{ matrix.tags }}
         run: |
           installed_packages <- as.data.frame(installed.packages())

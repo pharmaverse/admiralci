@@ -81,7 +81,20 @@ jobs:
         run: |
           devtools::install(force = TRUE, dependencies = TRUE)
         shell: Rscript {0}
-      #####################c#####################
+
+      ##################### END boilerplate steps #####################
+
+      - name: Upload dependencies artifact
+        run: |
+          installed_packages <- as.data.frame(installed.packages())
+          write.csv(installed_packages, "/workspace/deps.csv", row.names = FALSE)
+        shell: Rscript {0}
+
+      - name: Upload deps.csv artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deps
+          path: "/workspace/deps.csv"
 
       - name: Check Version
         id: check_version

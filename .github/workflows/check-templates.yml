@@ -110,6 +110,12 @@ jobs:
           renv-restore: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies from DESCRIPTION
+        run: |
+          devtools::install(force = TRUE, dependencies = TRUE)
+        shell: Rscript {0}
+
       ##################### END boilerplate steps #####################
 
       - name: Install package
