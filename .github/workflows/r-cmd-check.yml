@@ -87,7 +87,7 @@ jobs:
       - name: Upload dependencies artifact
         run: |
           installed_packages <- as.data.frame(installed.packages())
-          write.csv(installed_packages, "/workspace/deps.csv", row.names = FALSE)
+          write.csv(installed_packages, "/workspace/deps-${{ matrix.r_version }}.csv", row.names = FALSE)
         shell: Rscript {0}
 
       - name: Upload deps.csv artifact
