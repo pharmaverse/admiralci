@@ -196,6 +196,7 @@ jobs:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_FORCE_SUGGESTS_: false
         run: |
+          unlink("tmp",recursive=TRUE)
           if ("${{steps.check_version.outputs.maintenance_version}}" == "T"){
             Sys.setenv("_R_CHECK_CRAN_INCOMING_SKIP_LARGE_VERSION_" = TRUE)
           }
