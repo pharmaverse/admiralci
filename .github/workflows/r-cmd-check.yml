@@ -44,17 +44,13 @@ jobs:
     steps:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
-        if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel'
         id: branch-name
         uses: tj-actions/branch-names@v5.4
 
       - name: Checkout repo (PR) 🛎
         uses: actions/checkout@v3
         if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel' || github.event_name == 'pull_request'
+          github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
@@ -62,16 +58,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel' || github.event_name != 'pull_request'
+          github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
       - name: Restore cache
         uses: actions/cache@v3
-        if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel'
         with:
           path: |
             ~/.staged.dependencies
@@ -109,7 +101,6 @@ jobs:
           # save deps as csv file
           write.csv(installed_packages, "/workspace/deps-${{ matrix.r_version }}.csv", row.names = FALSE)
           # create also renv.lock file
-          package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
           dir.create("tmp")
           setwd("tmp")
 
@@ -132,7 +123,7 @@ jobs:
             dep_version <- installed_packages[installed_packages$Package == package, "Version"]
 
             version_parts <- strsplit(dep_version, "\\.")[[1]]
-            if (length(version_parts) == 4 | dep_name == package_name) {
+            if (length(version_parts) == 4) {
               print(sprintf("skipping installation of dep %s", dep_name))
             } else {
               print(sprintf("append dependency %s - version %s", dep_name, dep_version))
