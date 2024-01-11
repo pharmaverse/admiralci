@@ -150,7 +150,7 @@ jobs:
           }
 
           # Write the list to a JSON file (renv.lock)
-          writeLines(toJSON(renv_lock, pretty = TRUE, auto_unbox = TRUE), "renv.lock")
+          writeLines(jsonlite::toJSON(renv_lock, pretty = TRUE, auto_unbox = TRUE), "renv.lock")
           print("generated renv.lock content")
           system("cat renv.lock")
         shell: Rscript {0}
