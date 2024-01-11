@@ -97,6 +97,7 @@ jobs:
           (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
           matrix.r_version != 'devel'
         run: |
+          library(dplyr)
           installed_packages <- as.data.frame(installed.packages())
           # save deps as csv file
           write.csv(installed_packages, "/workspace/deps-${{ matrix.r_version }}.csv", row.names = FALSE)
