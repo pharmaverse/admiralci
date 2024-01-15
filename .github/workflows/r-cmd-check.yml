@@ -103,7 +103,7 @@ jobs:
           # save deps as csv file
           write.csv(installed_packages, "/workspace/tmp/deps-${{ matrix.r_version }}.csv", row.names = FALSE)
           # create also renv.lock file
-          setwd("tmp")
+          setwd("/workspace/tmp")
 
           installed_packages <- as.data.frame(installed.packages())
           installed_packages <- installed_packages %>% filter(LibPath != "/usr/local/lib/R/library")
