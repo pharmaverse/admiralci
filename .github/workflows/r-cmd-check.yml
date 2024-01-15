@@ -163,8 +163,7 @@ jobs:
         with:
           name: deps
           path: |
-            /workspace/tmp/deps-${{ matrix.r_version }}.csv
-            /workspace/tmp/renv-${{ matrix.r_version }}.lock
+            /workspace/tmp/
 
       - name: Check Version
         id: check_version
