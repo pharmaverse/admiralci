@@ -1,0 +1,52 @@
+---
+title: "Spell Checks"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spell Checks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# R Package Validation Report Workflow
+
+This GitHub Actions workflow generates a validation report for an R package. The report is triggered by manual dispatch, workflow call, or the publication of a release.
+It's mainly using [the validatoR](https://github.com/insightsengineering/thevalidatoR) downstream action.
+
+## Workflow Structure
+
+The workflow consists of a single job: `r-pkg-validation`.
+
+### `r-pkg-validation` Job
+
+This job generates a validation report for a specified version of R. The report is built using `thevalidatoR` action and uploaded to the release upon success.
+
+#### Inputs
+
+- `r-version`: The version of R to use. Defaults to '4.1' and accepts choices '4.1', '4.2', '4.3'.
+
+#### Steps
+
+1. **Get branch names:** Extracts branch names.
+2. **Checkout repo:** Checks out the repository based on the event type (push or pull request).
+3. **Normalize inputs:** Normalizes the input R version, defaulting to '4.1' if not specified.
+4. **Restore cache:** Restores cached dependencies.
+5. **Run Staged dependencies:** Executes staged dependencies action.
+6. **Build report:** Uses `thevalidatoR` action to build the validation report.
+7. **Upload report to release:** Uploads the validation report to the release if the job is successful.
+
+### Triggers
+
+- `workflow_dispatch`: Allows manual triggering of the workflow with the option to specify the R version.
+- `workflow_call`: Triggered by a workflow call event with the option to specify the R version.
+- `release`: Triggered on the publication of a release.
+
+### Concurrency
+
+Concurrency settings are not specified in this workflow.
+
+## Permissions
+
+- `contents: write`: Write permissions for repository contents.
+- `packages: write`: Write permissions for packages.
+- `deployments: write`: Write permissions for deployments.

@@ -1,0 +1,74 @@
+---
+title: "Push Docker Images"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Push Docker Images}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Deploy Docker Image Workflow
+
+This GitHub Actions workflow automates the deployment of Docker images based on changes in the `renv.lock` file within the `renv/profiles` directory. It is designed to run on pushes to the `main` branch, manual triggers, and on a schedule (every day at midnight UTC on Wednesdays and Sundays).
+Note : this workflow is using [InsightEngineering R image creator action](https://github.com/insightsengineering/r-image-creator).
+
+## Workflow Structure
+
+The workflow consists of three jobs: `get_renv_list`, `deploy-image`, `deploy-image-devel`, and `store_deps`.
+
+### `get_renv_list` Job
+
+This job determines the list of `renv.lock` files that need updates based on the changed files in the `renv/profiles` directory. It differentiates between scheduled runs and manual/dispatch runs.
+(For scheduled runs, only `devel` image will be created - see [devel image](#deploy-devel-image-job) section)
+
+#### Steps
+
+1. **Checkout repo:** Retrieves the repository for the current workflow run.
+2. **Get changed files in renv/profiles:** Determines the changed `renv.lock` files.
+3. **Get Updated renv:** Decides whether to update all Docker images or only modified `renv.lock` versions.
+
+### `deploy-image` Job
+
+This job deploys Docker images based on the specified configurations.
+
+#### Steps
+
+1. **Checkout repo:** Checks out the current repository.
+2. **Print message:** Displays a message indicating the Docker image update.
+3. **Set image specs:** Retrieves package name, R version, and other specifications.
+4. **Call deploy docker image action:** Invokes the Docker image deployment action for each R version and associated `renv.lock` file.
+
+### `deploy-image-devel` Job
+
+This job deploys the development version of Docker images. (based on `rstudio/rocker:devel` images using development version of R).
+For this job, we do not use `renv` lock files, but directly install dependencies from `DESCRIPTION` file with `devtools`.
+
+#### Steps
+
+1. **Call deploy docker image action devel:** Invokes the Docker image deployment action for the development version.
+
+### `store_deps` Job
+
+This job stores dependencies of `devel` image into a CSV file. (for now this CSV file is stored inside the action artifacts, but this should be moved to docker images releases artifacts)
+
+#### Steps
+
+1. **Store deps into CSV file:** Retrieves installed packages on `devel` image, and stores them in a CSV file.
+2. **Upload deps.csv artifact:** Uploads the CSV file containing dependencies as an artifact.
+
+## Inputs
+
+### Triggers
+
+- `push`: Triggered on pushes to the `main` branch with changes in `renv/profiles/**/renv.lock`.
+- `workflow_dispatch`: Allows manual triggering of the workflow.
+- `schedule`: Runs every day at midnight UTC on Wednesdays and Sundays. (for `devel` image only)
+
+## Permissions
+
+- `write-all`: Provides write permissions for various operations.
+
+## Concurrency
+
+Concurrency settings are specified to manage concurrent workflow runs effectively.

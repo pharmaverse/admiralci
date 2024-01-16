@@ -1,0 +1,47 @@
+---
+title: "Readme Render"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Readme Render}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Render README Workflow
+
+This GitHub Actions workflow renders the README from R Markdown (`README.Rmd`) to Markdown (`README.md`). Additionally, it can format the generated Markdown using a formatter. The workflow is triggered manually (`workflow_dispatch`) and can also be invoked as a workflow call (`workflow_call`). 
+
+## Workflow Structure
+
+The workflow consists of a single job: `render`.
+
+### `render` Job
+
+This job renders the README from R Markdown to Markdown and optionally formats the generated Markdown.
+
+#### Inputs
+
+- `r-version`: The version of R to use. Default is '4.1'.
+- `skip-md-formatting`: Skip markdown auto-formatting. Default is 'false'.
+
+#### Steps
+
+1. **Get branch names:** Extracts branch names.
+2. **Checkout repo (PR):** Checks out the repository based on the event type (pull request).
+3. **Checkout repository:** Checks out the repository for events other than pull requests.
+4. **Normalize inputs:** Normalizes the R version input.
+5. **Restore cache:** Restores cached dependencies.
+6. **Run Staged dependencies:** Runs staged dependencies action.
+7. **Render README to markdown:** Renders `README.Rmd` to `README.md`.
+8. **Install Markdown formatter:** Installs the Markdown formatter if not skipping formatting.
+9. **Commit and push formatted README.md:** Commits and pushes changes to the formatted README.md file.
+
+### Triggers
+
+- `workflow_dispatch`: Manually triggered workflow with optional inputs.
+- `workflow_call`: Invoked as a workflow call.
+
+## Permissions
+
+- `contents: write`: Write permissions for repository contents.

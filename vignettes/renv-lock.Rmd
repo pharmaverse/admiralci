@@ -1,0 +1,51 @@
+---
+title: "renv.lock"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{renv.lock}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# R Renv Lock Generation Workflow
+
+This GitHub Actions workflow generates the `renv.lock` file for R packages. It is triggered on pull requests targeting the main branch, specifically on changes to the `.github/workflows/r-renv-lock.yml` file.
+
+## Workflow Structure
+
+The workflow consists of a single job: `r-renv-lock-gen`.
+
+### `r-renv-lock-gen` Job
+
+This job generates the `renv.lock` file for different R versions and operating systems.
+
+#### Inputs
+
+- `os`: The operating system for the job. Currently set to 'ubuntu-20.04'.
+- `r`: The R version to use. Available versions are '4.1', '4.2', '4.3'.
+- `repos`: The CRAN repository to use.
+
+#### Steps
+
+1. **Get branch names:** Extracts branch names.
+2. **Checkout repo:** Checks out the repository based on the event type (pull request).
+3. **Setup R:** Sets up the specified R version.
+4. **Install system dependencies:** Installs required system dependencies.
+5. **Collect dependencies:** Generates the `renv.lock` file based on the specified R version and the DESCRIPTION file.
+6. **Commit and push changes:** Commits and pushes changes to the repository.
+
+### Triggers
+
+- `pull_request`: Triggered on pull requests targeting the main branch with changes to the `.github/workflows/r-renv-lock.yml` file.
+
+### Concurrency
+
+Concurrency settings are applied to prevent parallel execution for the same pull request or branch.
+
+## Permissions
+
+- `contents: write`: Write permissions for repository contents.
+
+Note : This action is quite hard to maintain, there are indeed some automation parts, such as `get_dependencies` function to configure `renv` snapshot with the `DESCRIPTION` file (taking also Suggests deps).
+But some dependencies constraints have to be fixed manually, calling `install_min_version` function to install a dependency with minimal version constraint.

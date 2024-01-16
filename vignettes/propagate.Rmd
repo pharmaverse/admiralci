@@ -1,0 +1,67 @@
+---
+title: "Propagate"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Propagate}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Propagate renv.lock, Rprofile, and .devcontainer Files Workflow
+
+This GitHub Actions workflow is specific to the admiralci project. It is designed to propagate changes in `renv.lock`, `.Rprofile`, and `.devcontainer` (for codespaces configuration) to multiple repositories within the project.
+
+## Workflow Structure
+
+The workflow consists of two jobs: `integrity` and `propagation`.
+
+### `integrity` Job
+
+This job checks the integrity of the `renv.lock` file and performs diagnostics to ensure consistency with the R environment. It is triggered on pull requests targeting the `main` branch and when run manually.
+
+### `propagation` Job
+
+This job propagates changes in `renv.lock`, `.Rprofile`, and `.devcontainer` files to specified repositories within the admiralci project. It is triggered on pull requests targeting the `main` branch and when run manually. This job is dependent on the successful completion of the `integrity` job.
+
+## Inputs
+
+### Triggers
+
+- `pull_request`: Triggered on pull requests targeting the `main` branch and specific file paths.
+- `workflow_dispatch`: Allows manual triggering of the workflow.
+
+## Jobs
+
+### `integrity` Job
+
+#### Steps
+
+1. **Checkout repo:** Retrieves the repository for the current workflow run.
+2. **Get R version from renv.lock file:** Extracts the R version from the `renv.lock` file.
+3. **Setup R:** Sets up the R environment based on the extracted R version.
+4. **Run renv.lock diagnostics:** Installs the `renv` package and performs diagnostics on the R environment.
+
+### `propagation` Job
+
+#### Steps
+
+1. **Checkout this repo:** Checks out the current repository.
+2. **Checkout specified repository:** Checks out the specified repository based on the matrix configuration.
+3. **Update files in the specified repository:** Updates `renv.lock`, `.Rprofile`, and `.devcontainer` files in the specified repository.
+4. **Commit and push changes:** Commits the changes and pushes them to the repository.
+5. **Create Pull Request:** Creates a pull request in the specified repository, assigning reviewers.
+
+### Matrix Configuration
+
+The `propagation` job uses a matrix strategy to iterate over specified repositories with different configurations. (MR with new `renv.lock`/`.Rprofile`/`.devcontainer` files will be created for each element of the matrix, with associated `reviewers` field)
+
+```yaml
+repos:
+  - name: admiralonco
+    target-branch: main
+    reviewers: bundfussr, cicdguy
+  - name: admiraldev
+    target-branch: main
+    reviewers: bms63, cicdguy
+  # Add more repositories as needed

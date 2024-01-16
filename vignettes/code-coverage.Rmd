@@ -1,0 +1,92 @@
+---
+title: "Code Coverage"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Code Coverage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Code Coverage Workflow
+
+This GitHub Actions workflow is designed for testing and generating code coverage reports for an R package. It uses a matrix strategy to test different versions of R and includes options to skip code coverage badge creation.
+
+## Inputs
+
+### `r-version`
+
+- **Description**: The version of R to use for testing.
+- **Default**: '4.1'
+- **Options**: '4.1', '4.2', '4.3'
+- **Required**: No
+
+### `skip-coverage-badges`
+
+- **Description**: Skip code coverage badge creation.
+- **Default**: false
+- **Required**: No
+- **Type**: boolean
+
+## Workflow Triggers
+
+This workflow is triggered in two ways:
+
+1. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event. When triggered manually, you can specify the R version and choose to skip code coverage badge creation.
+
+2. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event. The R version and skip-coverage-badges options are inputs for this event.
+
+## Workflow Setup
+
+- **Name**: Code Coverage
+- **Concurrency**: Code coverage jobs are organized by the pull request number or branch.
+- **Cancel-in-progress**: Allows canceling in-progress code coverage jobs.
+
+## Job: `coverage`
+
+This job verifies templates in the R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+
+### Steps
+
+#### Boilerplate Steps
+
+1. **Get branch names**: Retrieves branch names for further processing.
+2. **Checkout repo (PR)**: Checks out the repository for pull requests.
+3. **Checkout repository**: Checks out the repository for non-pull request events.
+4. **Normalize inputs**: Normalizes input values, including determining the R version.
+
+#### Staged Dependencies
+
+5. **Restore cache**: Restores the cache for staged dependencies.
+6. **Setup Pandoc**: Sets up Pandoc for documentation rendering.
+7. **Run Staged dependencies**: Runs the staged dependencies action.
+
+#### Run Coverage
+
+8. **Run coverage**: Runs code coverage tests, generates coverage reports, and outputs the coverage percentage.
+
+#### Check Coverage Reports
+
+9. **Check whether coverage reports exist**: Checks for the existence of coverage reports.
+
+10. **Set coverage percentage as output**: Sets the coverage percentage as an output variable.
+
+11. **Generate Coverage Summary Report**: Generates a coverage summary report, adds badges, and uploads the report for review.
+
+#### Add Coverage PR Comment
+
+12. **Add Coverage PR Comment**: Adds a comment to the pull request with the coverage summary.
+
+## Job: `badge`
+
+This job generates a code coverage badge and commits it to the repository. It is triggered after the completion of the `coverage` job.
+
+### Steps
+
+1. **Checkout the badges branch in repo**: Checks out the badges branch for badge updates.
+
+2. **Generate the badge SVG image**: Generates the code coverage badge SVG image.
+
+3. **Commit badge**: Commits the updated badge to the badges branch.
+
+4. **Push badges**: Pushes the changes to the badges branch.

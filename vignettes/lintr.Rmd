@@ -1,0 +1,73 @@
+---
+title: "LintR"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{LintR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+---
+title: GitHub Actions Workflow Documentation
+author: Your Name
+date: \today
+---
+
+# Lint Workflow
+
+This GitHub Actions workflow performs linting tasks for an R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+
+## Workflow Triggers
+
+This workflow is triggered in the following ways:
+
+- **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event.
+
+- **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event.
+
+## Workflow Inputs
+
+The workflow accepts the following inputs during manual dispatch or workflow call:
+
+- `r-version`: The version of R to use, with options '4.1', '4.2', and '4.3'.
+
+- `lint-all-files`: Boolean indicating whether to lint all files every time.
+
+- `latest-lintr`: Boolean indicating whether to install the latest lintr CRAN release.
+
+- `install-package`: Boolean indicating whether to install the R package locally.
+
+## Workflow Setup
+
+- **Concurrency**: Lint jobs are organized by the pull request number or branch.
+
+- **Cancel-in-progress**: Allows canceling in-progress lint jobs.
+
+## Job: `lint`
+
+This job performs linting tasks.
+
+### Steps
+
+1. **Get branch names**: Gets the branch names using the tj-actions/branch-names action.
+
+2. **Checkout repo (PR)**: Checks out the repository for pull requests.
+
+3. **Checkout repository**: Checks out the repository for non-pull request events.
+
+4. **Normalize inputs**: Normalizes the R version input.
+
+5. **Restore cache**: Restores the cache for staged dependencies.
+
+6. **Run Staged dependencies**: Runs staged dependencies action to set up the environment.
+
+7. **Install latest release of lintr**: Installs the latest release of lintr from the CRAN repository if specified.
+
+8. **Install package**: Installs the R package locally if specified.
+
+9. **Changed files**: Gets the list of changed files using the Ana06/get-changed-files action.
+
+10. **Lint**: Performs linting using lintr on the R package. Excludes files based on the changed files list.
+
+11. **Error if lints are detected**: Raises an error if lints are detected, prompting a review and adjustment of the code.

@@ -60,7 +60,7 @@ The process is implemented to generate `renv.lock` file automatically. It will b
 
 **Note:** In `[1]` you will see that one reviewer has a special shield symbol next to their name.  This person is a codeowner of the `common.yml` and is alerted whenever a change is made to this file.  You can read more about codeowners on [About Code Owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners) in GitHub Documentation
 
-Note that this propagate process also propagate .devcontainer files which are configuration files for codespaces (see [Codespaces](codespaces.Rmd))
+Note that this propagate process also propagate .devcontainer files which are configuration files for codespaces (see [Codespaces](codespaces.html))
 
 ```{r, echo = FALSE}
 knitr::include_graphics("./assets/prop.png", dpi = 144)

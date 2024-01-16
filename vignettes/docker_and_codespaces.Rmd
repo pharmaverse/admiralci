@@ -24,6 +24,8 @@ This article will go over the following:
 * What are codespaces, why we are using it for Admiral, and how to use them.
 * How codespaces are built (this section concerns more admiralci developers to be able to maintain codespaces - it's not needed to use codespaces, but interesting for users that want to learn more about admiral CI/CD processes).
 
+Go [here](https://www.youtube.com/watch?v=VUGeXqz_TXo&list=PLn-mqs_tEh86kA-UzWHeVZWIQNm6qvr_z&index=14) to watch codespaces demo !
+
 ## What are codespaces and how to use them
 
 ### What are codespaces, and why are we using it for Admiral ?
@@ -127,7 +129,7 @@ knitr::include_graphics("./assets/prebuild_ready.png", dpi = 144)
 
 ### Propagation
 
-Each time a change is detected inside .devcontainer folder, the [propagation job](./.github/workflows/propagate.yml) will be trigger (see doc [lock_and_prop](lock_and_prop))
+Each time a change is detected inside .devcontainer folder, the [propagation job](./.github/workflows/propagate.yml) will be trigger (see doc [lock_and_prop](lock_and_prop.html))
 
 ### Improvement ideas
 

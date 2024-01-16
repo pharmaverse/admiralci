@@ -3,13 +3,12 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'release'
         required: false
         type: choice
         options:
-          - '4.1'
-          - '4.2'
-          - '4.3'
+          - devel
+          - latest
       skip-multiversion-docs:
         description: 'Skip creation of multi-version docs'
         default: false
@@ -38,7 +37,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'release'
         required: false
         type: string
       skip-multiversion-docs:
@@ -148,6 +147,12 @@ jobs:
           enable-check: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies from DESCRIPTION
+        run: |
+          devtools::install(force = TRUE, dependencies = TRUE)
+        shell: Rscript {0}
+
       ##################### END boilerplate steps #####################
 
       - name: Install package

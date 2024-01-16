@@ -6,18 +6,17 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'release'
         required: false
         type: choice
         options:
-          - '4.1'
-          - '4.2'
-          - '4.3'
+          - devel
+          - latest
   workflow_call:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'release'
         required: false
         type: string
 
