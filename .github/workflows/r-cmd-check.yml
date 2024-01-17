@@ -40,7 +40,7 @@ jobs:
       R_KEEP_PKG_SOURCE: true
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       R_REPOS: "https://cran.r-project.org"
-      DEPS_IGNORE: "pharmaversesdtm,pharmaverseadam,admiral,admiraldev,admiralophtha,admiralonco,admiralvaccine"
+      DEPS_IGNORE: "pharmaversesdtm,pharmaverseadam,admiral,admiraldev,admiralophtha,admiralonco,admiralvaccine,staged.dependencies"
 
       # DEPS_IGNORE: env variable to ignore package when building renv.lock (step Upload dependencies artifact)
       # (improvments ideas : get this list of deps to ignore from staged.dependencies yml file)
