@@ -101,6 +101,14 @@ jobs:
           name: deps
           path: "/workspace/deps-${{ matrix.tags }}.csv"
 
+      - name: Delete current release existing artifacts
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ github.token }}
+          tag: "latest"
+          assets: |
+            Dependencies.list.of.docker.image.admiralci-${{ matrix.tags }}.csv
+
       - name: Upload SBOM to release 🔼
         uses: svenstaro/upload-release-action@v2
         with:
