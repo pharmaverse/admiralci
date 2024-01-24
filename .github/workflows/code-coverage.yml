@@ -97,7 +97,7 @@ jobs:
 
       - name: Install dependencies from DESCRIPTION
         run: |
-          devtools::install(force = TRUE, dependencies = TRUE)
+          remotes::install_local(force = TRUE, dependencies = TRUE)
         shell: Rscript {0}
         env:
           R_REMOTES_STANDALONE: "true"
