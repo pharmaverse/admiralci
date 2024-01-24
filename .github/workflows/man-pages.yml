@@ -84,6 +84,8 @@ jobs:
         run: |
           devtools::install(force = TRUE, dependencies = TRUE)
         shell: Rscript {0}
+        env:
+          R_REMOTES_STANDALONE: "true"
 
       ##################### END boilerplate steps #####################
 
