@@ -4,7 +4,7 @@ name: Deploy Docker Image
 on:
   workflow_dispatch: # give possibility to run it manually
   schedule:
-    - cron: '0 0 * * Wed,Sun' # Run every day at midnight UTC
+    - cron: '0 0 * * Wed,Sun' # Run every day at midnight UTC 
   push:
     branches:
       - fix_docker_im_artifacts
