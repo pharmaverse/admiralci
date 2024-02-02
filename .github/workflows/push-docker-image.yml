@@ -5,6 +5,9 @@ on:
   workflow_dispatch: # give possibility to run it manually
   schedule:
     - cron: '0 0 * * Wed,Sun' # Run every day at midnight UTC
+  push:
+    branches:
+      - fix_docker_im_artifacts
 
 permissions: write-all
 env:
@@ -28,53 +31,53 @@ jobs:
         run:
           echo "oldrelease=${{ env.OLD_RELEASE }}" >> $GITHUB_OUTPUT
 
-  deploy-image:
-    runs-on: ubuntu-latest
-    needs: [ "get_old_release" ]
-    strategy:
-      fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
-      matrix:
-        tags: ["devel", "latest", "${{ needs.get_old_release.outputs.oldrel }}"]
+  # deploy-image:
+  #   runs-on: ubuntu-latest
+  #   needs: [ "get_old_release" ]
+  #   strategy:
+  #     fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
+  #     matrix:
+  #       tags: ["devel", "latest", "${{ needs.get_old_release.outputs.oldrel }}"]
 
-    # Token permissions
-    permissions:
-      contents: read
-      packages: write
+  #   # Token permissions
+  #   permissions:
+  #     contents: read
+  #     packages: write
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Print message
-        run: |
-          echo "updating docker image for R version ${{ matrix.tags }}"
+  #     - name: Print message
+  #       run: |
+  #         echo "updating docker image for R version ${{ matrix.tags }}"
 
-      - name: Set image specs
-        id: image_specs
-        run: |
-          package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          if [ "${{ matrix.tags }}" == "latest" ]; then image_name="$package_name-release"; else image_name="$package_name-${{ matrix.tags }}"; fi
-          if [ "${{ matrix.tags }}" == "devel" ]; then R_REPOS="https://packagemanager.posit.co/cran/__linux__/focal/latest"; fi 
-          echo "r_repos=$R_REPOS" >> $GITHUB_OUTPUT
-          r_version="${{ matrix.tags }}"
-          if [ "$r_version" == "${{ env.OLD_RELEASE }}" ]; then image_name="$package_name-oldrel"; fi # TODO: del temporary -test suffix for testing
-          echo "image_name=$image_name" >> $GITHUB_OUTPUT
+  #     - name: Set image specs
+  #       id: image_specs
+  #       run: |
+  #         package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
+  #         if [ "${{ matrix.tags }}" == "latest" ]; then image_name="$package_name-release"; else image_name="$package_name-${{ matrix.tags }}"; fi
+  #         if [ "${{ matrix.tags }}" == "devel" ]; then R_REPOS="https://packagemanager.posit.co/cran/__linux__/focal/latest"; fi 
+  #         echo "r_repos=$R_REPOS" >> $GITHUB_OUTPUT
+  #         r_version="${{ matrix.tags }}"
+  #         if [ "$r_version" == "${{ env.OLD_RELEASE }}" ]; then image_name="$package_name-oldrel"; fi # TODO: del temporary -test suffix for testing
+  #         echo "image_name=$image_name" >> $GITHUB_OUTPUT
 
-      - name: Call deploy docker image action ${{ matrix.tags }}
-        uses: insightsengineering/r-image-creator@install_suggests_deps
-        with:
-          image-name: "${{ steps.image_specs.outputs.image_name }}"
-          tag-latest: true
-          base-image: "rocker/rstudio:${{ matrix.tags }}"
-          sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
-          description-file: "https://raw.githubusercontent.com/pharmaverse/admiral/main/DESCRIPTION"
-          repository-owner: ${{ github.repository_owner }}
-          repo-user: ${{ github.actor }} 
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          repos: ${{ steps.image_specs.outputs.r_repos }}
-          packages: "DT,R.cache,R.methodsS3,R.oo,R.utils,backports,cellranger,collections,covr,crosstalk,cyclocomp,diffdf,git2r,hunspell,languageserver,lazyeval,lintr,progress,readxl,rematch,renv,rex,spelling,staged.dependencies,styler,xmlparsedata"
+  #     - name: Call deploy docker image action ${{ matrix.tags }}
+  #       uses: insightsengineering/r-image-creator@install_suggests_deps
+  #       with:
+  #         image-name: "${{ steps.image_specs.outputs.image_name }}"
+  #         tag-latest: true
+  #         base-image: "rocker/rstudio:${{ matrix.tags }}"
+  #         sysdeps: qpdf,libxt-dev,curl,npm,libicu-dev,libcurl4-openssl-dev,libssl-dev,make,zlib1g-dev,libfontconfig1-dev,libfreetype6-dev,libfribidi-dev,libharfbuzz-dev,libjpeg-dev,libpng-dev,libtiff-dev,pandoc,libxml2-dev,libgit2-dev,libgit2-dev,jq
+  #         description-file: "https://raw.githubusercontent.com/pharmaverse/admiral/main/DESCRIPTION"
+  #         repository-owner: ${{ github.repository_owner }}
+  #         repo-user: ${{ github.actor }} 
+  #         repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  #         repos: ${{ steps.image_specs.outputs.r_repos }}
+  #         packages: "DT,R.cache,R.methodsS3,R.oo,R.utils,backports,cellranger,collections,covr,crosstalk,cyclocomp,diffdf,git2r,hunspell,languageserver,lazyeval,lintr,progress,readxl,rematch,renv,rex,spelling,staged.dependencies,styler,xmlparsedata"
 
   store_deps:
     name: Store Deps
