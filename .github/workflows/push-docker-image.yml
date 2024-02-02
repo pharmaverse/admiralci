@@ -82,7 +82,7 @@ jobs:
   store_deps:
     name: Store Deps
     runs-on: ubuntu-latest
-    needs: [ "get_old_release", "deploy-image" ]
+    needs: [ "get_old_release"]
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.tags }}:latest"
     strategy:
