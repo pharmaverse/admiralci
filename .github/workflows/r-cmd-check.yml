@@ -99,7 +99,7 @@ jobs:
           (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
           matrix.r_version != 'devel'
         run: |
-          devtools::install(force = TRUE, dependencies = TRUE)
+          remotes::install_local(force = TRUE, dependencies = TRUE)
         shell: Rscript {0}
 
       ##################### END boilerplate steps #####################
