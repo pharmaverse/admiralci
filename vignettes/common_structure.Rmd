@@ -56,7 +56,7 @@ This action is used to checkout on the right repository. This is a step commonly
 
 ## Staged dependencies
 
-The staged dependencies action allow to install every necessary upstream dependencies for `admiral` package, suche as :
+The staged dependencies action allow to install every necessary upstream dependencies for `admiral` package, such as :
 - `pharmaversesdtm` (SDTM test data)
 - `admiraldev` (utilities functions for the Admiral package family)
 
