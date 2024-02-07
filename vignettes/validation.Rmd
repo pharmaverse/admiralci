@@ -20,10 +20,11 @@ The workflow consists of a single job: `r-pkg-validation`.
 ### `r-pkg-validation` Job
 
 This job generates a validation report for a specified version of R. The report is built using `thevalidatoR` action and uploaded to the release upon success.
+The PDF report is then attached to the release within GitHub.
 
 #### Inputs
 
-- `r-version`: The version of R to use. Defaults to '4.1' and accepts choices '4.1', '4.2', '4.3'.
+- `r-version`: The version of R to use. Defaults to 'release'.
 
 #### Steps
 

@@ -1,4 +1,3 @@
----
 url: https://pharmaverse.github.io/admiralci
 
 template:
@@ -7,6 +6,38 @@ template:
     bootswatch: flatly
 
 navbar:
-  right:
-    - icon: fa-github
-      href: https://github.com/pharmaverse/admiralci
+  structure:
+    left: [basics, workflows_details]
+    right: [search, slack, newissue, github]
+  components:
+    basics:
+      text: Basics
+      menu:
+      - text: Get Started
+        href: get_started.html
+      - text: Common structure of the workflows
+        href: common_structure.html
+      - text: Cheatsheet
+        href: cheatsheet.html
+      - text: Codespaces (WIP)
+        href: docker_and_codespaces.html
+      
+    workflows_details:
+      text: Workflows Details
+      menu:
+      - text:  Common structure of admiralci workflows
+        href: common_structure.html
+      - text:  R CMD CHECKS
+        href: r-cmd-checks.html
+
+      
+
+    slack:
+      icon: fa-slack
+      href: https://app.slack.com/client/T028PB489D3/C02M8KN8269
+      aria-label: Slack
+    newissue:
+      icon: fa-bug
+      href: https://github.com/pharmaverse/admiralci/issues/new/choose
+      aria-label: New Issue
+

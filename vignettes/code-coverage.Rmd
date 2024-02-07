@@ -11,6 +11,28 @@ vignette: >
 # Code Coverage Workflow
 
 This GitHub Actions workflow is designed for testing and generating code coverage reports for an R package. It uses a matrix strategy to test different versions of R and includes options to skip code coverage badge creation.
+This workflow measures code coverage for unit tests and reports the code coverage as a percentage of the _total number of lines covered by unit tests_ vs. the _total number of lines in the codebase_.
+
+The [`covr`][covr] R package is used to calculate the coverage.
+
+Report summaries and badges for coverage are generated using a series of other GitHub Actions.
+
+For this workflow to execute successfully, you will need to create an orphan branch called `badges` in your GitHub repository. You can do that using the following steps:
+
+``` bash
+# Create orphan branch
+git checkout --orphan badges
+# Back up files
+mv .git /tmp/.git-backup
+# Remove everything else
+rm -rf * .*
+# Restore git files
+mv /tmp/.git-backup .git
+# Create a README file
+echo "# Badges" > README.md
+# Add, commit and push your new branch
+git add . && git commit -m "Init badges" && git push origin badges
+```
 
 ## Inputs
 

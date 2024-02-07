@@ -14,9 +14,9 @@ This GitHub Actions workflow performs spellchecking on the specified R files. Th
 
 ## Workflow Structure
 
-The workflow consists of a single job: `roxygen`.
+The workflow consists of a single job: `spellcheck`.
 
-### `roxygen` Job
+### `spellcheck` Job
 
 This job runs spellcheck on R files.
 
