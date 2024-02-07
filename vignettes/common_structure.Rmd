@@ -30,6 +30,7 @@ Once the `r-version` is picked, the worfklows will run inside a docker container
 for each available version of `R` (versions specified in `renv/profiles`, see [renv profiles conf](get_started.html#renv-profiles-configuration-handling-several-r-versions)). 
 At the building step of these docker images, every dependencies specified in the `renv.lock` files are installed.
 A total of 4 images are created :
+
 - `admiralci-4.1`
 - `admiralci-4.2`
 - `admiralci-4.3`
