@@ -43,7 +43,7 @@ container:
     image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
 ```
 
-(More more details on docker images creation process and how they're used, please read [Docker images and codespaces](docker_and_codespaces.html)) section.
+(For more details on docker images creation process and how they're used, please read [Docker images and codespaces](docker_and_codespaces.html)) section.
 
 ## Checkout repository
 
