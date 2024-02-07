@@ -73,7 +73,7 @@ The activation of the proper `renv.lock` file is managed inside the `.Rprofile` 
 This function is defined to determine the dependencies for the {renv} (R package manager) snapshot.
 It looks for the "admiral" DESCRIPTION file and extracts its dependencies, looking for suggested packages in the current project.
 
-- Then there is a step to look for current R version on a admiral devlopper environment, and load the proper R profile (use of the associate `renv.lock` file)
+- Then there is a step to look for current R version on a admiral developer environment, and load the proper R profile (use of the associate `renv.lock` file)
 - Then the variable `RENV_AUTOLOADER_ENABLED` is enabled or not depending on the context (if it's run through github workflows, it will be disabled, to preserve pre-installed dependencies on the workflows - more details on this in [Docker and Codespaces](docker_and_codespaces.html))
 <!-- - Env variables RENV_CONFIG_SANDBOX_ENABLED ? RENV_CONFIG_AUTO_SNAPSHOT maybe because we already configured options(renv.snapshot.filter = .get_dependencies) ? --> 
 <!-- Ask Adam Forys to document this part-->
