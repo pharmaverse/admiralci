@@ -45,7 +45,7 @@ This package will then probably be replaced by this global Pharmaverse repositor
 ## Workflows to manage dependencies change (`renv.lock` files changes)
 
 Before talking about workflows, let's first explain how dependencies are handled in `admiral` package.
-The developpers are using `renv` framework, to be able to use the same versions between developpers.
+The developers are using `renv` framework, to be able to use the same versions between developpers.
 
 ### renv profiles configuration (Handling several R versions)
 
