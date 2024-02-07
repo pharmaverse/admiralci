@@ -1,9 +1,9 @@
 ---
-title: "Cran Status"
+title: "CRAN Status"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Cran Status}
+  %\VignetteIndexEntry{CRAN Status}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

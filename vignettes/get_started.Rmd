@@ -10,7 +10,7 @@ vignette: >
 
 # Purpose of admiralci
 
-This repository contains GitHub Actions continuous integration/continuous delivery (CI/CD) workflows, most of which are used by [`Admiral`](https://github.com/pharmaverse/admiral) and its extensions.
+This repository contains GitHub Actions continuous integration/continuous delivery (CI/CD) workflows, most of which are used by [`admiral`](https://github.com/pharmaverse/admiral) and its extensions.
 Workflows defined here are responsible for assuring high package quality standards without compromising performance, security, or reproducibility.
 
 Please refer to the [`.github/workflows`](.github/workflows) directory to view the source code for the GitHub Actions workflows.

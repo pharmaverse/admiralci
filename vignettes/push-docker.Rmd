@@ -11,7 +11,7 @@ vignette: >
 # Deploy Docker Image Workflow
 
 This GitHub Actions workflow automates the deployment of Docker images based on changes in the `renv.lock` file within the `renv/profiles` directory. It is designed to run on pushes to the `main` branch, manual triggers, and on a schedule (every day at midnight UTC on Wednesdays and Sundays).
-Note : this workflow is using [InsightEngineering R image creator action](https://github.com/insightsengineering/r-image-creator).
+Note : this workflow is using [InsightsEngineering R image creator action](https://github.com/insightsengineering/r-image-creator).
 
 ## Workflow Structure
 

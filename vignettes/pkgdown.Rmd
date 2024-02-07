@@ -11,7 +11,7 @@ vignette: >
 # pkgdown Workflow
 
 This GitHub Actions workflow automates the generation and deployment of documentation for an R package using `pkgdown`. The workflow supports multiple versions and offers flexibility in customization.
-This workflow use rmarkdown to be able to generate html documentation from `Rmd` files (vignettes folder). This documentation is then stored in `gh-pages` branch (an orphan branch) and published.
+This workflow uses rmarkdown to be able to generate html documentation from `Rmd` files (vignettes folder). This documentation is then stored in `gh-pages` branch (an orphan branch) and published.
 Note : this workflow is using [InsightEngineering pkgdown multiversion action](https://github.com/insightsengineering/r-pkgdown-multiversion) action.
 
 ## Inputs

@@ -19,7 +19,7 @@ The workflow consists of a single job: `R-CMD-check`.
 
 ### `R-CMD-check` Job
 
-This job runs R CMD checks on different R versions, leveraging specified CRAN repositories. The job is conditioned not to run if the commit message contains '[skip r-cmd-check]'. The checks are performed in parallel for each specified R version, using [Matrix Strategy](#matrix)
+This job runs R CMD checks on different R versions, leveraging specified CRAN repositories. The job is conditioned not to run if the commit message contains '[skip r-cmd-check]'. The checks are performed in parallel for each specified R version, using [Matrix Strategy](#matrix).
 
 
 #### Inputs

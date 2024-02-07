@@ -47,5 +47,5 @@ Concurrency settings are applied to prevent parallel execution for the same pull
 
 - `contents: write`: Write permissions for repository contents.
 
-Note : This action is quite hard to maintain, there are indeed some automation parts, such as `get_dependencies` function to configure `renv` snapshot with the `DESCRIPTION` file (taking also Suggests deps).
+Note : This action is quite hard to maintain, there are indeed some automation parts, such as `.get_dependencies` function to configure `renv` snapshot with the `DESCRIPTION` file (taking also Suggests deps).
 But some dependencies constraints have to be fixed manually, calling `install_min_version` function to install a dependency with minimal version constraint.

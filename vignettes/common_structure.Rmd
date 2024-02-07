@@ -27,7 +27,7 @@ inputs:
 ## Use of `admiralci` docker images
 
 Once the `r-version` is picked, the worfklows will run inside a docker container instance. Indeed, `admiralci` contains an action `push-docker-image`, to be able to build `rocker:rstudio` images
-for each available versions of `R` (versions specified in `renv/profiles`, see [renv profiles conf](get_started.html#renv-profiles-configuration-handling-several-r-versions)). 
+for each available version of `R` (versions specified in `renv/profiles`, see [renv profiles conf](get_started.html#renv-profiles-configuration-handling-several-r-versions)). 
 At the building step of these docker images, every dependencies specified in the `renv.lock` files are installed.
 A total of 4 images are created :
 - `admiralci-4.1`

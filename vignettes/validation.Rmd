@@ -1,9 +1,9 @@
 ---
-title: "Spell Checks"
+title: "Validation Report"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Spell Checks}
+  %\VignetteIndexEntry{Validation Report}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
