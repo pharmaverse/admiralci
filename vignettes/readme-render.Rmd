@@ -22,7 +22,7 @@ This job renders the README from R Markdown to Markdown and optionally formats t
 
 #### Inputs
 
-- `r-version`: The version of R to use. Default is '4.1'.
+- `r-version`: The version of R to use. Default is 'release'.
 - `skip-md-formatting`: Skip markdown auto-formatting. Default is 'false'.
 
 #### Steps
@@ -33,9 +33,10 @@ This job renders the README from R Markdown to Markdown and optionally formats t
 4. **Normalize inputs:** Normalizes the R version input.
 5. **Restore cache:** Restores cached dependencies.
 6. **Run Staged dependencies:** Runs staged dependencies action.
-7. **Render README to markdown:** Renders `README.Rmd` to `README.md`.
-8. **Install Markdown formatter:** Installs the Markdown formatter if not skipping formatting.
-9. **Commit and push formatted README.md:** Commits and pushes changes to the formatted README.md file.
+7. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
+8. **Render README to markdown:** Renders `README.Rmd` to `README.md`.
+9. **Install Markdown formatter:** Installs the Markdown formatter if not skipping formatting.
+10. **Commit and push formatted README.md:** Commits and pushes changes to the formatted README.md file.
 
 ### Triggers
 

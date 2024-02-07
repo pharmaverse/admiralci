@@ -10,60 +10,69 @@ vignette: >
 
 # Deploy Docker Image Workflow
 
-This GitHub Actions workflow automates the deployment of Docker images based on changes in the `renv.lock` file within the `renv/profiles` directory. It is designed to run on pushes to the `main` branch, manual triggers, and on a schedule (every day at midnight UTC on Wednesdays and Sundays).
+This GitHub Actions workflow automates the deployment of Docker images based on changes in the `DESCRIPTION` file. It is designed to run on pushes to the `main` branch, manual triggers, and on a schedule (every day at midnight UTC on Wednesdays and Sundays).
 Note : this workflow is using [InsightsEngineering R image creator action](https://github.com/insightsengineering/r-image-creator).
+
+## Matrix
+
+- R versions are specified in the matrix for parallel execution.
+
+```
+matrix:
+  r_version: ['release', 'devel', 'oldrel']
+```
 
 ## Workflow Structure
 
-The workflow consists of three jobs: `get_renv_list`, `deploy-image`, `deploy-image-devel`, and `store_deps`.
+The workflow consists of three jobs: `get_old_release`, `deploy-image`, and `store_deps`.
 
-### `get_renv_list` Job
+### `get_old_release` Job
 
-This job determines the list of `renv.lock` files that need updates based on the changed files in the `renv/profiles` directory. It differentiates between scheduled runs and manual/dispatch runs.
-(For scheduled runs, only `devel` image will be created - see [devel image](#deploy-devel-image-job) section)
+This job retrieve the R version corresponding to "oldrelease". It contains only a simple step parsing `OLD_RELEASE` env variable. This variable is set up manually
+ (checking actual release version of R and taking the previous version). Another workflow (with cron workflow) is running in admiralci to check if a new release of R is available (this allow admiralci developers to check if they need to update `OLD_RELEASE` variable).
 
 #### Steps
 
-1. **Checkout repo:** Retrieves the repository for the current workflow run.
-2. **Get changed files in renv/profiles:** Determines the changed `renv.lock` files.
-3. **Get Updated renv:** Decides whether to update all Docker images or only modified `renv.lock` versions.
+1. **get old release:** Retrieves value of env variable `OLD_RELEASE`, and store it in `$GITHUB_OUTPUT` variables.
 
 ### `deploy-image` Job
 
-This job deploys Docker images based on the specified configurations.
+This job deploys Docker images based on the specified configurations. By the end of this job, the following images will be created and stored in admiralci ghcr (github container registry) :
+
+- admiralci-release
+- admiralci-devel
+- admiralci-oldrel
+
+The images are available in [admiralci ghcr](https://github.com/orgs/pharmaverse/packages?repo_name=admiralci).
 
 #### Steps
 
 1. **Checkout repo:** Checks out the current repository.
-2. **Print message:** Displays a message indicating the Docker image update.
 3. **Set image specs:** Retrieves package name, R version, and other specifications.
-4. **Call deploy docker image action:** Invokes the Docker image deployment action for each R version and associated `renv.lock` file.
+4. **Call deploy docker image action:** Invokes the Docker image deployment action for each R version.
 
-### `deploy-image-devel` Job
-
-This job deploys the development version of Docker images. (based on `rstudio/rocker:devel` images using development version of R).
-For this job, we do not use `renv` lock files, but directly install dependencies from `DESCRIPTION` file with `devtools`.
-
-#### Steps
-
-1. **Call deploy docker image action devel:** Invokes the Docker image deployment action for the development version.
 
 ### `store_deps` Job
 
-This job stores dependencies of `devel` image into a CSV file. (for now this CSV file is stored inside the action artifacts, but this should be moved to docker images releases artifacts)
+This job create admiralci release artifacts, for each docker image ()
 
 #### Steps
 
-1. **Store deps into CSV file:** Retrieves installed packages on `devel` image, and stores them in a CSV file.
+1. **Store deps into CSV file:** Retrieves installed packages for each image, and stores them in a CSV file.
 2. **Upload deps.csv artifact:** Uploads the CSV file containing dependencies as an artifact.
+3. **Delete current release existing artifacts** Delete admiralci existing release artifacts (this is necessary before the step bellow)
+4. **Upload SBOM to release 🔼** Upload admiralci release artifacts
+
+The output artifacts are available in [`admiralci` latest release](). These artifacts allow developers to retrieve versions of installed dependencies in the workflows, to ensure reproducibility locally.
+But note that dependencies artifacts are also produced during [R CMD CHECKS](r-cmd-checks.html) workflow.
 
 ## Inputs
 
 ### Triggers
 
-- `push`: Triggered on pushes to the `main` branch with changes in `renv/profiles/**/renv.lock`.
+- `push`: Triggered on pushes to the `main` branch with changes in `DESCRIPTION`.
 - `workflow_dispatch`: Allows manual triggering of the workflow.
-- `schedule`: Runs every day at midnight UTC on Wednesdays and Sundays. (for `devel` image only)
+- `schedule`: Runs every day at midnight UTC on Wednesdays and Sundays.
 
 ## Permissions
 

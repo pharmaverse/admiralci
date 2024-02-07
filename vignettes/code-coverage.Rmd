@@ -60,22 +60,23 @@ This job verifies templates in the R package. It runs on a docker container inst
 5. **Restore cache**: Restores the cache for staged dependencies.
 6. **Setup Pandoc**: Sets up Pandoc for documentation rendering.
 7. **Run Staged dependencies**: Runs the staged dependencies action.
+8. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
 
 #### Run Coverage
 
-8. **Run coverage**: Runs code coverage tests, generates coverage reports, and outputs the coverage percentage.
+9. **Run coverage**: Runs code coverage tests, generates coverage reports, and outputs the coverage percentage.
 
 #### Check Coverage Reports
 
-9. **Check whether coverage reports exist**: Checks for the existence of coverage reports.
+10. **Check whether coverage reports exist**: Checks for the existence of coverage reports.
 
-10. **Set coverage percentage as output**: Sets the coverage percentage as an output variable.
+11. **Set coverage percentage as output**: Sets the coverage percentage as an output variable.
 
-11. **Generate Coverage Summary Report**: Generates a coverage summary report, adds badges, and uploads the report for review.
+12. **Generate Coverage Summary Report**: Generates a coverage summary report, adds badges, and uploads the report for review.
 
 #### Add Coverage PR Comment
 
-12. **Add Coverage PR Comment**: Adds a comment to the pull request with the coverage summary.
+13. **Add Coverage PR Comment**: Adds a comment to the pull request with the coverage summary.
 
 ## Job: `badge`
 

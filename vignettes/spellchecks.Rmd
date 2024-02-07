@@ -22,7 +22,7 @@ This job runs spellcheck on R files.
 
 #### Inputs
 
-- `r-version`: The version of R to use. Default is '4.1'.
+- `r-version`: The version of R to use. Default is 'release'.
 - `exclude`: List of paths to exclude (comma-separated list). Default is an empty string.
 
 #### Conditions
@@ -36,7 +36,8 @@ The spellcheck job is skipped if the commit message contains `[skip spellcheck]`
 3. **Checkout repository:** Checks out the repository for events other than pull requests.
 4. **Restore cache:** Restores cached dependencies.
 5. **Run Staged dependencies:** Runs staged dependencies action.
-6. **Run Spellcheck:** Executes the spellcheck action on specified R files.
+6. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
+7. **Run Spellcheck:** Executes the spellcheck action on specified R files.
 
 ### Triggers
 

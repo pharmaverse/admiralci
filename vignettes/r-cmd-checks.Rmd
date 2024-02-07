@@ -19,7 +19,9 @@ The workflow consists of a single job: `R-CMD-check`.
 
 ### `R-CMD-check` Job
 
-This job runs R CMD checks on different R versions, leveraging specified CRAN repositories. The job is conditioned not to run if the commit message contains '[skip r-cmd-check]'. The checks are performed in parallel for each specified R version, using [Matrix Strategy](#matrix).
+This job runs R CMD checks on different R versions, leveraging specified CRAN repositories. The job is conditioned not to run if the commit message contains '[skip r-cmd-check]'. 
+The checks are performed in parallel for each specified R version, using [Matrix Strategy](#matrix).
+Artifacts are also produced for each R version from the matrix (`renv.lock` and `deps.csv`). Developers can download these artifacts in the Action summary page to be able to ensure reproducibility (having exactly the same dependencies versions locally).
 
 
 #### Inputs
@@ -32,9 +34,12 @@ This job runs R CMD checks on different R versions, leveraging specified CRAN re
 2. **Checkout repo:** Checks out the repository based on the event type (push or pull request).
 3. **Restore cache:** Restores cached dependencies.
 4. **Run Staged dependencies:** Executes staged dependencies action.
-5. **Check Version:** Determines if the package has a maintenance version.
-6. **Check:** Performs R CMD checks using `rcmdcheck::rcmdcheck()`.
-7. **Upload check results:** Uploads check results as an artifact in case of failure.
+5. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
+6. **Upload dependencies artifacts:** Create `renv.lock` and `deps.csv` file (containing docker image dependencies)
+7. **Upload deps.csv and renv.lock artifacts:** Upload `renv.lock` and `deps.csv` files as artifacts.
+8. **Check Version:** Determines if the package has a maintenance version.
+9. **Check:** Performs R CMD checks using `rcmdcheck::rcmdcheck()`.
+10. **Upload check results:** Uploads check results as an artifact in case of failure.
 
 ### Concurrency
 
@@ -52,15 +57,11 @@ Concurrency settings are specified to manage concurrent workflow runs effectivel
 ### Matrix
 
 - The workflow runs on admiralci docker images (depending on the matrix element r version).
-- R versions and CRAN repositories are specified in the matrix for parallel execution.
+- R versions are specified in the matrix for parallel execution.
 
 ```
 matrix:
-  config:
-    - {r: '4.1', repos: 'https://packagemanager.posit.co/cran/2021-05-03/'}
-    - {r: '4.2', repos: 'https://packagemanager.posit.co/cran/2022-01-03/'}
-    - {r: '4.3', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
-    - {r: 'devel', repos: 'https://packagemanager.posit.co/cran/__linux__/focal/latest'}
+  r_version: ['release', 'devel', 'oldrel']
 ```
 
 Note: We will change soon the `repos` element to use CRAN repo (https://cran.r-project.org/)

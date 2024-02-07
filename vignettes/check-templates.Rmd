@@ -56,8 +56,9 @@ These steps handle staged dependencies, including cache restoration and running 
 
 6. **Restore cache**: Restores the cache for staged dependencies.
 7. **Run Staged dependencies**: Runs the staged dependencies action.
+8. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
 
 #### Install and Run Templates
 
-8. **Install package**: Builds and installs the R package.
-9. **Run Template Scripts**: Reads the package description, identifies template scripts, and executes them. If any script fails, the workflow stops and provides an error message.
+9. **Install package**: Builds and installs the R package.
+10. **Run Template Scripts**: Reads the package description, identifies template scripts, and executes them. If any script fails, the workflow stops and provides an error message.

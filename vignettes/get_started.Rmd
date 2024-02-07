@@ -42,60 +42,12 @@ This package will then probably be replaced by this global Pharmaverse repositor
 - [r-pkg-validation.yml](validation.html)
 - [pkgdown.yml](pkgdown.html)
 
-## Workflows to manage dependencies change (`renv.lock` files changes)
+## Workflows to manage dependencies change (`DESCRIPTION` files changes)
 
-Before talking about workflows, let's first explain how dependencies are handled in `admiral` package.
-The developers are using `renv` framework, to be able to use the same versions between developpers.
-
-### renv profiles configuration (Handling several R versions)
-
-#### renv folder content
-
-The admiral project is built to be compatible with several R-versions (for now `4.1`, `4.2`, `4.3` and also latest development version of R (`devel` version)).
-
-```
-renv
-├── profiles
-│   ├── 4.1
-│       ├── renv.lock
-│   ├── 4.2
-│       ├── renv.lock
-│   ├── 4.3
-│       ├── renv.lock
-```
-
-The activation of the proper `renv.lock` file is managed inside the `.Rprofile` file. (The code implemented in `.Rprofile` is implemented at each new R session).
-
-#### Structure of `.Rprofile file` file :
-
-- `.get_dependencies` function :
-
-This function is defined to determine the dependencies for the {renv} (R package manager) snapshot.
-It looks for the "admiral" DESCRIPTION file and extracts its dependencies, looking for suggested packages in the current project.
-
-- Then there is a step to look for current R version on a admiral developer environment, and load the proper R profile (use of the associate `renv.lock` file)
-- Then the variable `RENV_AUTOLOADER_ENABLED` is enabled or not depending on the context (if it's run through github workflows, it will be disabled, to preserve pre-installed dependencies on the workflows - more details on this in [Docker and Codespaces](docker_and_codespaces.html))
-<!-- - Env variables RENV_CONFIG_SANDBOX_ENABLED ? RENV_CONFIG_AUTO_SNAPSHOT maybe because we already configured options(renv.snapshot.filter = .get_dependencies) ? --> 
-<!-- Ask Adam Forys to document this part-->
-
-### Workflows to manage `renv` environment
-
-#### Automatic updates of `renv` environment
-
-2 workflows has been defined to do following steps :
-
-- automatically update the `renv.lock` file content. <!-- TODO: this step is a bit unclear.. we trigger it only on new changes on admiralci main, why is it not a cronjob ..?) -->
-- propagate the `renv.lock` file changes to every `admiral` packages (`admiral`, `admiralonco` ..).
-
-This [Lock updates and Propagation](lock-and-prop.html) section explains this in details.
-And you can find more details here about these 2 workflows (technical details) :
-
-- [r-renv-lock.yml](renv-lock.html)
-- [propagate.yml](propagate.html)
-
-#### Docker images updates (`admiralci` container registry images)
+- [push-docker-images.yml](push-docker.html)
 
 ## cron workflows
 
 - [push-docker-image.yml](push-docker.html) (to update the `devel` image only)
 - [cran-status.yml](cran-status.html)
+- [check-r-tags.yml](check-r-tags.Rmd)
