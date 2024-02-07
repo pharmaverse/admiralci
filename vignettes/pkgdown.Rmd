@@ -25,7 +25,7 @@ Note : this workflow is using [InsightEngineering pkgdown multiversion action](h
 - `skip-multiversion-docs`: Skip the creation of multi-version docs. Default: false. If set to True, a subfolder will be created under `gh-pages` (with the current github reference (branch/tag) name)
 - `multiversion-docs-landing-page`: Ref to use for the multiversion docs landing page. Default: main.
 - `latest-tag-alt-name`: An alternate name to use for 'latest-tag' for multiversion pkgdown docs. Default: "".
-- `branches-or-tags-to-list`: Regular expression defining branches or tags listed under the 'Versions' dropdown menu. Default: ^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$.
+- `branches-or-tags-to-list`: Regular expression defining branches or tags listed under the 'Versions' dropdown menu. Default: `^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$`.
 
 ## Workflow Structure
 
