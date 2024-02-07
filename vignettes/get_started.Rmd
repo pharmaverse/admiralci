@@ -70,7 +70,7 @@ The activation of the proper `renv.lock` file is managed inside the `.Rprofile` 
 
 - `.get_dependencies` function :
 
-This function is defined to determine the dependencies for the renv (R package manager) snapshot.
+This function is defined to determine the dependencies for the {renv} (R package manager) snapshot.
 It looks for the "admiral" DESCRIPTION file and extracts its dependencies, looking for suggested packages in the current project.
 
 - Then there is a step to look for current R version on a admiral devlopper environment, and load the proper R profile (use of the associate `renv.lock` file)
