@@ -79,7 +79,6 @@ For more details about staged.dependencies, please visit these links :
 ```
 
 Note : the user can specify some parameters depending on the use case :
-
 - run-system-dependencies : install or not sys dependencies
 - renv-restore : restore or not renv.lock dependencies
 (and many other options you can find on Staged Dependencies Action documentation).

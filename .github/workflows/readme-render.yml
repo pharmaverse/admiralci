@@ -5,13 +5,12 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'release'
         required: false
         type: choice
         options:
-          - '4.1'
-          - '4.2'
-          - '4.3'
+          - devel
+          - latest
       skip-md-formatting:
         description: 'Skip markdown auto-formatting'
         default: false
@@ -21,7 +20,7 @@ on:
     inputs:
       r-version:
         description: 'The version of R to use'
-        default: '4.1'
+        default: 'release'
         required: false
         type: string
       skip-md-formatting:
@@ -85,6 +84,12 @@ jobs:
           enable-check: false
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies from DESCRIPTION
+        run: |
+          remotes::install_local(force = TRUE, dependencies = TRUE)
+        shell: Rscript {0}
+
       ##################### END boilerplate steps #####################
 
       - name: Render README to markdown
