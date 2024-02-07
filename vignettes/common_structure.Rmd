@@ -36,7 +36,7 @@ A total of 4 images are created :
 - `admiralci-4.3`
 - `admiralci-devel`
 
-These images and store them in admiralci ghcr (Github Container Registry - Place to store docker images), and are then reused to execute the workflows in docker container instances like this :
+These images are stored in admiralci ghcr (Github Container Registry - Place to store docker images), and are then reused to execute the workflows in docker container instances like this :
 
 ```
 container:
