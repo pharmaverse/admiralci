@@ -29,3 +29,4 @@
 ^README.Rmd$
 ^.devcontainer
 ^install_devel_deps.R
+^inst/doc\.html$
