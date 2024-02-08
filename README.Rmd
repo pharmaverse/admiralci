@@ -58,72 +58,74 @@ This package will then probably be replaced by this global Pharmaverse repositor
 
 ### Check Templates
 
+
+
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-templates.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/check-templates.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/check-templates.html")`)
 
 ### Lintr
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/lintr.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/lintr.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/lintr.html")`)
 
 ### Man Pages
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/man-pages.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/man-pages.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/man-pages.html")`)
 
 ### R CMD CHECKS
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-cmd-check.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/r-cmd-checks.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/r-cmd-checks.html")`)
 
 ### Check Templates
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellchecks.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/spellchecks.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/spellchecks.html")`)
 
 ### Code Coverage
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/code-coverage.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/code-coverage.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/code-coverage.html")`)
 
 ### Readme Render
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/readme-render.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/readme-render.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/readme-render.html")`)
 
 ### Style
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/style.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/style.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/style.html")`)
 
 ## Workflows trigger by a new release
 
 ### Validation
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-pkg-validation.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/validation.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/validation.html")`)
 
 ### Pkgdown
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/pkgdown.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/pkgdown.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/pkgdown.html")`)
 
 ## cron workflows
 
 ### Push Docker Image
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/push-docker-image.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/push-docker.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/push-docker.html")`)
 
 ### Cran Status
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/cran-status.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/cran-status.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/cran-status.html")`)
 
 ### Check R Tags
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-r-tags.yml)
-- [Link to the documentation](https://pharmaverse.github.io/admiralci/check-r-tags.html)
+- [Link to the documentation](`r paste0(admiralci_homepage, "/articles/check-r-tags.html")`)
 
 
 # How to use these workflows?

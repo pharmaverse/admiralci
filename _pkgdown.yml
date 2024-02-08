@@ -14,48 +14,48 @@ navbar:
       text: Basics
       menu:
       - text: Common structure of the workflows
-        href: common_structure.html
+        href: articles/common_structure.html
       - text: Cheatsheet
-        href: cheatsheet.html
+        href: articles/cheatsheet.html
     workflows_details:
       text: Workflows Details
       menu:
       - text: R CMD CHECKS
-        href: r-cmd-checks.html
+        href: articles/r-cmd-checks.html
       - text: Cran Status
-        href: cran-status.html
+        href: articles/cran-status.html
       - text: Code Coverage
-        href: code-coverage.html
+        href: articles/code-coverage.html
       - text: Check Templates
-        href: check-templates.html
+        href: articles/check-templates.html
       - text: Links (Check broken links)
-        href: links.html
+        href: articles/links.html
       - text: Lintr (Code lints)
-        href: lintr.html
+        href: articles/lintr.html
       - text: Style (Code style)
-        href: style.html
+        href: articles/style.html
       - text: Spellchecks
-        href: spellchecks.html
+        href: articles/spellchecks.html
       - text: Man pages (Code Doc Rendering)
-        href: man-pages.html
+        href: articles/man-pages.html
       - text: Readme Render (Readme.Rmd -> Readme.md)
         href: Readme.Rmd
       - text: Pkgdown (build doc from Vignettes)
-        href: pkgdown.html
+        href: articles/pkgdown.html
       - text: Tweak Pages (fix pkgdown broken links)
-        href: tweak-page-hooks.html
+        href: articles/tweak-page-hooks.html
       - text: Pkgdown (build doc from Vignettes)
-        href: pkgdown.html
+        href: articles/pkgdown.html
       - text: Validation (build PDF validation report)
-        href: validation.html
+        href: articles/validation.html
       - text: Push Docker Images
-        href: push-docker.html
+        href: articles/push-docker.html
       - text: Codespaces
-        href: docker_and_codespaces.html
+        href: articles/docker_and_codespaces.html
       - text: Propagate (share codespaces conf)
-        href: propagate.html
-      - text: Propagate (share codespaces conf)
-        href: propagate.html
+        href: articles/propagate.html
+      - text: Check R latest version
+        href: articles/check-r-tags.html
        
 
     slack:
