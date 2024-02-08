@@ -17,15 +17,6 @@ date: \today
 # Lint Workflow
 
 This GitHub Actions workflow performs linting tasks for an R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
-Note : a `.lintr` file can be configured at the upstream repository level, to be able for example to exclude some lint rules such as this example :
-
-```
-exclusions: list(
-    "R/data.R" = Inf,
-    "inst" = list(undesirable_function_linter = Inf),
-    "vignettes" = list(undesirable_function_linter = Inf)
-  )
-```
 
 ## Workflow Triggers
 
@@ -82,3 +73,13 @@ This job performs linting tasks.
 11. **Lint**: Performs linting using lintr on the R package. Excludes files based on the changed files list.
 
 12. **Error if lints are detected**: Raises an error if lints are detected, prompting a review and adjustment of the code.
+
+Note : a `.lintr` file can be configured at the upstream repository level, to be able for example to exclude some lint rules such as this example :
+
+```
+exclusions: list(
+    "R/data.R" = Inf,
+    "inst" = list(undesirable_function_linter = Inf),
+    "vignettes" = list(undesirable_function_linter = Inf)
+  )
+```

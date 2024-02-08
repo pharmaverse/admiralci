@@ -48,3 +48,5 @@ The style check job is skipped if the commit message contains `[skip style]`.
 ### Permissions
 
 - `contents: write`: Write permissions for repository contents.
+
+Note: It's possible to fix locally style issues using `styler::style_file()`.

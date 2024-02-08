@@ -47,3 +47,6 @@ The spellcheck job is skipped if the commit message contains `[skip spellcheck]`
 ### Permissions
 
 - `contents: write`: Write permissions for repository contents.
+
+
+Note : It's possible to ignore some spell checks using `inst/WORDLIST` file. It's possible to update it automatically using directly `spelling::update_wordlist()`

@@ -69,3 +69,5 @@ Note: We will change soon the `repos` element to use CRAN repo (https://cran.r-p
 ## Permissions
 
 - `write-all`: Provides write permissions for various operations.
+
+Note: It's possible to ignore some folders/files during build process, using `.Rbuildignore` file.
