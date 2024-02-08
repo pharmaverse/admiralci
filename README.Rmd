@@ -39,6 +39,8 @@ admiralci_homepage <- "https://pharmaverse.github.io/admiralci"
 
 # Purpose of admiralci
 
+![](man/figures/admiralci_hex.jpg)
+
 This repository contains GitHub Actions continuous integration/continuous delivery (CI/CD) workflows, most of which are used by [`admiral`](https://github.com/pharmaverse/admiral) and its extensions.
 Workflows defined here are responsible for assuring high package quality standards without compromising performance, security, or reproducibility.
 
@@ -57,7 +59,6 @@ This package will then probably be replaced by this global Pharmaverse repositor
 ## Workflows triggered by Admiral MR (feature branch to main branch)
 
 ### Check Templates
-
 
 
 - [Link to workflow code (yml file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-templates.yml)
