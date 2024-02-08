@@ -1,9 +1,9 @@
 ---
-title: "Check R tags"
+title: "Check R latest version"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Style}
+  %\VignetteIndexEntry{CheckRTags}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
