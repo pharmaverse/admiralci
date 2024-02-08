@@ -7,3 +7,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+# admiralci cheatsheet
+
+![](assets/cheatsheet.png)
