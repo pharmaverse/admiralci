@@ -16,7 +16,7 @@ navbar:
       - text: Common structure of the workflows
         href: articles/common_structure.html
       - text: Cheatsheet
-        href: assets/cheatsheet.pdf
+        href: https://github.com/dgrassellyb/admiralci/blob/main/vignettes/assets/cheatsheet.pdf
     workflows_details:
       text: Workflows Details
       menu:
