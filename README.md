@@ -2,7 +2,7 @@
 
 # Purpose of admiralci
 
-![](man/figures/admiralci_hex.jpg)
+![](man/figures/admiralci_hex.png)
 
 This repository contains GitHub Actions continuous
 integration/continuous delivery (CI/CD) workflows, most of which are
