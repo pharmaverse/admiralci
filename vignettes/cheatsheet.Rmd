@@ -10,4 +10,4 @@ vignette: >
 
 # admiralci cheatsheet
 
-![](assets/cheatsheet.pdf)
+![](assets/cheatsheet.pdf){width=100%}
