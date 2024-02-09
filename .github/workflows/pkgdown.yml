@@ -243,7 +243,7 @@ jobs:
           rlang::env_lock(pkgdown_env)
           require(desc::desc_get("Package"), character.only = TRUE)
           clean = FALSE
-          if ("${{ inputs.skip-multiversion-docs }}" == "false"){
+          if ("${{ inputs.skip-multiversion-docs }}" == "true"){
             clean = TRUE
           }
           pkgdown::deploy_to_branch(
