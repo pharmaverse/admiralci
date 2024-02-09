@@ -12,37 +12,44 @@ vignette: >
 
 ## R-version input
 
-For most of the workflows, we need to select a specific R version to load the associated `renv` profile.
-That's why most of the actions have a `r-version` input (by default set-up to `4.1`) :
+For most of the workflows, we need to select a specific R version.
+That's why most of the actions have a `r-version` input:
 
 ```
 inputs:
     r-version:
-    description: 'The version of R to use'
-    default: '4.1'
-    required: false
-    type: string
+      description: 'The version of R to use'
+      default: 'release'
+      required: false
+      type: choice
+      options:
+        - devel
+        - oldrel
 ```
+
+By default, we have `r-version=release`, and users can also use `devel` and `latest` versions.
+
+- `release` means we are using latest stable version of `R`.
+- `oldrel` means we are using previous release of R (for example if current release is `4.4`, oldrel will be `4.3`).
+- `devel` refers to the development version of R, which contains the latest changes and features that are still under development. This version is typically used by developers who want to test new features. The "devel" version may be less stable.
 
 ## Use of `admiralci` docker images
 
 Once the `r-version` is picked, the worfklows will run inside a docker container instance. Indeed, `admiralci` contains an action `push-docker-image`, to be able to build `rocker:rstudio` images
-for each available versions of `R` (versions specified in `renv/profiles`, see [renv profiles conf](get_started.html#renv-profiles-configuration-handling-several-r-versions)). 
-At the building step of these docker images, every dependencies specified in the `renv.lock` files are installed.
-A total of 4 images are created :
-- `admiralci-4.1`
-- `admiralci-4.2`
-- `admiralci-4.3`
+for each available version of `R` :
+
+- `admiralci-oldrelease`
+- `admiralci-release`
 - `admiralci-devel`
 
-These images and store them in admiralci ghcr (Github Container Registry - Place to store docker images), and are then reused to execute the workflows in docker container instances like this :
+These images are stored in admiralci ghcr (Github Container Registry - Place to store docker images), and are then reused to execute the workflows in docker container instances like this :
 
 ```
 container:
     image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
 ```
 
-(More more details on docker images creation process and how they're used, please read [Docker images and codespaces](docker_and_codespaces.html)) section.
+(For more details on docker images creation process, please read [Push Docker Images](push-docker.html)) workflow documentation).
 
 ## Checkout repository
 
@@ -55,7 +62,8 @@ This action is used to checkout on the right repository. This is a step commonly
 
 ## Staged dependencies
 
-The staged dependencies action allow to install every necessary upstream dependencies for `admiral` package, suche as :
+The staged dependencies action allow to install every necessary upstream dependencies for `admiral` package, such as :
+
 - `pharmaversesdtm` (SDTM test data)
 - `admiraldev` (utilities functions for the Admiral package family)
 

@@ -1,9 +1,9 @@
 ---
-title: "Cran Status"
+title: "CRAN Status"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Cran Status}
+  %\VignetteIndexEntry{CRAN Status}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -11,7 +11,7 @@ vignette: >
 # CRAN Status Workflow
 
 This GitHub Actions workflow checks the CRAN status of an R package. It can create an issue if specified statuses ('NOTE', 'WARN', 'ERROR') are reported on the check report.
-Note : this workflow is using [insightEngineering Cran Status Monitor](https://github.com/insightsengineering/cran-status-monitor) action.
+Note : this workflow is using [insightsEngineering Cran Status Monitor](https://github.com/insightsengineering/cran-status-monitor) action.
 
 ## Inputs
 

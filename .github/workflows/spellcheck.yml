@@ -35,7 +35,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  roxygen:
+  spellcheck:
     name: Spellcheck
     runs-on: ubuntu-latest
     container:

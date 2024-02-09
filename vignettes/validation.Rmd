@@ -1,9 +1,9 @@
 ---
-title: "Spell Checks"
+title: "Validation Report"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Spell Checks}
+  %\VignetteIndexEntry{Validation Report}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,10 +20,11 @@ The workflow consists of a single job: `r-pkg-validation`.
 ### `r-pkg-validation` Job
 
 This job generates a validation report for a specified version of R. The report is built using `thevalidatoR` action and uploaded to the release upon success.
+The PDF report is then attached to the release within GitHub.
 
 #### Inputs
 
-- `r-version`: The version of R to use. Defaults to '4.1' and accepts choices '4.1', '4.2', '4.3'.
+- `r-version`: The version of R to use. Defaults to 'release'.
 
 #### Steps
 
@@ -32,8 +33,9 @@ This job generates a validation report for a specified version of R. The report 
 3. **Normalize inputs:** Normalizes the input R version, defaulting to '4.1' if not specified.
 4. **Restore cache:** Restores cached dependencies.
 5. **Run Staged dependencies:** Executes staged dependencies action.
-6. **Build report:** Uses `thevalidatoR` action to build the validation report.
-7. **Upload report to release:** Uploads the validation report to the release if the job is successful.
+6. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
+7. **Build report:** Uses `thevalidatoR` action to build the validation report.
+8. **Upload report to release:** Uploads the validation report to the release if the job is successful.
 
 ### Triggers
 

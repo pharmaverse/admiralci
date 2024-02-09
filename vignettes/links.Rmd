@@ -48,3 +48,5 @@ This job validates URLs in documentation files. It runs on Ubuntu 20.04.
    
    - **Environment Variables**:
      - `GITHUB_TOKEN`: GitHub token for authentication.
+
+Note: It's possible to ignore some links checks using `.lycheeignore` file.

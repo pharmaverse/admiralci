@@ -1,0 +1,13 @@
+---
+title: "Cheatsheet"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Cheatsheet}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# admiralci cheatsheet
+
+![](assets/cheatsheet.png)

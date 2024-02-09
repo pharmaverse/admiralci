@@ -62,12 +62,24 @@ This job performs linting tasks.
 
 6. **Run Staged dependencies**: Runs staged dependencies action to set up the environment.
 
-7. **Install latest release of lintr**: Installs the latest release of lintr from the CRAN repository if specified.
+7. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
 
-8. **Install package**: Installs the R package locally if specified.
+8. **Install latest release of lintr**: Installs the latest release of lintr from the CRAN repository if specified.
 
-9. **Changed files**: Gets the list of changed files using the Ana06/get-changed-files action.
+9. **Install package**: Installs the R package locally if specified.
 
-10. **Lint**: Performs linting using lintr on the R package. Excludes files based on the changed files list.
+10. **Changed files**: Gets the list of changed files using the Ana06/get-changed-files action.
 
-11. **Error if lints are detected**: Raises an error if lints are detected, prompting a review and adjustment of the code.
+11. **Lint**: Performs linting using lintr on the R package. Excludes files based on the changed files list.
+
+12. **Error if lints are detected**: Raises an error if lints are detected, prompting a review and adjustment of the code.
+
+Note : a `.lintr` file can be configured at the upstream repository level, to be able for example to exclude some lint rules such as this example :
+
+```
+exclusions: list(
+    "R/data.R" = Inf,
+    "inst" = list(undesirable_function_linter = Inf),
+    "vignettes" = list(undesirable_function_linter = Inf)
+  )
+```
