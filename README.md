@@ -2,7 +2,8 @@
 
 # Purpose of admiralci
 
-![](man/figures/admiralci_hex.png)
+<img src="man/figures/admiralci_hex.png"
+style="width:30.0%;height:30.0%" />
 
 This repository contains GitHub Actions continuous
 integration/continuous delivery (CI/CD) workflows, most of which are
@@ -23,7 +24,7 @@ Notes :
   This package will then probably be replaced by this global Pharmaverse repository in the future. -->
 * Most of the workflows are sharing the same steps (see [Common
   workflows
-  structure](https://pharmaverse.github.io/admiralci/common_structure.html))
+  structure](https://pharmaverse.github.io/admiralci/articles/common_structure.html))
   (boilerplate code)
 
 # Available workflows
@@ -149,7 +150,10 @@ the file for feature flags.
 
 Alternatively, if you want a high level of customization, you could
 simply copy the workflows as-is from this repository to your repository
-and modify them to your liking.
+and modify them to your liking. We do not recommand this approach. For
+example, you might miss some updated or even bugs fixes from `admiralci`
+workflows. If you need some updates in some existing workflows, please
+[raise an issue](https://github.com/pharmaverse/admiralci/issues).
 
 ## Where to see these workflows in action?
 
@@ -163,8 +167,10 @@ workflow: ![](man/figures/pr_workflows.jpg)
 Alternatively, you can check on the workflows on the Actions tab in the
 repository as well: ![](man/figures/actions_tab_workflows.jpg)
 
-<!-- Begin links -->
+Most of our workflows are using Github Marketplace actions, referenced
+bellow :
 
+* [InsightsEngineering](https://github.com/insightsengineering)
 * [r-lib-actions](https://github.com/r-lib/actions)
 * [sd-action](https://github.com/marketplace/actions/staged-dependencies-action)
 * [sd-repo](https://github.com/openpharma/staged.dependencies)
