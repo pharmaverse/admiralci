@@ -39,7 +39,7 @@ navbar:
       - text: Man pages (Code Doc Rendering)
         href: articles/man-pages.html
       - text: Readme Render (Readme.Rmd -> Readme.md)
-        href: Readme.Rmd
+        href: articles/readme-render.html
       - text: Pkgdown (build doc from Vignettes)
         href: articles/pkgdown.html
       - text: Tweak Pages (fix pkgdown broken links)

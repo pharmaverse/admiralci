@@ -51,7 +51,7 @@ Notes :
 - Some workflows are using github actions from [InsightsEngineering](https://github.com/insightsengineering/) group.
 <!-- - Most of the workflows tends to be use by other packages (`oak` package for example). A global repository at Pharmaverse organization level will be set-up to host all common workflows for pharmaverse packages (Beyond Admiral uses cases).
 This package will then probably be replaced by this global Pharmaverse repository in the future. -->
-- Most of the workflows are sharing the same steps (see [Common workflows structure](https://pharmaverse.github.io/admiralci/common_structure.html)) (boilerplate code)
+- Most of the workflows are sharing the same steps (see [Common workflows structure](https://pharmaverse.github.io/admiralci/articles/common_structure.html)) (boilerplate code)
 
 
 # Available workflows
