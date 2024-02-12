@@ -10,15 +10,15 @@ vignette: >
 
 # Check URLs Workflow
 
-This GitHub Actions workflow checks URLs in documentation files. It runs on the main, devel, and pre-release branches for push events and specified pull request events.
+This GitHub Actions workflow checks URLs in documentation files. It runs on the main, and pre-release branches for push events and specified pull request events.
 
 ## Workflow Triggers
 
 This workflow is triggered in the following ways:
 
-1. **Push Events**: Triggered on pushes to the main, devel, and pre-release branches.
+1. **Push Events**: Triggered on pushes to the main, and pre-release branches.
 
-2. **Pull Request Events**: Triggered on pull requests when opened, synchronized, reopened, or ready for review for the main, devel, and pre-release branches.
+2. **Pull Request Events**: Triggered on pull requests when opened, synchronized, reopened, or ready for review for the main, and pre-release branches.
 
 3. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event.
 

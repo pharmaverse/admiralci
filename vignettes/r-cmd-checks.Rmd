@@ -11,7 +11,7 @@ vignette: >
 
 # R CMD Check Workflow
 
-This GitHub Actions workflow performs R CMD checks on specified R versions and repositories. The checks are triggered by manual dispatch, pushes to the `main` or `devel` branches, and pull requests targeting these branches.
+This GitHub Actions workflow performs R CMD checks on specified R versions and repositories. The checks are triggered by manual dispatch, pushes to the `main` branch, and pull requests targeting this branch.
 
 ## Workflow Structure
 
@@ -51,8 +51,8 @@ Concurrency settings are specified to manage concurrent workflow runs effectivel
 
 - `workflow_dispatch`: Allows manual triggering of the workflow.
 - `workflow_call`: Triggered by a workflow call event.
-- `push`: Triggered on pushes to the `main` or `devel` branches.
-- `pull_request`: Triggered on pull requests targeting the `main` or `devel` branches.
+- `push`: Triggered on pushes to the `main` branch.
+- `pull_request`: Triggered on pull requests targeting the `main` branch.
 
 ### Matrix
 

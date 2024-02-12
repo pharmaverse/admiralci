@@ -1,6 +1,6 @@
 Package: admiralci
 Type: Package
-Title: ADaM in R Asset Library - CI/CD Workflows
+Title: CI/CD Workflows for Admiral
 Version: 0.0.1
 Authors@R: c(
     person("Open", "Source", email = "admiralci@pharmaverse.com", role = c("aut", "cre")))
