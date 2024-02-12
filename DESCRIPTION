@@ -3,9 +3,9 @@ Type: Package
 Title: CI/CD Workflows for Admiral
 Version: 0.0.1
 Authors@R: c(
-    person("Dinakar", "Kulkarni", role = c("aut"))
-    person("Daphne", "Grasselly", role = c("aut"))
-    person("Adam", "Forys", role = c("aut"))
+    person("Dinakar", "Kulkarni", role = c("aut")),
+    person("Daphne", "Grasselly", role = c("aut")),
+    person("Adam", "Forys", role = c("aut")),
     person("Franciszek", "Walkowiak", role = c("aut")))
 Description: A set of common CI/CD workflows originally designed and developed for
     Admiral R package hosted in the Pharmaverse GitHub organization.
