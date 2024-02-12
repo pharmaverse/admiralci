@@ -51,6 +51,7 @@ jobs:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           token: "${{ secrets.PHARMAVERSE_BOT }}"
+          
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -117,6 +118,8 @@ jobs:
       - name: Add safe directory
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+          git config --local user.email "113703390+pharmaverse-bot@users.noreply.github.com"
+          git config --local user.name "pharmaverse-bot"
         shell: bash
 
       - name: Commit and push formatted README.md
