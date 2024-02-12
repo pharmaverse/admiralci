@@ -101,7 +101,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="purpose-of-admiralci">Purpose of admiralci<a class="anchor" aria-label="anchor" href="#purpose-of-admiralci"></a>
 </h1></div>
-<p><img src="reference/figures/admiralci_hex.png"></p>
+<p><img src="reference/figures/admiralci_hex.png" style="width:30.0%;height:30.0%"></p>
 <p>This repository contains GitHub Actions continuous integration/continuous delivery (CI/CD) workflows, most of which are used by <a href="https://github.com/pharmaverse/admiral" class="external-link"><code>admiral</code></a> and its extensions. Workflows defined here are responsible for assuring high package quality standards without compromising performance, security, or reproducibility.</p>
 <p>Please refer to the <a href=".github/workflows"><code>.github/workflows</code></a> directory to view the source code for the GitHub Actions workflows.</p>
 <p>Notes :</p>
@@ -109,7 +109,7 @@
 <li>Some workflows are using github actions from <a href="https://github.com/insightsengineering/" class="external-link">InsightsEngineering</a> group. <!-- - Most of the workflows tends to be use by other packages (`oak` package for example). A global repository at Pharmaverse organization level will be set-up to host all common workflows for pharmaverse packages (Beyond Admiral uses cases).
   This package will then probably be replaced by this global Pharmaverse repository in the future. -->
 </li>
-<li>Most of the workflows are sharing the same steps (see <a href="https://pharmaverse.github.io/admiralci/common_structure.html">Common workflows structure</a>) (boilerplate code)</li>
+<li>Most of the workflows are sharing the same steps (see <a href="https://pharmaverse.github.io/admiralci/articles/common_structure.html">Common workflows structure</a>) (boilerplate code)</li>
 </ul>
 </div>
 <div class="section level1">
@@ -245,7 +245,7 @@
 <div class="section level2">
 <h2 id="copy-as-is-not-recommended">Copy as-is (not recommended)<a class="anchor" aria-label="anchor" href="#copy-as-is-not-recommended"></a>
 </h2>
-<p>Alternatively, if you want a high level of customization, you could simply copy the workflows as-is from this repository to your repository and modify them to your liking.</p>
+<p>Alternatively, if you want a high level of customization, you could simply copy the workflows as-is from this repository to your repository and modify them to your liking. We do not recommand this approach. For example, you might miss some updated or even bugs fixes from <code>admiralci</code> workflows. If you need some updates in some existing workflows, please <a href="https://github.com/pharmaverse/admiralci/issues" class="external-link">raise an issue</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="where-to-see-these-workflows-in-action">Where to see these workflows in action?<a class="anchor" aria-label="anchor" href="#where-to-see-these-workflows-in-action"></a>
@@ -259,8 +259,9 @@
 <h3 id="actions-tab">Actions Tab<a class="anchor" aria-label="anchor" href="#actions-tab"></a>
 </h3>
 <p>Alternatively, you can check on the workflows on the Actions tab in the repository as well: <img src="reference/figures/actions_tab_workflows.jpg"></p>
-<!-- Begin links -->
+<p>Most of our workflows are using Github Marketplace actions, referenced bellow :</p>
 <ul>
+<li><a href="https://github.com/insightsengineering" class="external-link">InsightsEngineering</a></li>
 <li><a href="https://github.com/r-lib/actions" class="external-link">r-lib-actions</a></li>
 <li><a href="https://github.com/marketplace/actions/staged-dependencies-action" class="external-link">sd-action</a></li>
 <li><a href="https://github.com/openpharma/staged.dependencies" class="external-link">sd-repo</a></li>
