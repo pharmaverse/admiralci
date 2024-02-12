@@ -63,7 +63,7 @@ This job create admiralci release artifacts, for each docker image ()
 3. **Delete current release existing artifacts** Delete admiralci existing release artifacts (this is necessary before the step bellow)
 4. **Upload SBOM to release 🔼** Upload admiralci release artifacts
 
-The output artifacts are available in [`admiralci` latest release](). These artifacts allow developers to retrieve versions of installed dependencies in the workflows, to ensure reproducibility locally.
+The output artifacts are available in [`admiralci` latest release](https://github.com/pharmaverse/admiralci/releases/tag/latest). These artifacts allow developers to retrieve versions of installed dependencies in the workflows, to ensure reproducibility locally.
 But note that dependencies artifacts are also produced during [R CMD CHECKS](r-cmd-checks.html) workflow.
 
 ## Inputs
