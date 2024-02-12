@@ -39,7 +39,7 @@ admiralci_homepage <- "https://pharmaverse.github.io/admiralci"
 
 # Purpose of admiralci
 
-![](man/figures/admiralci_hex.png){width=60% height=60%}
+![](man/figures/admiralci_hex.png){width=30% height=30%}
 
 This repository contains GitHub Actions continuous integration/continuous delivery (CI/CD) workflows, most of which are used by [`admiral`](https://github.com/pharmaverse/admiral) and its extensions.
 Workflows defined here are responsible for assuring high package quality standards without compromising performance, security, or reproducibility.
