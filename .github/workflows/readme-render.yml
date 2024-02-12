@@ -114,6 +114,11 @@ jobs:
           npm install -g @quilicicf/markdown-formatter
         shell: bash
 
+      - name: Add safe directory
+        run: |
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+        shell: bash
+
       - name: Commit and push formatted README.md
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
