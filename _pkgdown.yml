@@ -1,4 +1,3 @@
----
 url: https://pharmaverse.github.io/admiralci
 
 template:
@@ -7,6 +6,64 @@ template:
     bootswatch: flatly
 
 navbar:
-  right:
-    - icon: fa-github
-      href: https://github.com/pharmaverse/admiralci
+  structure:
+    left: [basics, workflows_details]
+    right: [search, slack, newissue, github]
+  components:
+    basics:
+      text: Basics
+      menu:
+      - text: Common structure of the workflows
+        href: articles/common_structure.html
+      - text: Cheatsheet
+        href: articles/cheatsheet.html
+    workflows_details:
+      text: Workflows Details
+      menu:
+      - text: R CMD CHECKS
+        href: articles/r-cmd-checks.html
+      - text: Cran Status
+        href: articles/cran-status.html
+      - text: Code Coverage
+        href: articles/code-coverage.html
+      - text: Check Templates
+        href: articles/check-templates.html
+      - text: Links (Check broken links)
+        href: articles/links.html
+      - text: Lintr (Code lints)
+        href: articles/lintr.html
+      - text: Style (Code style)
+        href: articles/style.html
+      - text: Spellchecks
+        href: articles/spellchecks.html
+      - text: Man pages (Code Doc Rendering)
+        href: articles/man-pages.html
+      - text: Readme Render (Readme.Rmd -> Readme.md)
+        href: Readme.Rmd
+      - text: Pkgdown (build doc from Vignettes)
+        href: articles/pkgdown.html
+      - text: Tweak Pages (fix pkgdown broken links)
+        href: articles/tweak-page-hooks.html
+      - text: Pkgdown (build doc from Vignettes)
+        href: articles/pkgdown.html
+      - text: Validation (build PDF validation report)
+        href: articles/validation.html
+      - text: Push Docker Images
+        href: articles/push-docker.html
+      - text: Codespaces
+        href: articles/docker_and_codespaces.html
+      - text: Propagate (share codespaces conf)
+        href: articles/propagate.html
+      - text: Check R latest version
+        href: articles/check-r-tags.html
+       
+
+    slack:
+      icon: fa-slack
+      href: https://app.slack.com/client/T028PB489D3/C02M8KN8269
+      aria-label: Slack
+    newissue:
+      icon: fa-bug
+      href: https://github.com/pharmaverse/admiralci/issues/new/choose
+      aria-label: New Issue
+

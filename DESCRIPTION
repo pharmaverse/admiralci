@@ -1,9 +1,12 @@
 Package: admiralci
 Type: Package
-Title: ADaM in R Asset Library - CI/CD Workflows
+Title: CI/CD Workflows for Admiral
 Version: 0.0.1
 Authors@R: c(
-    person("Open", "Source", email = "admiralci@pharmaverse.com", role = c("aut", "cre")))
+    person("Dinakar", "Kulkarni", role = c("aut")),
+    person("Daphne", "Grasselly", role = c("aut", "cre"), email="daphne.grasselly@roche.com"),
+    person("Adam", "Forys", role = c("aut")),
+    person("Franciszek", "Walkowiak", role = c("aut")))
 Description: A set of common CI/CD workflows originally designed and developed for
     Admiral R package hosted in the Pharmaverse GitHub organization.
 License: Apache License (>= 2)

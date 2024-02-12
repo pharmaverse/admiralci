@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+WARNING: this article is outdated (codespaces need to be re-designed since we decided to stop handling dependencies with renv) - WIP
+
 # Introduction
 
 This article will go over the following:
@@ -129,7 +131,7 @@ knitr::include_graphics("./assets/prebuild_ready.png", dpi = 144)
 
 ### Propagation
 
-Each time a change is detected inside .devcontainer folder, the [propagation job](./.github/workflows/propagate.yml) will be trigger (see doc [lock_and_prop](lock_and_prop.html))
+Each time a change is detected inside .devcontainer folder, the [propagation job](./.github/workflows/propagate.yml) will be triggered.
 
 ### Improvement ideas
 

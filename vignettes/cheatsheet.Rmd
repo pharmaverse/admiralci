@@ -1,0 +1,15 @@
+---
+title: "cheatsheet"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cheatsheet}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Cheatsheet
+
+[![](assets/cheatsheet.png)](https://github.com/dgrassellyb/admiralci/blob/main/vignettes/assets/cheatsheet.pdf)
+
+(Please Download the cheatsheet to access embedded links).

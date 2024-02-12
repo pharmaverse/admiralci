@@ -1,0 +1,37 @@
+---
+title: "Check R latest version"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CheckRTags}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Style Workflow
+
+This GitHub Actions workflow checks and enforces coding style using `styler` on R files. The workflow is triggered manually (`workflow_dispatch`) and can also be invoked as a workflow call (`workflow_call`).
+
+## Workflow Structure
+
+The workflow consists of a single job: `check-r-release`.
+
+### `check-r-release` Job
+
+This job get latest R tag (checking dockerhub container registry). This workflow is mainly here for `admiralci` developers to be warned if a new version of R is released (then a manual update of `OLD_RELEASE` env variable need to be done).
+Note: If latest R tag is different from `OLD_RELEASE` this job will end-up will fail status.
+
+#### Inputs
+
+- `r-version`: The version of R to use. Default is 'release'.
+
+#### Steps
+
+1. **List rocker/rstudio tags:** Request dockerhub registry to list all available tags. Then apply regexp pattern to retrieve only tags with `^[0-9]+\.[0-9]+$` pattern, and take the highest tag.
+
+- `workflow_dispatch`: Manually triggered workflow with optional inputs.
+- `schedule`: Run every sunday at midnight UTC.
+
+### Permissions
+
+- `contents: write`: Write permissions for repository contents.

@@ -11,7 +11,7 @@ vignette: >
 # pkgdown Workflow
 
 This GitHub Actions workflow automates the generation and deployment of documentation for an R package using `pkgdown`. The workflow supports multiple versions and offers flexibility in customization.
-This workflow use rmarkdown to be able to generate html documentation from `Rmd` files (vignettes folder). This documentation is then stored in `gh-pages` branch (an orphan branch) and published.
+This workflow uses rmarkdown to be able to generate html documentation from `Rmd` files (vignettes folder). This documentation is then stored in `gh-pages` branch (an orphan branch) and published.
 Note : this workflow is using [InsightEngineering pkgdown multiversion action](https://github.com/insightsengineering/r-pkgdown-multiversion) action.
 
 ## Inputs
@@ -25,7 +25,7 @@ Note : this workflow is using [InsightEngineering pkgdown multiversion action](h
 - `skip-multiversion-docs`: Skip the creation of multi-version docs. Default: false. If set to True, a subfolder will be created under `gh-pages` (with the current github reference (branch/tag) name)
 - `multiversion-docs-landing-page`: Ref to use for the multiversion docs landing page. Default: main.
 - `latest-tag-alt-name`: An alternate name to use for 'latest-tag' for multiversion pkgdown docs. Default: "".
-- `branches-or-tags-to-list`: Regular expression defining branches or tags listed under the 'Versions' dropdown menu. Default: ^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$.
+- `branches-or-tags-to-list`: Regular expression defining branches or tags listed under the 'Versions' dropdown menu. Default: `^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$`.
 
 ## Workflow Structure
 
