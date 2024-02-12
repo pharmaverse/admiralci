@@ -123,10 +123,16 @@ jobs:
         shell: bash
 
       - name: Commit and push formatted README.md
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: templates data updates from ${{ github.repository }}
-          file_pattern: 'README.md'
-          commit_user_name: pharmaverse-bot
-          commit_user_email: 113703390+pharmaverse-bot@users.noreply.github.com
-          branch: "${{ steps.branch-name.outputs.head_ref_branch }}"
+        run: |
+          if [ "${{ inputs.skip-md-formatting }}" != "true" ]
+          then {
+            markdown-format -r -f README.md
+          }
+          fi
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+          git config --local user.email "113703390+pharmaverse-bot@users.noreply.github.com"
+          git config --local user.name "pharmaverse-bot"
+          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          git add README.md
+          git commit -m "[actions skip] Add/Update README.md for ${BRANCH}" || true
+          git push origin ${BRANCH} || echo "No changes to commit"
