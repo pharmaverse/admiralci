@@ -90,16 +90,25 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Store deps into csv file - image ${{ matrix.tags }}
+        id: store_deps
         run: |
           installed_packages <- as.data.frame(installed.packages())
-          write.csv(installed_packages, "/workspace/deps-${{ matrix.tags }}.csv", row.names = FALSE)
+          r_version <- "${{ matrix.tags }}"
+          if (r_version == "${{ needs.get_old_release.outputs.oldrel }}"){
+            r_version <- "oldrelease"
+          }
+          content <- sprintf("r_version=%s\n", r_version)
+
+          output_file <- Sys.getenv("GITHUB_OUTPUT")
+          write(content, file = output_file, append = TRUE)
+          write.csv(installed_packages, sprintf("/workspace/deps-%s.csv" % r_version), row.names = FALSE)
         shell: Rscript {0}
 
       - name: Upload deps.csv artifact
         uses: actions/upload-artifact@v2
         with:
           name: deps
-          path: "/workspace/deps-${{ matrix.tags }}.csv"
+          path: "/workspace/deps-${{ steps.store_deps.outputs.r_version }}.csv"
 
       - name: Delete current release existing artifacts
         uses: mknejp/delete-release-assets@v1
@@ -107,14 +116,14 @@ jobs:
           token: ${{ github.token }}
           tag: "latest"
           assets: |
-            Dependencies.list.of.docker.image.admiralci-${{ matrix.tags }}.csv
+            Dependencies.list.of.docker.image.admiralci-${{ steps.store_deps.outputs.r_version }}.csv
 
       - name: Upload SBOM to release 🔼
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          file: "/workspace/deps-${{ matrix.tags }}.csv"
-          asset_name: "Dependencies list of docker image admiralci-${{ matrix.tags }}.csv"
+          file: "/workspace/deps-${{ steps.store_deps.outputs.r_version }}.csv"
+          asset_name: "Dependencies list of docker image admiralci-${{ steps.store_deps.outputs.r_version }}.csv"
           tag: "latest"
           overwrite: true
 
