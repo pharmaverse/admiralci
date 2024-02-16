@@ -101,7 +101,7 @@ jobs:
 
           output_file <- Sys.getenv("GITHUB_OUTPUT")
           write(content, file = output_file, append = TRUE)
-          write.csv(installed_packages, sprintf("/workspace/deps-%s.csv" % r_version), row.names = FALSE)
+          write.csv(installed_packages, sprintf("/workspace/deps-%s.csv", r_version), row.names = FALSE)
         shell: Rscript {0}
 
       - name: Upload deps.csv artifact
