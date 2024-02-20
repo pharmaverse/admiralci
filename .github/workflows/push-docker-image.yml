@@ -115,6 +115,7 @@ jobs:
         with:
           token: ${{ github.token }}
           tag: "latest"
+          fail-if-no-assets: false
           assets: |
             Dependencies.list.of.docker.image.admiralci-${{ steps.store_deps.outputs.r_version }}.csv
 
