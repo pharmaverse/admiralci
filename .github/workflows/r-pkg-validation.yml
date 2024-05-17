@@ -74,12 +74,13 @@ jobs:
           key: staged-deps
 
       - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v1.7.2
+        uses: insightsengineering/staged-dependencies-action@v1
         with:
           run-system-dependencies: false
           renv-restore: false
           enable-check: false
           cran-repos: "RSPM=${{ env.R_REPOS }}"
+          direction: upstream
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -91,7 +92,7 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Build report
-        uses: insightsengineering/thevalidatoR@v1.2.4
+        uses: insightsengineering/thevalidatoR@v2
         id: validation
         with:
           disable_install_dev_deps: true

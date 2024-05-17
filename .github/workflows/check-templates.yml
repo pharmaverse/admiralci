@@ -108,6 +108,7 @@ jobs:
           enable-check: false
           git-ref: ${{ steps.normalizer.outputs.SD_GIT_REF }}
           renv-restore: false
+          direction: upstream
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 

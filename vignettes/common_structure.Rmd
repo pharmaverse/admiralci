@@ -1,6 +1,6 @@
 ---
 title: "Common Structure"
-output: 
+output:
   rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Common Structure}
@@ -80,6 +80,7 @@ For more details about staged.dependencies, please visit these links :
     with:
         run-system-dependencies: false
         renv-restore: false
+        direction: upstream
     env:
         GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 ```

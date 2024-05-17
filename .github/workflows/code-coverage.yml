@@ -92,6 +92,7 @@ jobs:
           run-system-dependencies: false
           renv-restore: false
           enable-check: false
+          direction: upstream
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 

@@ -91,6 +91,7 @@ jobs:
           renv-restore: false
           enable-check: false
           cran-repos: "$R_REPOS"
+          direction: upstream
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
