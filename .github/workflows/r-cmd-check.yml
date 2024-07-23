@@ -8,7 +8,7 @@ on:
         default: note
         type: string
       include-devel:
-        description: 'Set to true to include devel in the matrix for everyrun.'
+        description: 'Set to true to include devel in the matrix for every run.'
         required: false
         default: false
         type: boolean
@@ -37,9 +37,9 @@ jobs:
         id: set-matrix
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.include-devel }}" == "false" ]]; then
-            echo "::set-output name=matrix::$(echo '{\"r_version\":[\"release\",\"oldrel\"]}')"
+            echo "matrix={\"r_version\":[\"release\",\"oldrel\"]}" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=matrix::$(echo '{\"r_version\":[\"release\",\"devel\",\"oldrel\"]}')"
+            echo "matrix={\"r_version\":[\"release\",\"devel\",\"oldrel\"]}" >> $GITHUB_OUTPUT
           fi
         shell: bash
 
@@ -71,7 +71,7 @@ jobs:
         staged.dependencies
 
       # DEPS_IGNORE: env variable to ignore package when building renv.lock (step Upload dependencies artifact)
-      # (improvments ideas : get this list of deps to ignore from staged.dependencies yml file)
+      # (improvements ideas : get this list of deps to ignore from staged.dependencies yml file)
 
     steps:
       ##################### BEGIN boilerplate steps #####################
