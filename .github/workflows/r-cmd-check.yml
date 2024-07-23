@@ -7,6 +7,11 @@ on:
         required: false
         default: note
         type: string
+      include-devel:
+        description: 'Set to true to include devel in the matrix for everyrun.'
+        required: false
+        default: 'false'
+        type: boolean
   push:
     branches:
       - main
@@ -23,7 +28,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  set-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Set job matrix
+        id: set-matrix
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.include-devel }}" == "false" ]]; then
+            echo "::set-output name=matrix::$(echo '{\"r_version\":[\"release\",\"oldrel\"]}')"
+          else
+            echo "::set-output name=matrix::$(echo '{\"r_version\":[\"release\",\"devel\",\"oldrel\"]}')"
+          fi
+        shell: bash
+
   R-CMD-check:
+    needs: set-matrix
     runs-on: ubuntu-latest
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.r_version }}:latest"
@@ -32,8 +53,7 @@ jobs:
       !contains(github.event.commits[0].message, '[skip r-cmd-check]')
     strategy:
       fail-fast: false
-      matrix:
-        r_version: ['release', 'devel', 'oldrel']
+      matrix: ${{ fromJSON(needs.set-matrix.outputs.matrix) }}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -83,9 +103,6 @@ jobs:
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
-        if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel'
         with:
           run-system-dependencies: false
           renv-restore: false
@@ -96,9 +113,6 @@ jobs:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies from DESCRIPTION
-        if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel'
         run: |
           remotes::install_local(force = TRUE, dependencies = TRUE)
         shell: Rscript {0}
@@ -106,9 +120,6 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Upload dependencies artifact
-        if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel'
         run: |
           dir.create("/workspace/tmp")
           library(dplyr)
@@ -171,9 +182,6 @@ jobs:
 
       - name: Upload deps.csv and renv.lock artifacts
         uses: actions/upload-artifact@v2
-        if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel'
         with:
           name: deps
           path: |
@@ -181,9 +189,6 @@ jobs:
 
       - name: Check Version
         id: check_version
-        if: |
-          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-          matrix.r_version != 'devel'
         run: |
           maintenance_version="F"
           description_dat <- readLines("DESCRIPTION")
@@ -202,9 +207,6 @@ jobs:
         shell: Rscript {0}
 
       - name: Check
-        if: |
-            (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-            matrix.r_version != 'devel'
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_FORCE_SUGGESTS_: false
