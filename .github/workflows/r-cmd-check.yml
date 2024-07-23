@@ -10,7 +10,7 @@ on:
       include-devel:
         description: 'Set to true to include devel in the matrix for everyrun.'
         required: false
-        default: 'false'
+        default: false
         type: boolean
   push:
     branches:
