@@ -36,10 +36,10 @@ jobs:
       - name: Set job matrix
         id: set-matrix
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.include-devel }}" == "false" ]]; then
-            echo "matrix={\"r_version\":[\"release\",\"oldrel\"]}" >> $GITHUB_OUTPUT
-          else
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ inputs.include-devel }}" == "true" ]]; then
             echo "matrix={\"r_version\":[\"release\",\"devel\",\"oldrel\"]}" >> $GITHUB_OUTPUT
+          else
+            echo "matrix={\"r_version\":[\"release\",\"oldrel\"]}" >> $GITHUB_OUTPUT
           fi
         shell: bash
 
