@@ -2,20 +2,20 @@ on:
   workflow_dispatch:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: choice
         options:
           - devel
           - latest
       skip-multiversion-docs:
-        description: 'Skip creation of multi-version docs'
+        description: "Skip creation of multi-version docs"
         default: false
         required: false
         type: boolean
       multiversion-docs-landing-page:
-        description: 'Ref to use for the multiversion docs landing page'
+        description: "Ref to use for the multiversion docs landing page"
         default: main
         required: false
         type: string
@@ -36,17 +36,22 @@ on:
   workflow_call:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: string
       skip-multiversion-docs:
-        description: 'Skip creation of multi-version docs'
+        description: "Skip creation of multi-version docs"
         default: false
         required: false
         type: boolean
+      insert-tweak-page-hook:
+        description: "This option customizes the pkgdown::tweak_page function by adding a new custom hook to fix rdrr.io links"
+        default: true
+        required: false
+        type: boolean
       multiversion-docs-landing-page:
-        description: 'Ref to use for the multiversion docs landing page'
+        description: "Ref to use for the multiversion docs landing page"
         default: main
         required: false
         type: string
@@ -162,6 +167,7 @@ jobs:
 
       - name: Add script to fix rdrr.io links for pharmaverse packages
         uses: "DamianReeves/write-file-action@v1.2"
+        if: inputs.insert-tweak-page-hook
         with:
           path: ./.Rprofile
           write-mode: append
@@ -203,8 +209,10 @@ jobs:
               invisible()
             }
 
-            setHook("UserHook::admiralci::tweak_page", tweak_rdrr_url)
-            print("Tweak rdrr.io links for admiral pharmaverse packages.")
+            if ("${{ inputs.insert-tweak-page-hook }}" == "true") {
+              setHook("UserHook::admiralci::tweak_page", tweak_rdrr_url)
+              print("Tweak rdrr.io links for admiral pharmaverse packages.")
+            }
 
       - name: Publish documentation
         run: |
@@ -217,32 +225,34 @@ jobs:
           }
           fi
           Rscript - <<EOF
-          pkgdown_env <- asNamespace("pkgdown")
-          rlang::env_unlock(env = pkgdown_env)
-          rlang::env_binding_unlock(env = pkgdown_env)
-          pkgdown_env\$call_hook <- function(hook_name, ...) {
-            hooks <- getHook(paste0("UserHook::admiralci::", hook_name))
-            if (!is.list(hooks)) {
-              hooks <- list(hooks)
+          if ("${{ inputs.insert-tweak-page-hook }}" == "true") {
+            pkgdown_env <- asNamespace("pkgdown")
+            rlang::env_unlock(env = pkgdown_env)
+            rlang::env_binding_unlock(env = pkgdown_env)
+            pkgdown_env\$call_hook <- function(hook_name, ...) {
+              hooks <- getHook(paste0("UserHook::admiralci::", hook_name))
+              if (!is.list(hooks)) {
+                hooks <- list(hooks)
+              }
+              purrr::map(hooks, function(fun) {
+                fun(...)
+              }) %>%
+                invisible()
             }
-            purrr::map(hooks, function(fun) {
-              fun(...)
-            }) %>%
-              invisible()
-          }
-          environment(pkgdown_env\$call_hook) <- pkgdown_env
-          tweak_page <- body(pkgdown_env\$tweak_page)
-          body(pkgdown_env\$tweak_page) <-
-            as.call(
-              append(
-                as.list(tweak_page),
-                expression(call_hook("tweak_page", html, name, pkg)),
-                after=length(tweak_page)
+            environment(pkgdown_env\$call_hook) <- pkgdown_env
+            tweak_page <- body(pkgdown_env\$tweak_page)
+            body(pkgdown_env\$tweak_page) <-
+              as.call(
+                append(
+                  as.list(tweak_page),
+                  expression(call_hook("tweak_page", html, name, pkg)),
+                  after=length(tweak_page)
+                )
               )
-            )
-          rlang::env_binding_lock(env = pkgdown_env)
-          rlang::env_lock(pkgdown_env)
-          require(desc::desc_get("Package"), character.only = TRUE)
+            rlang::env_binding_lock(env = pkgdown_env)
+            rlang::env_lock(pkgdown_env)
+            require(desc::desc_get("Package"), character.only = TRUE)
+          }
           clean = FALSE
           if ("${{ inputs.skip-multiversion-docs }}" == "true"){
             clean = TRUE
