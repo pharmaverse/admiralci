@@ -170,12 +170,12 @@ jobs:
         shell: Rscript {0}
 
       - name: Upload deps.csv and renv.lock artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: |
           (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
           matrix.r_version != 'devel'
         with:
-          name: deps
+          name: deps-${{ matrix.r_version }}
           path: |
             /workspace/tmp/
 
@@ -228,7 +228,7 @@ jobs:
 
       - name: Upload check results
         if: failure()
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v4
         with:
           name: r${{ matrix.r_version }}-results
           path: check
