@@ -236,7 +236,7 @@ jobs:
               }
               purrr::map(hooks, function(fun) {
                 fun(...)
-              }) %>%
+              }) |>
                 invisible()
             }
             environment(pkgdown_env\$call_hook) <- pkgdown_env
