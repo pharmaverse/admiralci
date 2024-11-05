@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   get_old_release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       oldrel: ${{ steps.oldrelease.outputs.oldrelease }}
 
@@ -28,7 +28,7 @@ jobs:
         run: echo "oldrelease=${{ env.OLD_RELEASE }}" >> $GITHUB_OUTPUT
 
   deploy-image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["get_old_release"]
     strategy:
       fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
@@ -123,7 +123,7 @@ jobs:
 
   store_deps:
     name: Store Deps
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["get_old_release", "deploy-image"]
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.tags }}:latest"

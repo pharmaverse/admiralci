@@ -36,7 +36,7 @@ concurrency:
 jobs:
   coverage:
     name: Test Coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     if: >
