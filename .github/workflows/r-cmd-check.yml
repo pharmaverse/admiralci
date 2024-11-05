@@ -73,7 +73,7 @@ jobs:
           github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-          set-safe-directory: "."
+          set-safe-directory: true
           fetch-depth: 0
 
       - name: Restore cache
