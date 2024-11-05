@@ -76,59 +76,13 @@ jobs:
           image-name: "${{ steps.image_specs.outputs.image_name }}"
           tag-latest: true
           base-image: "rocker/rstudio:${{ matrix.tags }}"
-          sysdeps: >-
-            curl,
-            libcurl4-openssl-dev,
-            libfreetype6-dev,
-            libfontconfig1-dev,
-            libfribidi-dev,
-            libgit2-dev,
-            libharfbuzz-dev,
-            libicu-dev,
-            libjpeg-dev,
-            libpng-dev,
-            libssl-dev,
-            libtiff-dev,
-            libxml2-dev,
-            libxt-dev,
-            make,
-            npm,
-            pandoc,
-            qpdf,
-            zlib1g-dev
+          sysdeps: "curl,libcurl4-openssl-dev,libfreetype6-dev,libfontconfig1-dev,libfribidi-dev,libgit2-dev,libharfbuzz-dev,libicu-dev,libjpeg-dev,libpng-dev,libssl-dev,libtiff-dev,libxml2-dev,libxt-dev,make,npm,pandoc,qpdf,zlib1g-dev"
           description-file: "https://raw.githubusercontent.com/pharmaverse/admiral/main/DESCRIPTION"
           repository-owner: ${{ github.repository_owner }}
           repo-user: ${{ github.actor }}
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           repos: ${{ steps.image_specs.outputs.r_repos }}
-          packages: >-
-            DT,
-            R.cache,
-            R.methodsS3,
-            R.oo,
-            R.utils,
-            backports,
-            cellranger,
-            collections,
-            covr,
-            crosstalk,
-            cyclocomp,
-            diffdf,
-            git2r,
-            hunspell,
-            languageserver,
-            lazyeval,
-            lintr,
-            pak,
-            progress,
-            readxl,
-            rematch,
-            renv,
-            rex,
-            spelling,
-            staged.dependencies,
-            styler,
-            xmlparsedata
+          packages: "DT,R.cache,R.methodsS3,R.oo,R.utils,backports,cellranger,collections,covr,crosstalk,cyclocomp,diffdf,git2r,hunspell,languageserver,lazyeval,lintr,pak,progress,readxl,rematch,renv,rex,spelling,staged.dependencies,styler,xmlparsedata"
 
   store_deps:
     name: Upload Image Manifests
