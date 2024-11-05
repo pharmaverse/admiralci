@@ -4,31 +4,30 @@ on:
   workflow_dispatch:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: choice
         options:
           - devel
           - latest
       skip-md-formatting:
-        description: 'Skip markdown auto-formatting'
+        description: "Skip markdown auto-formatting"
         default: false
         required: false
         type: boolean
   workflow_call:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: string
       skip-md-formatting:
-        description: 'Skip markdown auto-formatting'
+        description: "Skip markdown auto-formatting"
         default: false
         required: false
         type: boolean
-
 
 jobs:
   render:
@@ -45,14 +44,14 @@ jobs:
         uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}

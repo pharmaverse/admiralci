@@ -4,7 +4,7 @@ name: Deploy Docker Image
 on:
   workflow_dispatch: # give possibility to run it manually
   schedule:
-    - cron: '0 0 * * Wed,Sun' # Run every day at midnight UTC
+    - cron: "0 0 * * Wed,Sun" # Run every day at midnight UTC
 
 permissions: write-all
 env:
@@ -25,12 +25,11 @@ jobs:
     steps:
       - name: get old release
         id: oldrelease
-        run:
-          echo "oldrelease=${{ env.OLD_RELEASE }}" >> $GITHUB_OUTPUT
+        run: echo "oldrelease=${{ env.OLD_RELEASE }}" >> $GITHUB_OUTPUT
 
   deploy-image:
     runs-on: ubuntu-latest
-    needs: [ "get_old_release" ]
+    needs: ["get_old_release"]
     strategy:
       fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
       matrix:
@@ -43,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
 
@@ -79,7 +78,7 @@ jobs:
   store_deps:
     name: Store Deps
     runs-on: ubuntu-latest
-    needs: [ "get_old_release", "deploy-image" ]
+    needs: ["get_old_release", "deploy-image"]
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.tags }}:latest"
     strategy:
@@ -127,9 +126,7 @@ jobs:
           asset_name: "Dependencies list of docker image admiralci-${{ steps.store_deps.outputs.r_version }}.csv"
           tag: "latest"
           overwrite: true
-
 # refacto todo: image-name, sysdeps on get-renv-list job
-
 
 # note: in case of 403 error when pushing to ghcr : link current repo to the given package registry - https://github.com/docker/build-push-action/issues/687
 # (got to https://github.com/<user name>?tab=packages to go to packages settings) and there https://github.com/users/<user name>/packages/container/admiralci-4.0/settings

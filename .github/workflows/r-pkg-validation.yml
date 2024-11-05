@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: choice
         options:
@@ -14,8 +14,8 @@ on:
   workflow_call:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: string
   release:
@@ -30,7 +30,7 @@ jobs:
     # Set Github token permissions
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_REPOS: 'https://packagemanager.posit.co/cran/2021-03-31/'
+      R_REPOS: "https://packagemanager.posit.co/cran/2021-03-31/"
     permissions:
       contents: write
       packages: write
@@ -42,14 +42,14 @@ jobs:
         uses: tj-actions/branch-names@v5.4
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
