@@ -29,7 +29,7 @@ jobs:
     name: Verify
     if: >
       !contains(github.event.commits[0].message, '[skip check_templates]')
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     env:
@@ -56,7 +56,7 @@ jobs:
 
       - name: Add safe directory
         run: |
-          git config --global --add safe.directory "${GITHUB_WORKSPACE}" # open issue: git dubious ownership running in docker container context: https://github.com/actions/runner/issues/2033
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
         shell: bash
 
       - name: Normalize inputs

@@ -24,7 +24,7 @@ on:
 jobs:
   r-pkg-validation:
     name: Generate
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     # Set Github token permissions
@@ -69,6 +69,7 @@ jobs:
           enable-check: false
           cran-repos: "RSPM=${{ env.R_REPOS }}"
           direction: upstream
+          git-ref: ${{ steps.branch-name.outputs.current_branch }}
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 

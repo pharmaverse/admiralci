@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   check-r-release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: List rocker/rstudio tags
         run: |

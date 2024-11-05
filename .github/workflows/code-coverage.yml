@@ -36,7 +36,7 @@ concurrency:
 jobs:
   coverage:
     name: Test Coverage
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     if: >
@@ -81,6 +81,7 @@ jobs:
           renv-restore: false
           enable-check: false
           direction: upstream
+          git-ref: ${{ steps.branch-name.outputs.current_branch }}
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 

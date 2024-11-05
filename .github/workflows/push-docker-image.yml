@@ -18,7 +18,8 @@ concurrency:
 
 jobs:
   get_old_release:
-    runs-on: ubuntu-22.04
+    name: Get Old Release Version
+    runs-on: ubuntu-latest
     outputs:
       oldrel: ${{ steps.oldrelease.outputs.oldrelease }}
 
@@ -28,10 +29,11 @@ jobs:
         run: echo "oldrelease=${{ env.OLD_RELEASE }}" >> $GITHUB_OUTPUT
 
   deploy-image:
-    runs-on: ubuntu-22.04
+    name: Deploy Image
+    runs-on: ubuntu-latest
     needs: ["get_old_release"]
     strategy:
-      fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
+      fail-fast: false
       matrix:
         tags: ["devel", "latest", "${{ needs.get_old_release.outputs.oldrel }}"]
 
@@ -46,19 +48,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Print message
-        run: |
-          echo "updating docker image for R version ${{ matrix.tags }}"
-
       - name: Set image specs
         id: image_specs
         run: |
           package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          if [ "${{ matrix.tags }}" == "latest" ]; then image_name="${package_name}-release"; else image_name="${package_name}-${{ matrix.tags }}"; fi
-          if [ "${{ matrix.tags }}" == "devel" ]; then R_REPOS="https://packagemanager.posit.co/cran/__linux__/focal/latest"; fi
-          echo "r_repos=$R_REPOS" >> $GITHUB_OUTPUT
           r_version="${{ matrix.tags }}"
-          if [ "$r_version" == "${{ env.OLD_RELEASE }}" ]; then image_name="${package_name}-oldrel"; fi
+          ########### LATEST aka RELEAESE IMAGE NAME ###########
+          if [ "${{ matrix.tags }}" == "latest" ]; then
+              image_name="${package_name}-release"
+          else
+              image_name="${package_name}-${{ matrix.tags }}"
+          fi
+          ########### DEVEL IMAGE NAME ###########
+          if [ "${{ matrix.tags }}" == "devel" ]; then
+              R_REPOS="https://packagemanager.posit.co/cran/__linux__/focal/latest"
+          fi
+          ########### OLDREL IMAGE NAME ###########
+          if [ "$r_version" == "${{ env.OLD_RELEASE }}" ]; then
+              image_name="${package_name}-oldrel"
+          fi
+          #### Set outputs ####
+          echo "r_repos=$R_REPOS" >> $GITHUB_OUTPUT
           echo "image_name=${image_name}" >> $GITHUB_OUTPUT
 
       - name: Call deploy docker image action ${{ matrix.tags }}
@@ -122,8 +132,8 @@ jobs:
             xmlparsedata
 
   store_deps:
-    name: Store Deps
-    runs-on: ubuntu-22.04
+    name: Upload Image Manifests
+    runs-on: ubuntu-latest
     needs: ["get_old_release", "deploy-image"]
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ matrix.tags }}:latest"

@@ -83,7 +83,7 @@ concurrency:
 jobs:
   pkgdown:
     name: pkgdown
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container:
       image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     env:
@@ -149,6 +149,7 @@ jobs:
           renv-restore: false
           enable-check: false
           direction: upstream
+          git-ref: ${{ steps.branch-name.outputs.current_branch }}
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -267,7 +268,7 @@ jobs:
   multi-version-docs:
     name: Multi-version docs
     needs: pkgdown
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: >
       !inputs.skip-multiversion-docs &&
         !contains(github.event.commits[0].message, '[skip docs]')
