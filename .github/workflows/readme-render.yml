@@ -56,18 +56,6 @@ jobs:
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Normalize inputs
-        id: normalizer
-        run: |
-          R_VERSION="${{ inputs.r-version }}"
-          if [ "$R_VERSION" == "" ]
-          then {
-            R_VERSION="4.1"
-          }
-          fi
-          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Restore cache
         uses: actions/cache@v4
         with:
