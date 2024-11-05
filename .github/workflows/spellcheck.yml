@@ -51,14 +51,14 @@ jobs:
         uses: tj-actions/branch-names@v5.4
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.2.2
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.2.2
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}

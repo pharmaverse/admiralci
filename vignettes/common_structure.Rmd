@@ -57,7 +57,7 @@ This action is used to checkout on the right repository. This is a step commonly
 
 ```
 - name: Checkout repository
-  uses: actions/checkout@v4.1.1
+  uses: actions/checkout@v4.2.2
 ```
 
 ## Staged dependencies
