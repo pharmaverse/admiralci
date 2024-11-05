@@ -103,12 +103,6 @@ jobs:
           write.csv(installed_packages, sprintf("/workspace/deps-%s.csv", r_version), row.names = FALSE)
         shell: Rscript {0}
 
-      - name: Upload deps.csv artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: deps
-          path: "/workspace/deps-${{ steps.store_deps.outputs.r_version }}.csv"
-
       - name: Delete current release existing artifacts
         uses: mknejp/delete-release-assets@v1
         with:
