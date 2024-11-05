@@ -92,7 +92,7 @@ jobs:
           run-system-dependencies: false
           renv-restore: false
           enable-check: false
-          cran-repos: "$R_REPOS"
+          cran-repos: "https://cloud.r-project.org"
           direction: upstream
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
