@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tags: ["devel", "latest", "${{ needs.get_old_release.outputs.oldrel }}"]
+        tags: ["devel", "4.4.1", "${{ needs.get_old_release.outputs.oldrel }}"]
 
     # Token permissions
     permissions:
@@ -53,14 +53,13 @@ jobs:
         run: |
           package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
           r_version="${{ matrix.tags }}"
+          image_name="${package_name}-${r_version}"
           ########### LATEST aka RELEAESE IMAGE NAME ###########
-          if [ "${{ matrix.tags }}" == "latest" ]; then
+          if [ "$r_version" == "4.4.1" ]; then
               image_name="${package_name}-release"
-          else
-              image_name="${package_name}-${{ matrix.tags }}"
           fi
           ########### DEVEL IMAGE NAME ###########
-          if [ "${{ matrix.tags }}" == "devel" ]; then
+          if [ "$r_version" == "devel" ]; then
               R_REPOS="https://packagemanager.posit.co/cran/__linux__/focal/latest"
           fi
           ########### OLDREL IMAGE NAME ###########
