@@ -67,7 +67,7 @@ jobs:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v5.4
+        uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
         uses: actions/checkout@v4.2.2

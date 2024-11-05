@@ -62,7 +62,7 @@ jobs:
           echo "image_name=$image_name" >> $GITHUB_OUTPUT
 
       - name: Call deploy docker image action ${{ matrix.tags }}
-        uses: insightsengineering/r-image-creator@install_suggests_deps
+        uses: insightsengineering/r-image-creator@v1
         with:
           image-name: "${{ steps.image_specs.outputs.image_name }}"
           tag-latest: true
@@ -73,7 +73,7 @@ jobs:
           repo-user: ${{ github.actor }}
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           repos: ${{ steps.image_specs.outputs.r_repos }}
-          packages: "DT,R.cache,R.methodsS3,R.oo,R.utils,backports,cellranger,collections,covr,crosstalk,cyclocomp,diffdf,git2r,hunspell,languageserver,lazyeval,lintr,progress,readxl,rematch,renv,rex,spelling,staged.dependencies,styler,xmlparsedata"
+          packages: "DT,R.cache,R.methodsS3,R.oo,R.utils,backports,cellranger,collections,covr,crosstalk,cyclocomp,diffdf,git2r,hunspell,languageserver,lazyeval,lintr,pak,progress,readxl,rematch,renv,rex,spelling,staged.dependencies,styler,xmlparsedata"
 
   store_deps:
     name: Store Deps

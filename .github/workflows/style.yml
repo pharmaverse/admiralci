@@ -36,7 +36,7 @@ jobs:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v5.4
+        uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
         uses: actions/checkout@v4.2.2
@@ -57,7 +57,7 @@ jobs:
           R_VERSION="${{ inputs.r-version }}"
           if [ "$R_VERSION" == "" ]
           then {
-            R_VERSION="4.1"
+            R_VERSION="4.3"
           }
           fi
           echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
@@ -83,7 +83,7 @@ jobs:
 
       - name: Get changed files
         id: changed-files
-        uses: Ana06/get-changed-files@v2.1.0
+        uses: Ana06/get-changed-files@v2.3.0
         with:
           format: csv
           filter: |
