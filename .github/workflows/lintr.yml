@@ -2,48 +2,48 @@ on:
   workflow_dispatch:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: choice
         options:
           - devel
           - latest
       lint-all-files:
-        description: 'Lint all files every time'
-        default: 'false'
+        description: "Lint all files every time"
+        default: "false"
         required: false
         type: string
       latest-lintr:
-        description: 'Latest lintr CRAN release'
-        default: 'false'
+        description: "Latest lintr CRAN release"
+        default: "false"
         required: false
         type: string
       install-package:
-        description: 'Install package locally.'
-        default: 'false'
+        description: "Install package locally."
+        default: "false"
         required: false
         type: string
   workflow_call:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: string
       lint-all-files:
-        description: 'Lint all files every time'
-        default: 'false'
+        description: "Lint all files every time"
+        default: "false"
         required: false
         type: string
       latest-lintr:
-        description: 'Latest lintr CRAN release'
-        default: 'false'
+        description: "Latest lintr CRAN release"
+        default: "false"
         required: false
         type: string
       install-package:
-        description: 'Install package locally.'
-        default: 'false'
+        description: "Install package locally."
+        default: "false"
         required: false
         type: string
 
@@ -67,17 +67,17 @@ jobs:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v5.4
+        uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
@@ -95,7 +95,7 @@ jobs:
         shell: bash
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.staged.dependencies
@@ -127,8 +127,8 @@ jobs:
         id: files
         uses: Ana06/get-changed-files@v2.2.0
         with:
-          format: 'json'
-          filter: '*'
+          format: "json"
+          filter: "*"
 
       - name: Lint
         run: |

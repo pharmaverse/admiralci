@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: choice
         options:
@@ -14,8 +14,8 @@ on:
   workflow_call:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: string
   release:
@@ -30,7 +30,7 @@ jobs:
     # Set Github token permissions
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_REPOS: 'https://packagemanager.posit.co/cran/2021-03-31/'
+      R_REPOS: "https://packagemanager.posit.co/cran/2021-03-31/"
     permissions:
       contents: write
       packages: write
@@ -39,17 +39,17 @@ jobs:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v5.4
+        uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
@@ -67,7 +67,7 @@ jobs:
         shell: bash
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.staged.dependencies

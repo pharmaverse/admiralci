@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        r_version: ['release', 'devel', 'oldrel']
+        r_version: ["release", "devel", "oldrel"]
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -60,7 +60,7 @@ jobs:
         uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: |
           github.event_name == 'pull_request'
         with:
@@ -68,14 +68,16 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: |
           github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
+          set-safe-directory: "."
+          fetch-depth: 0
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.staged.dependencies
@@ -90,7 +92,7 @@ jobs:
           run-system-dependencies: false
           renv-restore: false
           enable-check: false
-          cran-repos: "$R_REPOS"
+          cran-repos: "https://cloud.r-project.org"
           direction: upstream
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -203,8 +205,8 @@ jobs:
 
       - name: Check
         if: |
-            (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
-            matrix.r_version != 'devel'
+          (github.event_name == 'workflow_dispatch' && matrix.r_version == 'devel') ||
+          matrix.r_version != 'devel'
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_FORCE_SUGGESTS_: false
