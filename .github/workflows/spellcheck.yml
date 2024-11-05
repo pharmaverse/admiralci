@@ -64,7 +64,7 @@ jobs:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.staged.dependencies

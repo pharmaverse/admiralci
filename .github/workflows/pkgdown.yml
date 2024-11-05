@@ -128,14 +128,14 @@ jobs:
             fi
             echo ${var}
           }
-          R_VERSION=$(normalize ${{ inputs.r-version }} 4.1)
+          R_VERSION=$(normalize ${{ inputs.r-version }} 4.3)
           DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
           echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
           echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.staged.dependencies
@@ -297,7 +297,7 @@ jobs:
         shell: bash
 
       - name: Create and publish docs
-        uses: insightsengineering/r-pkgdown-multiversion@v2
+        uses: insightsengineering/r-pkgdown-multiversion@v3
         with:
           path: ${{ github.event.repository.name }}
           default-landing-page: "${{ steps.normalizer.outputs.DOCS_LANDING_PAGE }}"
