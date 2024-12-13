@@ -293,6 +293,9 @@ jobs:
           }
           DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
           echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
+          echo "Waiting for 45 seconds for pages build and deployment jobs finish"
+          echo "This is to avoid concurrency-related cancellations imposed by the step below."
+          sleep 45
         shell: bash
 
       - name: Create and publish docs
