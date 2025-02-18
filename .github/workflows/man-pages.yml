@@ -80,7 +80,7 @@ jobs:
       ##################### END boilerplate steps #####################
 
       - name: Generate man pages
-        run: roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))
+        run: roxygen2::roxygenize('.')
         shell: Rscript {0}
 
       - name: Set-up safe dir
