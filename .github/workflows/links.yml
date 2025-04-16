@@ -27,7 +27,7 @@ concurrency:
 jobs:
   links:
     name: Validate Links
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: >
       !contains(github.event.commits[0].message, '[skip links]')
     steps:
