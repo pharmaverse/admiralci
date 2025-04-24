@@ -226,9 +226,8 @@ jobs:
           Rscript - <<EOF
           if ("${{ inputs.insert-tweak-page-hook }}" == "true") {
             pkgdown_env <- asNamespace("pkgdown")
-            rlang::env_unlock(env = pkgdown_env)
             rlang::env_binding_unlock(env = pkgdown_env)
-            pkgdown_env\$call_hook <- function(hook_name, ...) {
+            .GlobalEnv\$.call_hook <- function(hook_name, ...) {
               hooks <- getHook(paste0("UserHook::admiralci::", hook_name))
               if (!is.list(hooks)) {
                 hooks <- list(hooks)
@@ -238,18 +237,17 @@ jobs:
               }) |>
                 invisible()
             }
-            environment(pkgdown_env\$call_hook) <- pkgdown_env
+            environment(.GlobalEnv\$.call_hook) <- pkgdown_env
             tweak_page <- body(pkgdown_env\$tweak_page)
             body(pkgdown_env\$tweak_page) <-
               as.call(
                 append(
                   as.list(tweak_page),
-                  expression(call_hook("tweak_page", html, name, pkg)),
+                  expression(.call_hook("tweak_page", html, name, pkg)),
                   after=length(tweak_page)
                 )
               )
             rlang::env_binding_lock(env = pkgdown_env)
-            rlang::env_lock(pkgdown_env)
             require(desc::desc_get("Package"), character.only = TRUE)
           }
           clean = FALSE
