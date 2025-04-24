@@ -94,17 +94,17 @@ jobs:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v5.4
+        uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
@@ -128,14 +128,12 @@ jobs:
             fi
             echo ${var}
           }
-          R_VERSION=$(normalize ${{ inputs.r-version }} 4.1)
           DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
-          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
           echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.staged.dependencies
@@ -151,6 +149,7 @@ jobs:
           renv-restore: false
           enable-check: false
           direction: upstream
+          git-ref: ${{ steps.branch-name.outputs.current_branch }}
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -227,9 +226,8 @@ jobs:
           Rscript - <<EOF
           if ("${{ inputs.insert-tweak-page-hook }}" == "true") {
             pkgdown_env <- asNamespace("pkgdown")
-            rlang::env_unlock(env = pkgdown_env)
             rlang::env_binding_unlock(env = pkgdown_env)
-            pkgdown_env\$call_hook <- function(hook_name, ...) {
+            .GlobalEnv\$.call_hook <- function(hook_name, ...) {
               hooks <- getHook(paste0("UserHook::admiralci::", hook_name))
               if (!is.list(hooks)) {
                 hooks <- list(hooks)
@@ -239,18 +237,17 @@ jobs:
               }) |>
                 invisible()
             }
-            environment(pkgdown_env\$call_hook) <- pkgdown_env
+            environment(.GlobalEnv\$.call_hook) <- pkgdown_env
             tweak_page <- body(pkgdown_env\$tweak_page)
             body(pkgdown_env\$tweak_page) <-
               as.call(
                 append(
                   as.list(tweak_page),
-                  expression(call_hook("tweak_page", html, name, pkg)),
+                  expression(.call_hook("tweak_page", html, name, pkg)),
                   after=length(tweak_page)
                 )
               )
             rlang::env_binding_lock(env = pkgdown_env)
-            rlang::env_lock(pkgdown_env)
             require(desc::desc_get("Package"), character.only = TRUE)
           }
           clean = FALSE
@@ -275,7 +272,7 @@ jobs:
         !contains(github.event.commits[0].message, '[skip docs]')
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         with:
           path: ${{ github.event.repository.name }}
           ref: "gh-pages"
@@ -294,10 +291,13 @@ jobs:
           }
           DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
           echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
+          echo "Waiting for 45 seconds for pages build and deployment jobs finish"
+          echo "This is to avoid concurrency-related cancellations imposed by the step below."
+          sleep 45
         shell: bash
 
       - name: Create and publish docs
-        uses: insightsengineering/r-pkgdown-multiversion@v2
+        uses: insightsengineering/r-pkgdown-multiversion@v3
         with:
           path: ${{ github.event.repository.name }}
           default-landing-page: "${{ steps.normalizer.outputs.DOCS_LANDING_PAGE }}"

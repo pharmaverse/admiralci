@@ -10,7 +10,7 @@ on:
           encountered in the CRAN status checks?
           This is a comma-separated string of GitHub usernames.
           If undefined or empty, no assignments are made.
-        default: ''
+        default: ""
         required: false
         type: string
       statuses:
@@ -19,14 +19,14 @@ on:
           statuses are reported on the check report.
           This is a comma-separated string of statuses.
           Allowed statuses are 'NOTE', 'WARN', and 'ERROR'
-        default: 'ERROR'
+        default: "ERROR"
         required: false
         type: string
       path:
         description: |
           Path to the R package root, if the package is not at the
           top level of the repository.
-        default: '.'
+        default: "."
         required: false
         type: string
   workflow_call:
@@ -37,7 +37,7 @@ on:
           encountered in the CRAN status checks?
           This is a comma-separated string of GitHub usernames.
           If undefined or empty, no assignments are made.
-        default: ''
+        default: ""
         required: false
         type: string
       statuses:
@@ -46,14 +46,14 @@ on:
           statuses are reported on the check report.
           This is a comma-separated string of statuses.
           Allowed statuses are 'NOTE', 'WARN', and 'ERROR'
-        default: 'ERROR'
+        default: "ERROR"
         required: false
         type: string
       path:
         description: |
           Path to the R package root, if the package is not at the
           top level of the repository.
-        default: '.'
+        default: "."
         required: false
         type: string
 

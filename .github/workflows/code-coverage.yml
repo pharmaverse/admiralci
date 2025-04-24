@@ -2,27 +2,27 @@ on:
   workflow_dispatch:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: choice
         options:
           - devel
           - latest
       skip-coverage-badges:
-        description: 'Skip code coverage badge creation'
+        description: "Skip code coverage badge creation"
         default: false
         required: false
         type: boolean
   workflow_call:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: string
       skip-coverage-badges:
-        description: 'Skip code coverage badge creation'
+        description: "Skip code coverage badge creation"
         default: false
         required: false
         type: boolean
@@ -49,35 +49,23 @@ jobs:
       ##################### BEGIN boilerplate steps #####################
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v5.4
+        uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Normalize inputs
-        id: normalizer
-        run: |
-          R_VERSION="${{ inputs.r-version }}"
-          if [ "$R_VERSION" == "" ]
-          then {
-            R_VERSION="4.1"
-          }
-          fi
-          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.staged.dependencies
@@ -93,6 +81,7 @@ jobs:
           renv-restore: false
           enable-check: false
           direction: upstream
+          git-ref: ${{ steps.branch-name.outputs.current_branch }}
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -162,7 +151,7 @@ jobs:
           hide_complexity: true
           indicators: true
           output: both
-          thresholds: '60 80'
+          thresholds: "60 80"
 
       - name: Upload report for review
         if: steps.check_coverage_reports.outputs.files_exists == 'true' && github.event_name == 'pull_request'
@@ -183,13 +172,13 @@ jobs:
   badge:
     name: Generate badge for coverage
     needs: [coverage]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: >
       inputs.skip-coverage-badges != 'true' ||
         !contains(github.event.commits[0].message, '[skip coverage]')
     steps:
       - name: Checkout the badges branch in repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         with:
           ref: badges
           path: badges
@@ -199,7 +188,7 @@ jobs:
         uses: emibcn/badge-action@v1
         id: badge
         with:
-          label: 'Test Coverage'
+          label: "Test Coverage"
           status: "${{ needs.coverage.outputs.coverage-percent }}%"
           color: ${{
             needs.coverage.outputs.coverage-percent > 90 && 'green'              ||

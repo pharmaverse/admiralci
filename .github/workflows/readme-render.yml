@@ -4,31 +4,30 @@ on:
   workflow_dispatch:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: choice
         options:
           - devel
           - latest
       skip-md-formatting:
-        description: 'Skip markdown auto-formatting'
+        description: "Skip markdown auto-formatting"
         default: false
         required: false
         type: boolean
   workflow_call:
     inputs:
       r-version:
-        description: 'The version of R to use'
-        default: 'release'
+        description: "The version of R to use"
+        default: "release"
         required: false
         type: string
       skip-md-formatting:
-        description: 'Skip markdown auto-formatting'
+        description: "Skip markdown auto-formatting"
         default: false
         required: false
         type: boolean
-
 
 jobs:
   render:
@@ -45,32 +44,20 @@ jobs:
         uses: tj-actions/branch-names@v8
 
       - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name == 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.2.2
         if: github.event_name != 'pull_request'
         with:
           ref: ${{ steps.branch-name.outputs.head_ref_branch }}
 
-      - name: Normalize inputs
-        id: normalizer
-        run: |
-          R_VERSION="${{ inputs.r-version }}"
-          if [ "$R_VERSION" == "" ]
-          then {
-            R_VERSION="4.1"
-          }
-          fi
-          echo "R_VERSION=$R_VERSION" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.staged.dependencies
@@ -83,6 +70,7 @@ jobs:
           renv-restore: false
           enable-check: false
           direction: upstream
+          git-ref: ${{ steps.branch-name.outputs.current_branch }}
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
