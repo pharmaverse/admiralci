@@ -81,7 +81,7 @@ jobs:
           renv-restore: false
           enable-check: false
           direction: upstream
-          git-ref: ${{ steps.branch-name.outputs.current_branch }}
+          git-ref: ${{ steps.branch-name.outputs.default_branch }}
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
