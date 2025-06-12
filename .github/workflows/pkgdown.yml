@@ -297,7 +297,7 @@ jobs:
         shell: bash
 
       - name: Create and publish docs
-        uses: insightsengineering/r-pkgdown-multiversion@v3
+        uses: insightsengineering/r-pkgdown-multiversion@feat/logic-shuffle
         with:
           path: ${{ github.event.repository.name }}
           default-landing-page: "${{ steps.normalizer.outputs.DOCS_LANDING_PAGE }}"
