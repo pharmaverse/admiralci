@@ -7,8 +7,7 @@ on:
         required: false
         type: choice
         options:
-          - devel
-          - latest
+          - release
   workflow_call:
     inputs:
       r-version:
