@@ -3,8 +3,8 @@ name: Deploy Docker Image
 
 on:
   workflow_dispatch: # give possibility to run it manually
-  schedule:
-    - cron: "0 0 * * Wed,Sun" # Run every day at midnight UTC
+  #schedule:
+  #  - cron: "0 0 * * Wed,Sun" # Run every day at midnight UTC
 
 permissions: write-all
 env:

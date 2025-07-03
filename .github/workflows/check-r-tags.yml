@@ -3,14 +3,14 @@ name: Check R tags
 
 on:
   workflow_dispatch: # give possibility to run it manually
-  schedule:
-    - cron: "0 0 * * Sun" # Run every sunday at midnight UTC
+  #schedule:
+  #  - cron: "0 0 * * Sun" # Run every sunday at midnight UTC
 
 permissions: write-all
 env:
   REGISTRY: ghcr.io
   R_REPOS: "https://cran.r-project.org"
-  OLD_RELEASE: "4.3"
+  OLD_RELEASE: "4.4"
 
 concurrency:
   group: check-r-tags-${{ github.event.pull_request.number || github.ref }}
