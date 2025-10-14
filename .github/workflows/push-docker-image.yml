@@ -10,7 +10,7 @@ permissions: write-all
 env:
   REGISTRY: ghcr.io
   R_REPOS: "https://cran.r-project.org"
-  OLD_RELEASE: "4.4"
+  OLD_RELEASE: "4.5"
 
 concurrency:
   group: deploy-docker-image-${{ github.event.pull_request.number || github.ref }}
