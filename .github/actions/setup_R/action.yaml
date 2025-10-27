@@ -1,0 +1,34 @@
+name: 'Set R environment for admiral CI/CD'
+
+runs:
+  using: "composite"
+
+steps:
+  - uses: actions/checkout@v4
+  - uses: r-lib/actions/setup-r@v2
+  - uses: r-lib/actions/setup-r-dependencies@v2
+    with:
+      extra-packages: any::roxygen2, any::yaml, any::remotes
+  - name: Install Development Versions of Dependencies
+    if: |
+      !(contains(github.event.commits[0].message, '[skip vbump]') ||
+        contains(github.event.head_commit.message, '[skip vbump]') ||
+        github.ref == 'refs/heads/patch'
+       )
+    run: |
+      if (file.exists("staged_dependencies.yaml")) {
+        dev_dependencies <- yaml::read_yaml("staged_dependencies.yaml")$upstream_repos |>
+          sapply(function(x) x$repo)
+        if (length(dev_dependencies) > 0) {
+          cat("The development versions for the following packages will be installed:\n")
+          cat(paste(dev_dependencies, collapse = ", "), "\n")
+          for (i in seq_along(dev_dependencies)) {
+            remotes::install_github(dev_dependencies[[i]], ref = "main")
+          }
+        } else {
+          cat("No upstream dependencies found.\n")
+        }
+      } else {
+        cat("No dependency file (staged_dependencies.yaml) found.\n")
+      }
+    shell: Rscript {0}
