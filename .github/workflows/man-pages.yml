@@ -30,6 +30,7 @@ jobs:
       !contains(github.event.commits[0].message, '[skip lint]')
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
       - uses: .github/actions/setup_R
 
       - name: Generate man pages
