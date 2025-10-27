@@ -63,7 +63,7 @@ jobs:
 
       - name: Generate man pages
         run: |
-          cat("Using roxygen2 version ", packageVersion("roxygen2"))
+          cat("Using roxygen2 version", packageVersion("roxygen2") |> as.character())
           roxygen2::roxygenize('.')
         shell: Rscript {0}
 
