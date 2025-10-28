@@ -68,7 +68,7 @@ jobs:
               )
               stop(err_msg, call. = FALSE)
             } else {
-              cli::cli_alert_success("All templates has been run successfully.")
+              cli::cli_alert_success("All templates have been run successfully.")
             }
           }
         shell: Rscript {0}
