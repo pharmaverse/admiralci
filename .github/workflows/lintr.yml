@@ -75,6 +75,7 @@ jobs:
 
       - name: Lint
         run: |
+          # Lint Changed Files
           exclusions_list <- NULL
           if (!identical("${{ inputs.lint-all-files }}", "true")) {
             changed_files <- jsonlite::fromJSON('${{ steps.files.outputs.added_modified }}')
@@ -91,11 +92,12 @@ jobs:
 
       - name: Error if lints are detected
         run: |
+          # Error if lints are Detected
+          # attach lintr to ensure the lints are formatted nicely
+          library(lintr)
           lints <- readRDS("lints.rds")
           if (length(lints) > 0L) {
-            for(i in seq_along(lints)) {
-              print(lints[[i]])
-            }
+            print(lints)
             stop("Lints detected. Please review and adjust code according to the comments provided.", call. = FALSE)
           }
         shell: Rscript {0}
