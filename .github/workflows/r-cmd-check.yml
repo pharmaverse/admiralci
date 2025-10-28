@@ -49,6 +49,6 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          error-on: ${{ inputs.error-on}}
+          error-on: '"note"'
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
