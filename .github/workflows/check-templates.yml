@@ -33,7 +33,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: pharmaverse/admiralci/.github/actions/setup_R@206_fix_cicd
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
 
       - name: Install package
         run: |

@@ -41,7 +41,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: pharmaverse/admiralci/.github/actions/setup_R@206_fix_cicd
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}

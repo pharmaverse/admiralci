@@ -43,7 +43,7 @@ jobs:
     if: >
       !contains(github.event.commits[0].message, '[skip spellcheck]')
     steps:
-      - uses: pharmaverse/admiralci/.github/actions/setup_R@206_fix_cicd
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
 
       - name: Run Spellcheck
         uses: insightsengineering/r-spellcheck-action@v3
