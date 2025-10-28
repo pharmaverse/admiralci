@@ -30,8 +30,6 @@ jobs:
     if: >
       !contains(github.event.commits[0].message, '[skip check_templates]')
     runs-on: ubuntu-latest
-    container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
