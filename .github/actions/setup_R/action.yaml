@@ -41,7 +41,7 @@ runs:
           if (length(dev_dependencies) > 0) {
             # add names for having bullets in message
             names(dev_dependencies) <- rep("*", length(dev_dependencies))
-            cli_bullets(c(
+            cli::cli_bullets(c(
               i = "The development versions for the following packages will be installed:",
               dev_dependencies
             ))
@@ -49,9 +49,9 @@ runs:
               remotes::install_github(dev_dependencies[[i]], ref = "main")
             }
           } else {
-            cat("No upstream dependencies found.\n")
+            cli::cli_alert_info("No upstream dependencies found in {.file staged_dependencies.yaml}.\n")
           }
         } else {
-          cat("No dependency file (staged_dependencies.yaml) found.\n")
+          cli::cli_alert_warning("No dependency file ({.file staged_dependencies.yaml}) found.\n")
         }
       shell: Rscript {0}
