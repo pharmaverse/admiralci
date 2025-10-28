@@ -32,6 +32,8 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: pharmaverse/admiralci/.github/actions/setup_R@206_fix_cicd
+        with:
+          extra-packages: any::roxygen2
 
       - name: Generate man pages
         run: |
