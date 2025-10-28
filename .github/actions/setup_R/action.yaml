@@ -42,7 +42,7 @@ runs:
             # add names for having bullets in message
             names(dev_dependencies) <- rep("*", length(dev_dependencies))
             cli::cli_bullets(c(
-              i = "The development versions for the following packages will be installed:",
+              i = "The development versions of the following packages will be installed:",
               dev_dependencies
             ))
             for (i in seq_along(dev_dependencies)) {
