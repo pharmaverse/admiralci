@@ -28,47 +28,12 @@ jobs:
   style:
     name: Code Style
     runs-on: ubuntu-latest
-    container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     if: >
       !contains(github.event.commits[0].message, '[skip style]')
     steps:
-      ##################### BEGIN boilerplate steps #####################
-      - name: Get branch names
-        id: branch-name
-        uses: tj-actions/branch-names@v8
-
-      - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v4.2.2
-        if: github.event_name == 'pull_request'
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@206_fix_cicd
         with:
-          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
-        if: github.event_name != 'pull_request'
-        with:
-          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.staged.dependencies
-          key: staged-deps
-
-      - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v1
-        with:
-          run-system-dependencies: false
-          renv-restore: false
-          enable-check: false
-          direction: upstream
-          git-ref: ${{ steps.branch-name.outputs.current_branch }}
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      ##################### END boilerplate steps #####################
+          extra-packages: any::styler
 
       - name: Get changed files
         id: changed-files
@@ -81,6 +46,7 @@ jobs:
 
       - name: Run styler
         run: |
+          # Run styler
           changed_files <- unlist(strsplit(
             "${{ steps.changed-files.outputs.all }}",
             split=","
