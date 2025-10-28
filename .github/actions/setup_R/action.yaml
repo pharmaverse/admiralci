@@ -39,8 +39,12 @@ runs:
           dev_dependencies <- yaml::read_yaml("staged_dependencies.yaml")$upstream_repos |>
             sapply(function(x) x$repo)
           if (length(dev_dependencies) > 0) {
-            cat("The development versions for the following packages will be installed:\n")
-            cat(paste(dev_dependencies, collapse = ", "), "\n")
+            # add names for having bullets in message
+            names(dev_dependencies) <- rep("*", length(dev_dependencies))
+            cli_bullets(c(
+              i = "The development versions for the following packages will be installed:",
+              dev_dependencies
+            ))
             for (i in seq_along(dev_dependencies)) {
               remotes::install_github(dev_dependencies[[i]], ref = "main")
             }
