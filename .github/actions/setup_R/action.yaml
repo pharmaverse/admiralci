@@ -3,6 +3,13 @@ description: 'Sets up an R environment using the r-lib actions.
   Additionally it installs the development versions of upstream dependencies as
   defined in staged_dependencies.yaml.'
 inputs:
+  r-version:
+    description: 'R version to use'
+    required: true
+    default: 'release'
+  http-user-agent:
+    required: true
+    default: 'default'
   extra-packages:
     description: 'extra packages to install (in addition to the dependencies of
       the package and the remotes and yaml package)\n
@@ -14,6 +21,9 @@ runs:
   steps:
     - uses: actions/checkout@v4
     - uses: r-lib/actions/setup-r@v2
+      with:
+        r-version: ${{ inputs.r-version}}
+        http-user-agent: ${{ inputs.http-user-agent }}
     - uses: r-lib/actions/setup-r-dependencies@v2
       with:
         extra-packages: any::remotes, any::yaml, ${{ inputs.extra-packages}}

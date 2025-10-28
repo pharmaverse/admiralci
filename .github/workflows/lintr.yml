@@ -95,6 +95,7 @@ jobs:
           # Error if lints are Detected
           # attach lintr to ensure the lints are formatted nicely
           library(lintr)
+          options(warn = 1)
           lints <- readRDS("lints.rds")
           if (length(lints) > 0L) {
             print(lints)
