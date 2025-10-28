@@ -93,7 +93,9 @@ jobs:
         run: |
           lints <- readRDS("lints.rds")
           if (length(lints) > 0L) {
-            print(lints)
+            for(i in seq_along(lints)) {
+              print(lints[[i]])
+            }
             stop("Lints detected. Please review and adjust code according to the comments provided.", call. = FALSE)
           }
         shell: Rscript {0}

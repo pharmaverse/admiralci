@@ -30,6 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       !contains(github.event.commits[0].message, '[skip style]')
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: pharmaverse/admiralci/.github/actions/setup_R@206_fix_cicd
         with:
