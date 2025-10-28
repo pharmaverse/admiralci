@@ -64,7 +64,7 @@ jobs:
     steps:
       - uses: pharmaverse/admiralci/.github/actions/setup_R@206_fix_cicd
         with:
-          extra-packages: any::lintr
+          extra-packages: any::lintr, any::cyclocomp
 
       - name: Changed files
         id: files
