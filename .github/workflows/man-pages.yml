@@ -23,11 +23,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
+  man:
     name: Roxygen
     runs-on: ubuntu-latest
     if: >
-      !contains(github.event.commits[0].message, '[skip lint]')
+      !contains(github.event.commits[0].message, '[skip man]')
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -35,8 +35,9 @@ jobs:
         with:
           extra-packages: any::roxygen2
 
-      - name: Generate man pages
+      - name: Generate man Pages
         run: |
+          # Generate man Pages
           cat("Using roxygen2 version", packageVersion("roxygen2") |> as.character(), "\n")
           roxygen2::roxygenize('.')
         shell: Rscript {0}
