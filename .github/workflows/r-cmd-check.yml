@@ -5,7 +5,7 @@ on:
       error-on:
         description: Input for the 'error_on' parameter in rcmdcheck::rcmdcheck()
         required: false
-        default: '"note"'
+        default: note
         type: string
   push:
     branches:
@@ -49,6 +49,6 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          error-on: '"note"'
+          error-on: '"${{ inputs.error-on }}"'
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
