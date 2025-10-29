@@ -7,14 +7,6 @@ on:
         required: false
         default: note
         type: string
-  push:
-    branches:
-      - main
-      - devel
-  pull_request:
-    branches:
-      - main
-      - devel
 
 name: R CMD Check
 
