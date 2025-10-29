@@ -37,8 +37,6 @@ jobs:
   coverage:
     name: Test Coverage
     runs-on: ubuntu-latest
-    container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     if: >
       !contains(github.event.commits[0].message, '[skip coverage]')
     env:
@@ -46,52 +44,9 @@ jobs:
     outputs:
       coverage-percent: ${{ steps.set-coverage-percentage.outputs.coverage-percentage }}
     steps:
-      ##################### BEGIN boilerplate steps #####################
-      - name: Get branch names
-        id: branch-name
-        uses: tj-actions/branch-names@v8
-
-      - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v4.2.2
-        if: github.event_name == 'pull_request'
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
         with:
-          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
-        if: github.event_name != 'pull_request'
-        with:
-          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.staged.dependencies
-          key: staged-deps
-
-      - name: Setup Pandoc
-        uses: r-lib/actions/setup-pandoc@v2
-
-      - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v1
-        with:
-          run-system-dependencies: false
-          renv-restore: false
-          enable-check: false
-          direction: upstream
-          git-ref: ${{ steps.branch-name.outputs.current_branch }}
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install dependencies from DESCRIPTION
-        run: |
-          remotes::install_local(force = TRUE, dependencies = TRUE)
-        shell: Rscript {0}
-        env:
-          R_REMOTES_STANDALONE: "true"
-      ##################### END boilerplate steps #####################
+          extra-packages: any::covr
 
       - name: Run coverage 👟
         run: |
