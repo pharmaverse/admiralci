@@ -44,7 +44,7 @@ jobs:
         if: ${{ inputs.install_package }}
         run: |
           # Install package
-          install.packages("devtools"")
+          install.packages("devtools")
           devtools::install()
         shell: Rscript {0}
 
