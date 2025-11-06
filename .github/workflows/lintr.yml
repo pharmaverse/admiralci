@@ -62,7 +62,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@210_install_package
         with:
           extra-packages: any::lintr, any::cyclocomp
           install-package: ${{ inputs.install-package }}
