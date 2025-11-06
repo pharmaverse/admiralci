@@ -18,7 +18,7 @@ inputs:
     default: ''
   install-package:
     description: Should the package be installed?
-    required: true
+    required: false
     default: false
     type: boolean
 
