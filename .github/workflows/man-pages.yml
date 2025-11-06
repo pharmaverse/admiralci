@@ -36,7 +36,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: pharmaverse/admiralci/.github/actions/setup_R@210_install_package
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
         with:
           extra-packages: any::roxygen2
           install_package: ${{ inputs.install_package }}
