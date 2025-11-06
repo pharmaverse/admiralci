@@ -16,6 +16,12 @@ inputs:
       A comma separated list is expected.'
     required: true
     default: ''
+  install-package:
+    description: Should the package be installed?
+    required: true
+    default: false
+    type: boolean
+
 runs:
   using: "composite"
   steps:
@@ -55,3 +61,11 @@ runs:
           cli::cli_alert_warning("No dependency file ({.file staged_dependencies.yaml}) found.\n")
         }
       shell: Rscript {0}
+    - name: Install package
+      if: ${{ inputs.install-package }}
+      run: |
+        # Install package
+        install.packages("devtools")
+        devtools::install()
+      shell: Rscript {0}
+
