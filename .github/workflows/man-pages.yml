@@ -15,9 +15,9 @@ on:
         default: "release"
         required: false
         type: string
-      install_package:
-        description: Should the package be installed
-        required: true
+      install-package:
+        description: "Should the package be installed?"
+        required: false
         default: false
         type: boolean
 
@@ -39,14 +39,7 @@ jobs:
       - uses: pharmaverse/admiralci/.github/actions/setup_R@main
         with:
           extra-packages: any::roxygen2
-
-      - name: Install package
-        if: ${{ inputs.install_package }}
-        run: |
-          # Install package
-          install.packages("devtools")
-          devtools::install()
-        shell: Rscript {0}
+          install_package: ${{ inputs.install_package }}
 
       - name: Generate man Pages
         run: |
