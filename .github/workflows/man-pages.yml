@@ -39,7 +39,7 @@ jobs:
       - uses: pharmaverse/admiralci/.github/actions/setup_R@main
         with:
           extra-packages: any::roxygen2
-          install_package: ${{ inputs.install_package }}
+          install-package: ${{ inputs.install-package }}
 
       - name: Generate man Pages
         run: |
