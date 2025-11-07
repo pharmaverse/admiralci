@@ -31,15 +31,15 @@ runs:
         r-version: ${{ inputs.r-version}}
         http-user-agent: ${{ inputs.http-user-agent }}
     - name: Debug
-      run: echo "install-package ${{ input.install-package }}"
+      run: echo "install-package ${{ inputs.install-package }}"
     - name: install_it
-      if: ${{ input.install-package}}
+      if: ${{ inputs.install-package}}
       run: echo "Install it"
     - name: no_install
-      if: ${{ input.install-pacakge == 'false'}}
+      if: ${{ inputs.install-pacakge == 'false'}}
       run: echo "Don't install it"
     - name: install_equal
-      if: ${{ input.install-package == 'true'}}
+      if: ${{ inputs.install-package == 'true'}}
       run: echo "Install it with ="
 
     - uses: r-lib/actions/setup-r-dependencies@v2
