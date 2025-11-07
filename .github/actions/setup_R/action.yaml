@@ -31,7 +31,7 @@ runs:
         r-version: ${{ inputs.r-version}}
         http-user-agent: ${{ inputs.http-user-agent }}
     - name: Debug
-      run: echo "install-package: ${{ input.install-package }}"
+      run: echo "install-package ${{ input.install-package }}"
     - name: install_it
       if: ${{ input.install-package}}
       run: echo "Install it"
