@@ -44,7 +44,7 @@ jobs:
     outputs:
       coverage-percent: ${{ steps.set-coverage-percentage.outputs.coverage-percentage }}
     steps:
-      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@213_no_install
         with:
           extra-packages: any::covr
 
