@@ -78,7 +78,7 @@ runs:
         }
       shell: Rscript {0}
     - name: Install package
-      if: ${{ inputs.install-package }}
+      if: ${{ inputs.install-package == true}}
       run: |
         # Install package
         install.packages("devtools")
