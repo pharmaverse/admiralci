@@ -30,22 +30,6 @@ runs:
       with:
         r-version: ${{ inputs.r-version}}
         http-user-agent: ${{ inputs.http-user-agent }}
-    - name: Debug
-      shell: bash
-      run: echo "install-package ${{ inputs.install-package }}"
-    - name: install_it
-      if: ${{ inputs.install-package}}
-      shell: bash
-      run: echo "Install it"
-    - name: no_install
-      if: ${{ inputs.install-package == 'false'}}
-      shell: bash
-      run: echo "Don't install it"
-    - name: install_equal
-      if: ${{ inputs.install-package == 'true'}}
-      shell: bash
-      run: echo "Install it with ="
-
     - uses: r-lib/actions/setup-r-dependencies@v2
       with:
         extra-packages: any::remotes, any::yaml, ${{ inputs.extra-packages}}
