@@ -38,11 +38,11 @@ runs:
       shell: bash
       run: echo "Install it"
     - name: no_install
-      if: ${{ inputs.install-pacakge == false}}
+      if: ${{ inputs.install-package == 'false'}}
       shell: bash
       run: echo "Don't install it"
     - name: install_equal
-      if: ${{ inputs.install-package == true}}
+      if: ${{ inputs.install-package == 'true'}}
       shell: bash
       run: echo "Install it with ="
 
@@ -78,7 +78,7 @@ runs:
         }
       shell: Rscript {0}
     - name: Install package
-      if: ${{ inputs.install-package == true}}
+      if: ${{ inputs.install-package == 'true'}}
       run: |
         # Install package
         install.packages("devtools")
