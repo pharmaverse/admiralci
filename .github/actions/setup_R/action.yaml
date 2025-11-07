@@ -81,8 +81,9 @@ runs:
       if: ${{ inputs.install-package == 'true'}}
       run: |
         # Install package
-        install.packages(c('systemfonts', 'textshaping'))
-        install.packages("devtools")
-        devtools::install()
+        if (!requireNamespace("pak", quietly = TRUE)) {
+          install.packages("pak")
+        }
+        pak::pkg_install(".")
       shell: Rscript {0}
 
