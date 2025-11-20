@@ -85,7 +85,7 @@ jobs:
 
       - name: Check whether coverage reports exists
         id: check_coverage_reports
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v3
         with:
           files: "coverage.xml, coverage.txt, coverage-report.html"
 
