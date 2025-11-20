@@ -129,8 +129,9 @@ jobs:
     needs: [coverage]
     runs-on: ubuntu-latest
     if: >
-      inputs.skip-coverage-badges != 'true' ||
-        !contains(github.event.commits[0].message, '[skip coverage]')
+      inputs.skip-coverage-badges != 'true' &&
+        !contains(github.event.commits[0].message, '[skip coverage]') &&
+        github.ref == 'refs/heads/main'
     steps:
       - name: Checkout the badges branch in repo
         uses: actions/checkout@v4.2.2
