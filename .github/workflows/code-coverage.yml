@@ -85,7 +85,7 @@ jobs:
 
       - name: Check whether coverage reports exists
         id: check_coverage_reports
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v3
         with:
           files: "coverage.xml, coverage.txt, coverage-report.html"
 
@@ -129,8 +129,9 @@ jobs:
     needs: [coverage]
     runs-on: ubuntu-latest
     if: >
-      inputs.skip-coverage-badges != 'true' ||
-        !contains(github.event.commits[0].message, '[skip coverage]')
+      inputs.skip-coverage-badges != 'true' &&
+        !contains(github.event.commits[0].message, '[skip coverage]') &&
+        github.ref == 'refs/heads/main'
     steps:
       - name: Checkout the badges branch in repo
         uses: actions/checkout@v4.2.2
@@ -140,7 +141,7 @@ jobs:
 
       # Use the output from the `coverage` step
       - name: Generate the badge SVG image
-        uses: emibcn/badge-action@v1
+        uses: emibcn/badge-action@v2
         id: badge
         with:
           label: "Test Coverage"
