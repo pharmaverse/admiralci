@@ -93,7 +93,7 @@ jobs:
     strategy:
       fail-fast: false # if one of the job "deploy-image" fails, the other parallel jobs will just continue
       matrix:
-        tags: ["devel", "latest", "${{ needs.get_old_release.outputs.oldrel }}"]
+        tags: ["devel", "release", "oldrel"]
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -102,7 +102,7 @@ jobs:
         run: |
           installed_packages <- as.data.frame(installed.packages())
           r_version <- "${{ matrix.tags }}"
-          if (r_version == "${{ needs.get_old_release.outputs.oldrel }}"){
+          if (r_version == "oldrel"){
             r_version <- "oldrelease"
           }
           content <- sprintf("r_version=%s\n", r_version)
