@@ -40,6 +40,11 @@ on:
         default: "release"
         required: false
         type: string
+      install-package:
+        description: "Should the package be installed?"
+        required: false
+        default: true
+        type: boolean
       skip-multiversion-docs:
         description: "Skip creation of multi-version docs"
         default: false
@@ -91,30 +96,10 @@ jobs:
     if: >
       !contains(github.event.commits[0].message, '[skip docs]')
     steps:
-      ##################### BEGIN boilerplate steps #####################
-      - name: Get branch names
-        id: branch-name
-        uses: tj-actions/branch-names@v8
-
-      - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v4.2.2
-        if: github.event_name == 'pull_request'
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
         with:
-          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
-        if: github.event_name != 'pull_request'
-        with:
-          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-          # https://github.com/actions/runner/issues/2033
-
-      - name: Set-up safe dir
-        run: |
-          echo "${PWD}"
-          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
-        shell: bash
+          extra-packages: any::pkgdown
+          install-package: ${{ inputs.install-package }}
 
       - name: Normalize inputs
         id: normalizer
@@ -131,38 +116,6 @@ jobs:
           DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
           echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
         shell: bash
-
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.staged.dependencies
-          key: staged-deps
-
-      - name: Setup pandoc
-        uses: r-lib/actions/setup-pandoc@v2
-
-      - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v2
-        with:
-          run-system-dependencies: false
-          renv-restore: false
-          enable-check: false
-          direction: upstream
-          git-ref: main
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install dependencies from DESCRIPTION
-        run: |
-          remotes::install_local(force = TRUE, dependencies = TRUE)
-        shell: Rscript {0}
-
-      ##################### END boilerplate steps #####################
-
-      - name: Install package
-        run: renv::install(".", dependencies = "no-deps")
-        shell: Rscript {0}
 
       - name: Add script to fix rdrr.io links for pharmaverse packages
         uses: "DamianReeves/write-file-action@v1.2"
