@@ -177,11 +177,11 @@ jobs:
             if [ "$GITHUB_EVENT_NAME" = "pull_request" ]
             then {
               BRANCH_NAME="${{ steps.branch-name.outputs.head_ref_branch }}"
+              echo "Determined branch name: ${BRANCH_NAME}"
             }
             else {
               BRANCH_NAME="${GITHUB_REF##*/}"
             }
-            echo "Determined branch name: ${BRANCH_NAME}"
             fi
             SUBDIR_OPTION="subdir = \"${BRANCH_NAME}\","
           }
