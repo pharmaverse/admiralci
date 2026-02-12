@@ -89,8 +89,6 @@ jobs:
   pkgdown:
     name: pkgdown
     runs-on: ubuntu-latest
-    container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     if: >
@@ -142,7 +140,7 @@ jobs:
                 package_name <- matches[2]
                 function_name <- matches[3]
 
-                if (!(grepl("^admiral", package_name) || package_name %in% c("matatools", "matacore"))) {
+                if (!(grepl("^admiral", package_name))) {
                     return(x)
                 }
 
