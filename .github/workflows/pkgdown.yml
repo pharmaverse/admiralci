@@ -220,7 +220,17 @@ jobs:
           SUBDIR_OPTION=""
           if [ "${{ inputs.skip-multiversion-docs }}" != "true" ]
           then {
-            SUBDIR_OPTION="subdir = \"${GITHUB_REF##*/}\","
+            # For pull_request events GITHUB_REF is like "refs/pull/NN/merge"
+            # ${GITHUB_REF##*/} would yield "merge" — not the PR branch name.
+            if [ "$GITHUB_EVENT_NAME" = "pull_request" ]
+            then {
+              BRANCH_NAME="${{ steps.branch-name.outputs.head_ref_branch }}"
+            }
+            else {
+              BRANCH_NAME="${GITHUB_REF##*/}"
+            }
+            fi
+            SUBDIR_OPTION="subdir = \"${BRANCH_NAME}\","
           }
           fi
           Rscript - <<EOF
