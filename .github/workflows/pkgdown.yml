@@ -173,6 +173,7 @@ jobs:
           then {
             # For pull_request events GITHUB_REF is like "refs/pull/NN/merge"
             # ${GITHUB_REF##*/} would yield "merge" — not the PR branch name.
+            echo "Determining branch name for event: ${GITHUB_EVENT_NAME}"
             if [ "$GITHUB_EVENT_NAME" = "pull_request" ]
             then {
               BRANCH_NAME="${{ steps.branch-name.outputs.head_ref_branch }}"
@@ -180,6 +181,7 @@ jobs:
             else {
               BRANCH_NAME="${GITHUB_REF##*/}"
             }
+            echo "Determined branch name: ${BRANCH_NAME}"
             fi
             SUBDIR_OPTION="subdir = \"${BRANCH_NAME}\","
           }
