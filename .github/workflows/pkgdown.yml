@@ -184,6 +184,10 @@ jobs:
             SUBDIR_OPTION="subdir = \"${BRANCH_NAME}\","
           }
           fi
+          
+          # Display the resolved SUBDIR_OPTION so it's visible in the Actions log
+          echo "SUBDIR_OPTION=${SUBDIR_OPTION}"
+          
           Rscript - <<EOF
           if ("${{ inputs.insert-tweak-page-hook }}" == "true") {
             pkgdown_env <- asNamespace("pkgdown")
