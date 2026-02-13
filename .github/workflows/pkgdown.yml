@@ -9,6 +9,11 @@ on:
         options:
           - devel
           - latest
+      install-package:
+        description: "Should the package be installed?"
+        required: false
+        default: true
+        type: boolean
       skip-multiversion-docs:
         description: "Skip creation of multi-version docs"
         default: false
