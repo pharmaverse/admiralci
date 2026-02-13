@@ -174,7 +174,11 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           SUBDIR_OPTION=""
-          if [ "${{ inputs.skip-multiversion-docs }}" != "true" ]
+          # Set BRANCH_NAME and SUBDIR_OPTION when multiversion docs are enabled,
+          # and also ensure they are set for pull_request events. If SUBDIR_OPTION
+          # is not set, the website at the root of the gh-pages branch will be
+          # overwritten, which is not desirable for pull_request events.
+          if [ "${{ inputs.skip-multiversion-docs }}" != "true" ] || [ "$GITHUB_EVENT_NAME" = "pull_request" ]
           then {
             # For pull_request events GITHUB_REF is like "refs/pull/NN/merge"
             # ${GITHUB_REF##*/} would yield "merge" — not the PR branch name.
