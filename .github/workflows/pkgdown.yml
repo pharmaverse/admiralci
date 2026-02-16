@@ -228,11 +228,11 @@ jobs:
           if ("${{ inputs.skip-multiversion-docs }}" == "true"){
             clean = TRUE
           }
-          pkgdown::deploy_to_branch(
-            new_process = FALSE,
-            ${SUBDIR_OPTION}
-            clean = clean
-          )
+          # pkgdown::deploy_to_branch(
+          #  new_process = FALSE,
+          #  ${SUBDIR_OPTION}
+          #  clean = clean
+          #)
           EOF
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -243,7 +243,7 @@ jobs:
         with:
           header: "Documenation Website"
           message: |
-            The documentation is availables at [https://${{ github.repository_owner }}.github.io/${{ github.repository}}/${{ github.head_ref }}]
+            The documentation is availables at [https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.head_ref }}].
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
