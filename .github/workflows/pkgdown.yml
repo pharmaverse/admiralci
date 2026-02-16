@@ -241,9 +241,9 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: "Documenation Website"
+          header: "Documentation Website"
           message: |
-            The documentation is availables at [https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.head_ref }}].
+            The documentation is availables at https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.head_ref }}.
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
