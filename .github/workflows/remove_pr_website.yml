@@ -51,7 +51,7 @@ jobs:
               git config user.name "github-actions[bot]"
               git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
               git commit -m "ci: remove gh-pages subfolder for merged branch ${BRANCH}"
-              # git push origin gh-pages
+              git push origin gh-pages
             else
               echo "No changes to commit after removal."
             fi
