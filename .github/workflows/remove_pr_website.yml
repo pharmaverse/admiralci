@@ -1,15 +1,18 @@
 name: Remove PR website
 
 on:
-  pull_request:
-    types: [closed]
+  workflow_call:
+    secrets:
+      GITHUB_PAT:
+        required: false
+        description: GitHub API access token, which might be needed for downstream ops or rendering.
 
 permissions:
   contents: write
 
 jobs:
   delete-subfolder:
-    if: github.event.pull_request.merged == true
+    if: github.event.action == 'closed'
     runs-on: ubuntu-latest
     env:
       BRANCH: ${{ github.event.pull_request.head.ref }}
@@ -36,6 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           SUBDIR="${BRANCH}"
+          echo "SUBDIR: ${SUBDIR}"
           if [ -z "$SUBDIR" ]; then
             echo "Branch name empty. Nothing to do."
             exit 0
