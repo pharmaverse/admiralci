@@ -9,6 +9,11 @@ on:
         options:
           - devel
           - latest
+      install-package:
+        description: "Should the package be installed?"
+        required: false
+        default: true
+        type: boolean
       skip-multiversion-docs:
         description: "Skip creation of multi-version docs"
         default: false
@@ -40,6 +45,11 @@ on:
         default: "release"
         required: false
         type: string
+      install-package:
+        description: "Should the package be installed?"
+        required: false
+        default: true
+        type: boolean
       skip-multiversion-docs:
         description: "Skip creation of multi-version docs"
         default: false
@@ -84,37 +94,15 @@ jobs:
   pkgdown:
     name: pkgdown
     runs-on: ubuntu-latest
-    container:
-      image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     if: >
       !contains(github.event.commits[0].message, '[skip docs]')
     steps:
-      ##################### BEGIN boilerplate steps #####################
-      - name: Get branch names
-        id: branch-name
-        uses: tj-actions/branch-names@v8
-
-      - name: Checkout repo (PR) 🛎
-        uses: actions/checkout@v4.2.2
-        if: github.event_name == 'pull_request'
+      - uses: pharmaverse/admiralci/.github/actions/setup_R@main
         with:
-          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
-        if: github.event_name != 'pull_request'
-        with:
-          ref: ${{ steps.branch-name.outputs.head_ref_branch }}
-          # https://github.com/actions/runner/issues/2033
-
-      - name: Set-up safe dir
-        run: |
-          echo "${PWD}"
-          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
-        shell: bash
+          extra-packages: any::pkgdown
+          install-package: ${{ inputs.install-package }}
 
       - name: Normalize inputs
         id: normalizer
@@ -131,38 +119,6 @@ jobs:
           DOCS_LANDING_PAGE=$(normalize ${{ inputs.multiversion-docs-landing-page }} main)
           echo "DOCS_LANDING_PAGE=$DOCS_LANDING_PAGE" >> $GITHUB_OUTPUT
         shell: bash
-
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.staged.dependencies
-          key: staged-deps
-
-      - name: Setup pandoc
-        uses: r-lib/actions/setup-pandoc@v2
-
-      - name: Run Staged dependencies
-        uses: insightsengineering/staged-dependencies-action@v2
-        with:
-          run-system-dependencies: false
-          renv-restore: false
-          enable-check: false
-          direction: upstream
-          git-ref: main
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install dependencies from DESCRIPTION
-        run: |
-          remotes::install_local(force = TRUE, dependencies = TRUE)
-        shell: Rscript {0}
-
-      ##################### END boilerplate steps #####################
-
-      - name: Install package
-        run: renv::install(".", dependencies = "no-deps")
-        shell: Rscript {0}
 
       - name: Add script to fix rdrr.io links for pharmaverse packages
         uses: "DamianReeves/write-file-action@v1.2"
@@ -189,7 +145,7 @@ jobs:
                 package_name <- matches[2]
                 function_name <- matches[3]
 
-                if (!(grepl("^admiral", package_name) || package_name %in% c("matatools", "matacore"))) {
+                if (!(grepl("^admiral", package_name))) {
                     return(x)
                 }
 
@@ -218,11 +174,29 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           SUBDIR_OPTION=""
-          if [ "${{ inputs.skip-multiversion-docs }}" != "true" ]
+          # Set BRANCH_NAME and SUBDIR_OPTION when multiversion docs are enabled,
+          # and also ensure they are set for pull_request events. If SUBDIR_OPTION
+          # is not set, the website at the root of the gh-pages branch will be
+          # overwritten, which is not desirable for pull_request events.
+          if [ "${{ inputs.skip-multiversion-docs }}" != "true" ] || [ "$GITHUB_EVENT_NAME" = "pull_request" ]
           then {
-            SUBDIR_OPTION="subdir = \"${GITHUB_REF##*/}\","
+            # For pull_request events GITHUB_REF is like "refs/pull/NN/merge"
+            # ${GITHUB_REF##*/} would yield "merge" — not the PR branch name.
+            if [ "$GITHUB_EVENT_NAME" = "pull_request" ]
+            then {
+              BRANCH_NAME="${GITHUB_HEAD_REF}"
+            }
+            else {
+              BRANCH_NAME="${GITHUB_REF##*/}"
+            }
+            fi
+            SUBDIR_OPTION="subdir = \"${BRANCH_NAME}\","
           }
           fi
+          
+          # Display the resolved SUBDIR_OPTION so it's visible in the Actions log
+          echo "SUBDIR_OPTION=${SUBDIR_OPTION}"
+          
           Rscript - <<EOF
           if ("${{ inputs.insert-tweak-page-hook }}" == "true") {
             pkgdown_env <- asNamespace("pkgdown")
@@ -262,6 +236,17 @@ jobs:
           EOF
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create comment
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: "Documentation Website"
+          message: |
+            The website/documentation is availables at https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.head_ref }}.
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
 
   multi-version-docs:
     name: Multi-version docs
