@@ -1,9 +1,8 @@
-<!-- Please do not edit the README.md file as it is auto-generated. Only edit the README.Rmd file -->
+# admiralci <img src="man/figures/admiralci_hex.png" align="right" width="200" style="margin-left:50px;"/>
 
-# Purpose of admiralci
+admiral CI/CD workflows
 
-<img src="man/figures/admiralci_hex.png"
-style="width:30.0%;height:30.0%" />
+## Purpose
 
 This repository contains GitHub Actions continuous
 integration/continuous delivery (CI/CD) workflows, most of which are
@@ -20,16 +19,17 @@ Notes :
 * Some workflows are using github actions from
   [InsightsEngineering](https://github.com/insightsengineering/)
   group.
-  <!-- - Most of the workflows tends to be use by other packages (`oak` package for example). A global repository at Pharmaverse organization level will be set-up to host all common workflows for pharmaverse packages (Beyond Admiral uses cases).
-  This package will then probably be replaced by this global Pharmaverse repository in the future. -->
 * Most of the workflows are sharing the same steps (see [Common
-  workflows
-  structure](https://pharmaverse.github.io/admiralci/articles/common_structure.html))
-  (boilerplate code)
+workflows
+structure](https://pharmaverse.github.io/admiralci/articles/common_structure.html))
 
 # Available workflows
 
-## Workflows triggered by Admiral MR (feature branch to main branch)
+The following workflows are available in this repository, and can be reused in
+your repository. Please note that it depends on the set up of your repository
+when they are triggered.
+
+## Workflows to be triggered by Admiral MR (feature branch to main branch)
 
 ### Check Templates
 
@@ -87,7 +87,7 @@ Notes :
 * [Link to the
   documentation](https://pharmaverse.github.io/admiralci/articles/style.html)
 
-## Workflows trigger by a new release
+## Workflows to be triggered by a new release
 
 ### Validation
 
@@ -103,14 +103,7 @@ Notes :
 * [Link to the
   documentation](https://pharmaverse.github.io/admiralci/articles/pkgdown.html)
 
-## cron workflows
-
-### Push Docker Image
-
-* [Link to workflow code (yml
-  file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/push-docker-image.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/push-docker.html)
+## cron Workflows
 
 ### Cran Status
 
@@ -119,12 +112,6 @@ Notes :
 * [Link to the
   documentation](https://pharmaverse.github.io/admiralci/articles/cran-status.html)
 
-### Check R Tags
-
-* [Link to workflow code (yml
-  file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-r-tags.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/check-r-tags.html)
 
 # How to use these workflows?
 
@@ -139,18 +126,17 @@ event.
 The contents of the `.github/workflows/common.yml` file are available in
 the
 [`common.yml.inactive`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/common.yml.inactive)
-file in this repository. Feature flags in the form of `workflow_call`
-inputs are available for customization purposes. Feature flags are
-documented in the same file - look for the `env:` and `with:` hashes in
-the file for feature flags.
+file in this repository. It can be customized by modifying the global variables
+(look for the `env:` key) or inputs of the called workflows (look for the
+`with:` keys) in the file.
 
-<!-- TODO: update common.inactive taking the one from admiral because it's quite outdated ..  -->
+To modify when the workflows are triggered, you can modify the `if:` key.
 
 ## Copy as-is (not recommended)
 
 Alternatively, if you want a high level of customization, you could
 simply copy the workflows as-is from this repository to your repository
-and modify them to your liking. We do not recommand this approach. For
+and modify them to your liking. We do not recommend this approach. For
 example, you might miss some updated or even bugs fixes from `admiralci`
 workflows. If you need some updates in some existing workflows, please
 [raise an issue](https://github.com/pharmaverse/admiralci/issues).
@@ -170,10 +156,8 @@ repository as well: ![](man/figures/actions_tab_workflows.jpg)
 Most of our workflows are using Github Marketplace actions, referenced
 bellow :
 
-* [InsightsEngineering](https://github.com/insightsengineering)
 * [r-lib-actions](https://github.com/r-lib/actions)
-* [sd-action](https://github.com/marketplace/actions/staged-dependencies-action)
-* [sd-repo](https://github.com/openpharma/staged.dependencies)
+* [InsightsEngineering](https://github.com/insightsengineering)
 * [lychee](https://github.com/lycheeverse/lychee)
 * [covr](https://covr.r-lib.org/)
 * [lintr](https://lintr.r-lib.org/)

@@ -10,19 +10,30 @@ vignette: >
 
 # pkgdown Workflow
 
-This GitHub Actions workflow automates the generation and deployment of documentation for an R package using `pkgdown`. The workflow supports multiple versions and offers flexibility in customization.
-This workflow uses rmarkdown to be able to generate html documentation from `Rmd` files (vignettes folder). This documentation is then stored in `gh-pages` branch (an orphan branch) and published.
-Note : this workflow is using [InsightEngineering pkgdown multiversion action](https://github.com/insightsengineering/r-pkgdown-multiversion) action.
+This GitHub Actions workflow automates the generation and deployment of
+documentation for an R package using `pkgdown`. The workflow supports multiple
+versions and offers flexibility in customization. This workflow uses rmarkdown
+to be able to generate html documentation from `Rmd` files (vignettes folder).
+This documentation is then stored in `gh-pages` branch (an orphan branch) and
+published. Note : this workflow is using [InsightEngineering pkgdown
+multiversion
+action](https://github.com/insightsengineering/r-pkgdown-multiversion) action.
 
 ## Inputs
 
 ### Required Inputs
 
-- `r-version`: The version of R to use. Default: '4.1'.
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values). Default: `'release'`
 
 ### Optional Inputs
 
-- `skip-multiversion-docs`: Skip the creation of multi-version docs. Default: false. If set to True, a subfolder will be created under `gh-pages` (with the current github reference (branch/tag) name)
+- `install-package`: Should the package be installed? Default: `false`
+
+- `skip-multiversion-docs`: Skip the creation of multi-version docs. Default:
+`false`. If set to `true`, a subfolder will be created under `gh-pages` (with
+the current github reference (branch/tag) name)
 - `multiversion-docs-landing-page`: Ref to use for the multiversion docs landing page. Default: main.
 - `latest-tag-alt-name`: An alternate name to use for 'latest-tag' for multiversion pkgdown docs. Default: "".
 - `branches-or-tags-to-list`: Regular expression defining branches or tags listed under the 'Versions' dropdown menu. Default: `^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$`.
@@ -31,9 +42,14 @@ Note : this workflow is using [InsightEngineering pkgdown multiversion action](h
 
 ### `pkgdown` Job
 
-This job runs the `pkgdown` process to generate documentation. It checks for `[skip docs]` in the commit message and, if not present, proceeds with the documentation generation. The documentation includes an additional script to fix rdrr.io links for pharmaverse packages.
+This job runs the `pkgdown` process to generate documentation. It checks for
+`[skip docs]` in the commit message and, if not present, proceeds with the
+documentation generation. The documentation includes an additional script to fix
+rdrr.io links for pharmaverse packages. If `skip-multiversion-docs` is set to
+`false` or the jobs is triggered by a `pull_request` event, the documentation is
+published in a subfolder (with the current github reference (branch/tag) name)
+of the  `gh-pages` branch.
 
 ### `multi-version-docs` Job
 
 This job, if triggered, deploys the multi-version documentation to the `gh-pages` branch. It checks for the `skip-multiversion-docs` input and `[skip docs]` in the commit message before proceeding.
-

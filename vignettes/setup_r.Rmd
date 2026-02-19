@@ -1,0 +1,72 @@
+---
+title: "setup_R Action"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{setup_R Action}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# `setup_R` Action
+
+The `setup_R` action is usually called as first step in the workflows to set up
+the R environment. It checks out the repository, sets up the R environment
+according to the specified R version, installs the necessary dependencies, and
+the package itself.
+
+## Inputs
+
+### Required Inputs
+
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values). Default: `'release'`
+
+- `http-user-agent`: The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values). Default: `'default'`
+
+- `extra-packages`: Extra packages to install (in addition to the dependencies
+of the package and the `remotes` and `yaml` package). A comma separated list is
+expected. The value is passed to the
+[r-lib/setup-r-dependencies](https://github.com/r-lib/actions/tree/v2/setup-r-dependencies)
+action. Default: `''`
+
+### Optional Inputs
+
+- `install-package`: Should the package be installed? Default: `false`
+
+## Additional Requirements
+
+The action expects the file `staged_dependencies.yaml` to be present in the root
+of the repository. It defines the upstream dependencies of the package. For
+example:
+```
+upstream_repos:
+- repo: pharmaverse/pharmaversesdtm
+  host: https://github.com
+- repo: pharmaverse/admiraldev
+  host: https://github.com
+```
+For upstream dependencies the current development version will be installed,
+except for releases and patch releases.
+
+## Action Structure
+
+The following steps are performed:
+
+1. **Checkout repository**: Checks out the repository using the
+`actions/checkout` action.
+2. **Set up R**: Sets up the R environment using the `r-lib/setup-r` action with
+the specified R version and HTTP user agent.
+3. **Install dependencies**: Installs the package dependencies using the
+`r-lib/setup-r-dependencies` action, including any extra packages specified in
+the inputs.
+1. **Install Development Versions of Upstream Dependencies**: Installs the
+development versions of upstream dependencies defined in the
+`staged_dependencies.yaml` file, except for releases ("[skip vbump]" in the
+title of the merge request) and patch releases (merge requests with target
+`patch`).
+4. **Install package**: If the `install-package` input is set to `true`, the
+package itself is installed using the `remotes::install_local()` function.

@@ -8,7 +8,7 @@ on:
         type: choice
         options:
           - devel
-          - latest
+          - oldrel
       install-package:
         description: "Should the package be installed?"
         required: false
@@ -16,7 +16,7 @@ on:
         type: boolean
       skip-multiversion-docs:
         description: "Skip creation of multi-version docs"
-        default: false
+        default: true
         required: false
         type: boolean
       multiversion-docs-landing-page:
@@ -193,10 +193,10 @@ jobs:
             SUBDIR_OPTION="subdir = \"${BRANCH_NAME}\","
           }
           fi
-          
+
           # Display the resolved SUBDIR_OPTION so it's visible in the Actions log
           echo "SUBDIR_OPTION=${SUBDIR_OPTION}"
-          
+
           Rscript - <<EOF
           if ("${{ inputs.insert-tweak-page-hook }}" == "true") {
             pkgdown_env <- asNamespace("pkgdown")
@@ -236,7 +236,7 @@ jobs:
           EOF
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Create comment
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
