@@ -1,0 +1,54 @@
+# Spellchecks
+
+## Spelling Workflow
+
+This GitHub Actions workflow performs spellchecking on the specified R
+files. The workflow is triggered manually (`workflow_dispatch`) and can
+also be invoked as a workflow call (`workflow_call`).
+
+### Workflow Structure
+
+The workflow consists of a single job: `spellcheck`.
+
+#### `spellcheck` Job
+
+This job runs spellcheck on R files.
+
+##### Inputs
+
+- `r-version`: The version of R to use. Default is ‘release’.
+- `exclude`: List of paths to exclude (comma-separated list). Default is
+  an empty string.
+
+##### Conditions
+
+The spellcheck job is skipped if the commit message contains
+`[skip spellcheck]`.
+
+##### Steps
+
+1.  **Get branch names:** Extracts branch names.
+2.  **Checkout repo (PR):** Checks out the repository based on the event
+    type (pull request).
+3.  **Checkout repository:** Checks out the repository for events other
+    than pull requests.
+4.  **Restore cache:** Restores cached dependencies.
+5.  **Run Staged dependencies:** Runs staged dependencies action.
+6.  **Install dependencies from DESCRIPTION:** install dependencies from
+    DESCRIPTION (in case of missing dependencies in parent admiralci
+    docker image)
+7.  **Run Spellcheck:** Executes the spellcheck action on specified R
+    files.
+
+#### Triggers
+
+- `workflow_dispatch`: Manually triggered workflow with optional inputs.
+- `workflow_call`: Invoked as a workflow call.
+
+#### Permissions
+
+- `contents: write`: Write permissions for repository contents.
+
+Note : It’s possible to ignore some spell checks using `inst/WORDLIST`
+file. It’s possible to update it automatically using directly
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)

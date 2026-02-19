@@ -1,0 +1,57 @@
+# Style
+
+## Style Workflow
+
+This GitHub Actions workflow checks and enforces coding style using
+`styler` on R files. The workflow is triggered manually
+(`workflow_dispatch`) and can also be invoked as a workflow call
+(`workflow_call`).
+
+### Workflow Structure
+
+The workflow consists of a single job: `style`.
+
+#### `style` Job
+
+This job performs code style checks and enforces styling using `styler`.
+
+##### Inputs
+
+- `r-version`: The version of R to use. Default is ‘release’.
+
+##### Conditions
+
+The style check job is skipped if the commit message contains
+`[skip style]`.
+
+##### Steps
+
+1.  **Get branch names:** Extracts branch names.
+2.  **Checkout repo (PR):** Checks out the repository based on the event
+    type (pull request).
+3.  **Checkout repository:** Checks out the repository for events other
+    than pull requests.
+4.  **Normalize inputs:** Normalizes the R version input.
+5.  **Restore cache:** Restores cached dependencies.
+6.  **Run Staged dependencies:** Runs staged dependencies action.
+7.  **Install dependencies from DESCRIPTION:** install dependencies from
+    DESCRIPTION (in case of missing dependencies in parent admiralci
+    docker image)
+8.  **Get changed files:** Retrieves the list of changed files.
+9.  **Run styler:** Applies `styler` to the changed R files and checks
+    for style violations. If violations are found, the workflow displays
+    relevant information and version details (files with style violation
+    will be displayed using `git diff` after running styler on the
+    workflows)
+
+#### Triggers
+
+- `workflow_dispatch`: Manually triggered workflow with optional inputs.
+- `workflow_call`: Invoked as a workflow call.
+
+#### Permissions
+
+- `contents: write`: Write permissions for repository contents.
+
+Note: It’s possible to fix locally style issues using
+[`styler::style_file()`](https://styler.r-lib.org/reference/style_file.html).

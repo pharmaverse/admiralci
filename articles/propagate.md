@@ -1,0 +1,48 @@
+# Propagate
+
+WARNING: this article mention codespaces configuration. The Admiral
+codespaces feature is still in progress, and current codespaces article
+is outdated for now.
+
+## Propagate .devcontainer Files Workflow
+
+This GitHub Actions workflow is specific to the admiralci project. It is
+designed to propagate changes in `.devcontainer` files (for codespaces
+configuration) to multiple repositories within the project.
+
+### Inputs
+
+#### Triggers
+
+- `pull_request`: Triggered on pull requests targeting the `main` branch
+  and specific file paths.
+- `workflow_dispatch`: Allows manual triggering of the workflow.
+
+#### Steps
+
+1.  **Checkout this repo:** Checks out the current repository.
+2.  **Checkout specified repository:** Checks out the specified
+    repository based on the matrix configuration.
+3.  **Update files in the specified repository:** Updates
+    `.devcontainer` files in the specified repository.
+4.  **Commit and push changes:** Commits the changes and pushes them to
+    the repository.
+5.  **Create Pull Request:** Creates a pull request in the specified
+    repository, assigning reviewers.
+
+#### Matrix Configuration
+
+The `propagation` job uses a matrix strategy to iterate over specified
+repositories with different configurations. (MR with new `.devcontainer`
+file will be created for each element of the matrix, with associated
+`reviewers` field)
+
+``` yaml
+repos:
+  - name: admiralonco
+    target-branch: main
+    reviewers: bundfussr, cicdguy
+  - name: admiraldev
+    target-branch: main
+    reviewers: bms63, cicdguy
+```

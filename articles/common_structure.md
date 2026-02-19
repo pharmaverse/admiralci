@@ -1,0 +1,96 @@
+# Common Structure
+
+## Common structure of the workflows
+
+### R-version input
+
+For most of the workflows, we need to select a specific R version.
+That’s why most of the actions have a `r-version` input:
+
+    inputs:
+        r-version:
+          description: 'The version of R to use'
+          default: 'release'
+          required: false
+          type: choice
+          options:
+            - devel
+            - oldrel
+
+By default, we have `r-version=release`, and users can also use `devel`
+and `latest` versions.
+
+- `release` means we are using latest stable version of `R`.
+- `oldrel` means we are using previous release of R (for example if
+  current release is `4.4`, oldrel will be `4.3`).
+- `devel` refers to the development version of R, which contains the
+  latest changes and features that are still under development. This
+  version is typically used by developers who want to test new features.
+  The “devel” version may be less stable.
+
+### Use of `admiralci` docker images
+
+Once the `r-version` is picked, the worfklows will run inside a docker
+container instance. Indeed, `admiralci` contains an action
+`push-docker-image`, to be able to build `rocker:rstudio` images for
+each available version of `R` :
+
+- `admiralci-oldrelease`
+- `admiralci-release`
+- `admiralci-devel`
+
+These images are stored in admiralci ghcr (Github Container Registry -
+Place to store docker images), and are then reused to execute the
+workflows in docker container instances like this :
+
+    container:
+        image: "ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest"
+
+(For more details on docker images creation process, please read [Push
+Docker
+Images](https://pharmaverse.github.io/admiralci/articles/push-docker.md))
+workflow documentation).
+
+### Checkout repository
+
+This action is used to checkout on the right repository. This is a step
+commonly used in github actions to be able to access a repository tree.
+
+    - name: Checkout repository
+      uses: actions/checkout@v4.2.2
+
+### Staged dependencies
+
+The staged dependencies action allow to install every necessary upstream
+dependencies for `admiral` package, such as :
+
+- `pharmaversesdtm` (SDTM test data)
+- `admiraldev` (utilities functions for the Admiral package family)
+
+(note that these dependencies are refered inside
+`staged_dependencies.yml` file)
+
+For more details about staged.dependencies, please visit these links :
+
+- [Staged Dependencies
+  Package](https://github.com/openpharma/staged.dependencies)
+- [Staged Dependencies
+  Action](https://github.com/insightsengineering/staged-dependencies-action)
+  (Github action to use Staged Dependencies package through github
+  workflows)
+
+&nbsp;
+
+    - name: Run Staged dependencies
+        uses: insightsengineering/staged-dependencies-action@v1
+        with:
+            run-system-dependencies: false
+            renv-restore: false
+            direction: upstream
+        env:
+            GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+Note : the user can specify some parameters depending on the use case
+: - run-system-dependencies : install or not sys dependencies -
+renv-restore : restore or not renv.lock dependencies (and many other
+options you can find on Staged Dependencies Action documentation).
