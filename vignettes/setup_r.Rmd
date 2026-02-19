@@ -65,7 +65,7 @@ the specified R version and HTTP user agent.
 the inputs.
 1. **Install Development Versions of Upstream Dependencies**: Installs the
 development versions of upstream dependencies defined in the
-`staged_dependencies.yaml` file, except for releases ("[skip vbump]" in the
+`staged_dependencies.yaml` file, except for releases (`[skip vbump]` in the
 title of the merge request) and patch releases (merge requests with target
 `patch`).
 4. **Install package**: If the `install-package` input is set to `true`, the

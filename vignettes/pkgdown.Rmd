@@ -15,7 +15,7 @@ documentation for an R package using `pkgdown`. The workflow supports multiple
 versions and offers flexibility in customization. This workflow uses rmarkdown
 to be able to generate html documentation from `Rmd` files (vignettes folder).
 This documentation is then stored in `gh-pages` branch (an orphan branch) and
-published. Note : this workflow is using [InsightEngineering pkgdown
+published. Note : this workflow is using [InsightsEngineering pkgdown
 multiversion
 action](https://github.com/insightsengineering/r-pkgdown-multiversion) action.
 
@@ -45,10 +45,10 @@ the current github reference (branch/tag) name)
 This job runs the `pkgdown` process to generate documentation. It checks for
 `[skip docs]` in the commit message and, if not present, proceeds with the
 documentation generation. The documentation includes an additional script to fix
-rdrr.io links for pharmaverse packages. If `skip-multiversion-docs` is set to
+`rdrr.io` links for pharmaverse packages. If `skip-multiversion-docs` is set to
 `false` or the jobs is triggered by a `pull_request` event, the documentation is
 published in a subfolder (with the current github reference (branch/tag) name)
-of the  `gh-pages` branch.
+of the `gh-pages` branch.
 
 ### `multi-version-docs` Job
 

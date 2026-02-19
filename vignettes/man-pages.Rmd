@@ -56,5 +56,5 @@ This job runs Roxygen to generate and check man pages in the R package. It runs 
 
 8. **Generate man pages**: Runs `roxygen2::roxygenize()` to generate man pages.
 9. **Set-up safe dir**: Sets up a safe directory for git configuration.
-10. **Roxygen check**: Checks if manuals are up-to-date with Roxygen comments and provides guidance if differences are found. If differences are found, the workflow will fail, giving the cmd to run to the admiral devs : 
-`roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))`
+10. **Roxygen check**: Checks if manuals are up-to-date with Roxygen comments and provides guidance if differences are found. If differences are found, the workflow will fail, giving the command to run: 
+`roxygen2::roxygenize('.')`

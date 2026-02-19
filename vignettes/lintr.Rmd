@@ -8,15 +8,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
----
-title: GitHub Actions Workflow Documentation
-author: Your Name
-date: \today
----
-
 # Lint Workflow
 
-This GitHub Actions workflow performs linting tasks for an R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+This GitHub Actions workflow performs linting tasks for an R package.
 
 ## Workflow Triggers
 
@@ -30,13 +24,13 @@ This workflow is triggered in the following ways:
 
 The workflow accepts the following inputs during manual dispatch or workflow call:
 
-- `r-version`: The version of R to use, with options '4.1', '4.2', and '4.3'.
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values). Default: `'release'`
 
-- `lint-all-files`: Boolean indicating whether to lint all files every time.
+- `lint-all-files`: Boolean indicating whether to lint all files every time. Default: `false`.
 
-- `latest-lintr`: Boolean indicating whether to install the latest lintr CRAN release.
-
-- `install-package`: Boolean indicating whether to install the R package locally.
+- `install-package`: Should the package be installed? Default: `false`
 
 ## Workflow Setup
 
@@ -50,31 +44,20 @@ This job performs linting tasks.
 
 ### Steps
 
-1. **Get branch names**: Gets the branch names using the tj-actions/branch-names action.
+1. Set up R environment using the [`setup_R`](setup_r.html) action
 
-2. **Checkout repo (PR)**: Checks out the repository for pull requests.
+1. Determine changed files using the
+[`Ana06/get-changed-files`](https://github.com/Ana06/get-changed-files/tree/v2.2.0)
+action
 
-3. **Checkout repository**: Checks out the repository for non-pull request events.
+1. Lint the files
 
-4. **Normalize inputs**: Normalizes the R version input.
+1. Perform linting using lintr on the R package. Excludes files based on the changed files list.
 
-5. **Restore cache**: Restores the cache for staged dependencies.
+1. Raise an error if lints are detected, prompting a review and adjustment of the code.
 
-6. **Run Staged dependencies**: Runs staged dependencies action to set up the environment.
-
-7. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
-
-8. **Install latest release of lintr**: Installs the latest release of lintr from the CRAN repository if specified.
-
-9. **Install package**: Installs the R package locally if specified.
-
-10. **Changed files**: Gets the list of changed files using the Ana06/get-changed-files action.
-
-11. **Lint**: Performs linting using lintr on the R package. Excludes files based on the changed files list.
-
-12. **Error if lints are detected**: Raises an error if lints are detected, prompting a review and adjustment of the code.
-
-Note : a `.lintr` file can be configured at the upstream repository level, to be able for example to exclude some lint rules such as this example :
+Note: a `.lintr` file can be configured at the upstream repository level, to be
+able for example to exclude some lint rules such as this example:
 
 ```
 exclusions: list(

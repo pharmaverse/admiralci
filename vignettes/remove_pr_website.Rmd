@@ -1,0 +1,16 @@
+---
+title: "remove_pr_website"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{remove_pr_website}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# remove_pr_website Workflow
+
+This reusable workflow deletes the documentation website for a pull request when
+the pull request is closed. It is designed to be used in conjunction with the
+[`pkgdown`](pkgdown.html) workflow, which may generate and deploy documentation
+to a subfolder of the `gh-pages` branch.

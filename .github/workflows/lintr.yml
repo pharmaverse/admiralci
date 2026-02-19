@@ -8,14 +8,9 @@ on:
         type: choice
         options:
           - devel
-          - latest
+          - oldrel
       lint-all-files:
         description: "Lint all files every time"
-        default: "false"
-        required: false
-        type: string
-      latest-lintr:
-        description: "Latest lintr CRAN release"
         default: "false"
         required: false
         type: string
@@ -33,11 +28,6 @@ on:
         type: string
       lint-all-files:
         description: "Lint all files every time"
-        default: "false"
-        required: false
-        type: string
-      latest-lintr:
-        description: "Latest lintr CRAN release"
         default: "false"
         required: false
         type: string
