@@ -34,11 +34,8 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: pharmaverse/admiralci/.github/actions/setup_R@main
-
-      - name: Install package
-        run: |
-          R CMD build --no-build-vignettes --no-manual .
-          R CMD INSTALL *.tar.gz
+        with:
+          install-package: true
 
       - name: Run Template Scripts
         run: |

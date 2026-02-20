@@ -10,10 +10,13 @@ vignette: >
 
 # Code Coverage Workflow
 
-This GitHub Actions workflow is designed for testing and generating code coverage reports for an R package. It uses a matrix strategy to test different versions of R and includes options to skip code coverage badge creation.
-This workflow measures code coverage for unit tests and reports the code coverage as a percentage of the _total number of lines covered by unit tests_ vs. the _total number of lines in the codebase_.
+This GitHub Actions workflow is designed for testing and generating code
+coverage reports for an R package. It includes options to skip code coverage
+badge creation. This workflow measures code coverage for unit tests and reports
+the code coverage as a percentage of the _total number of lines covered by unit
+tests_ vs. the _total number of lines in the codebase_.
 
-The [`covr`][covr] R package is used to calculate the coverage.
+The `{covr}` R package is used to calculate the coverage.
 
 Report summaries and badges for coverage are generated using a series of other GitHub Actions.
 
@@ -36,27 +39,19 @@ git add . && git commit -m "Init badges" && git push origin badges
 
 ## Inputs
 
-### `r-version`
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values). Default: `'release'`
 
-- **Description**: The version of R to use for testing.
-- **Default**: '4.1'
-- **Options**: '4.1', '4.2', '4.3'
-- **Required**: No
-
-### `skip-coverage-badges`
-
-- **Description**: Skip code coverage badge creation.
-- **Default**: false
-- **Required**: No
-- **Type**: boolean
+- `skip-coverage-badges`: Skip code coverage badge creation. Default: `false`
 
 ## Workflow Triggers
 
 This workflow is triggered in two ways:
 
-1. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event. When triggered manually, you can specify the R version and choose to skip code coverage badge creation.
+- **Manual Dispatch**: You can manually trigger the workflow using the `workflow_dispatch` event. When triggered manually, you can specify the R version and choose to skip code coverage badge creation.
 
-2. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event. The R version and skip-coverage-badges options are inputs for this event.
+- **Workflow Call**: The workflow can also be triggered by another workflow using the `workflow_call` event. The R version and skip-coverage-badges options are inputs for this event.
 
 ## Workflow Setup
 
@@ -66,43 +61,28 @@ This workflow is triggered in two ways:
 
 ## Job: `coverage`
 
-This job verifies templates in the R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+This job runs code coverage tests, generates coverage reports, and outputs the
+coverage percentage.
 
 ### Steps
 
-#### Boilerplate Steps
+1. Set up R environment using the [`setup_R`](setup_r.html) action
 
-1. **Get branch names**: Retrieves branch names for further processing.
-2. **Checkout repo (PR)**: Checks out the repository for pull requests.
-3. **Checkout repository**: Checks out the repository for non-pull request events.
-4. **Normalize inputs**: Normalizes input values, including determining the R version.
+1. **Run coverage**: Runs code coverage tests, generates coverage reports, and outputs the coverage percentage.
 
-#### Staged Dependencies
+1. **Check whether coverage reports exist**: Checks for the existence of coverage reports.
 
-5. **Restore cache**: Restores the cache for staged dependencies.
-6. **Setup Pandoc**: Sets up Pandoc for documentation rendering.
-7. **Run Staged dependencies**: Runs the staged dependencies action.
-8. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
+1. **Set coverage percentage as output**: Sets the coverage percentage as an output variable.
 
-#### Run Coverage
+1. **Generate Coverage Summary Report**: Generates a coverage summary report, adds badges, and uploads the report for review.
 
-9. **Run coverage**: Runs code coverage tests, generates coverage reports, and outputs the coverage percentage.
-
-#### Check Coverage Reports
-
-10. **Check whether coverage reports exist**: Checks for the existence of coverage reports.
-
-11. **Set coverage percentage as output**: Sets the coverage percentage as an output variable.
-
-12. **Generate Coverage Summary Report**: Generates a coverage summary report, adds badges, and uploads the report for review.
-
-#### Add Coverage PR Comment
-
-13. **Add Coverage PR Comment**: Adds a comment to the pull request with the coverage summary.
+1. **Add Coverage PR Comment**: Adds a comment to the pull request with the coverage summary.
 
 ## Job: `badge`
 
-This job generates a code coverage badge and commits it to the repository. It is triggered after the completion of the `coverage` job.
+This job generates a code coverage badge and commits it to the repository. It is
+triggered after the completion of the `coverage` job and only if for `push`
+events to `main`.
 
 ### Steps
 

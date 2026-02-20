@@ -10,24 +10,26 @@ vignette: >
 
 # Man Pages Workflow
 
-This GitHub Actions workflow is designed for generating and checking man pages in an R package using Roxygen. It uses a matrix strategy to test different versions of R.
+This GitHub Actions workflow is designed for generating and checking man pages
+in an R package using Roxygen. If the generated pages differ to those in the
+repo, workflow fails.
 
 ## Inputs
 
-### `r-version`
-
-- **Description**: The version of R to use for testing.
-- **Default**: '4.1'
-- **Options**: '4.1', '4.2', '4.3'
-- **Required**: No
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values). Default: `'release'`
 
 ## Workflow Triggers
 
 This workflow is triggered in two ways:
 
-1. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event. When triggered manually, you can specify the R version.
+1. **Manual Dispatch**: You can manually trigger the workflow using the
+`workflow_dispatch` event. When triggered manually, you can specify the R
+version.
 
-2. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event. The R version is an input for this event.
+2. **Workflow Call**: The workflow can also be triggered by another workflow
+using the `workflow_call` event. The R version is an input for this event.
 
 ## Workflow Setup
 
@@ -35,26 +37,15 @@ This workflow is triggered in two ways:
 - **Concurrency**: Man page jobs are organized by the pull request number or branch.
 - **Cancel-in-progress**: Allows canceling in-progress man page jobs.
 
-## Job: `lint`
+## Job: `man`
 
-This job runs Roxygen to generate and check man pages in the R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+This job runs Roxygen to generate and check man pages in the R package.
 
 ### Steps
 
-#### Boilerplate Steps
-
-1. **Get branch names**: Retrieves branch names for further processing.
-2. **Checkout repo (PR)**: Checks out the repository for pull requests.
-3. **Checkout repository**: Checks out the repository for non-pull request events.
-4. **Normalize inputs**: Normalizes input values, including determining the R version.
-
-5. **Restore cache**: Restores the cache for staged dependencies.
-6. **Run Staged dependencies**: Runs the staged dependencies action.
-7. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
-
-#### Roxygen Workflow
-
-8. **Generate man pages**: Runs `roxygen2::roxygenize()` to generate man pages.
-9. **Set-up safe dir**: Sets up a safe directory for git configuration.
-10. **Roxygen check**: Checks if manuals are up-to-date with Roxygen comments and provides guidance if differences are found. If differences are found, the workflow will fail, giving the command to run: 
-`roxygen2::roxygenize('.')`
+1. Set up R environment using the [`setup_R`](setup_r.html) action
+1. **Generate man pages**: Runs `roxygen2::roxygenize()` to generate man pages.
+1. **Set-up safe dir**: Sets up a safe directory for git configuration.
+1. **Roxygen check**: Checks if manuals are up-to-date with Roxygen comments and
+provides guidance if differences are found. If differences are found, the
+workflow will fail, giving the command to run: `roxygen2::roxygenize('.')`

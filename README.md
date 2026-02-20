@@ -1,4 +1,4 @@
-# admiralci <img src="man/figures/admiralci_hex.png" align="right" width="200" style="margin-left:50px;"/>
+# admiralci <img src="man/figures/logo.png" align="right" width="200" style="margin-left:50px;"/>
 
 admiral CI/CD workflows
 
@@ -11,8 +11,9 @@ extensions. Workflows defined here are responsible for assuring high
 package quality standards without compromising performance, security, or
 reproducibility.
 
-Please refer to the [`.github/workflows`](.github/workflows) directory
-to view the source code for the GitHub Actions workflows.
+Please refer to the
+[`.github/workflows`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows)
+directory to view the source code for the GitHub Actions workflows.
 
 Notes :
 
@@ -38,7 +39,7 @@ when they are triggered.
 * [Link to the
   documentation](https://pharmaverse.github.io/admiralci/articles/check-templates.html)
 
-### Lintr
+### lintr
 
 * [Link to workflow code (yml
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/lintr.yml)
@@ -59,7 +60,7 @@ when they are triggered.
 * [Link to the
   documentation](https://pharmaverse.github.io/admiralci/articles/r-cmd-checks.html)
 
-### Check Templates
+### Check Spelling
 
 * [Link to workflow code (yml
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellchecks.yml)

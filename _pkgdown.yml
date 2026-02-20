@@ -39,8 +39,9 @@ navbar:
       - text: Common structure of the workflows
         href: articles/common_structure.html
     workflows_details:
-      text: Workflows Details
+      text: Workflows and Actions
       menu:
+      - text: Workflows
       - text: R-CMD CHECKS
         href: articles/r-cmd-checks.html
       - text: CRAN Status
@@ -67,6 +68,10 @@ navbar:
         href: articles/tweak-page-hooks.html
       - text: Validation (build PDF validation report)
         href: articles/validation.html
+      - text: ----
+      - text: Actions
+      - text: Set up R
+        href: articles/setup_r.html
 
     slack:
       icon: fa-slack

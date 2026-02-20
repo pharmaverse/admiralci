@@ -1,9 +1,9 @@
 ---
-title: "LintR"
+title: "lintr"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LintR}
+  %\VignetteIndexEntry{lintr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,9 +16,9 @@ This GitHub Actions workflow performs linting tasks for an R package.
 
 This workflow is triggered in the following ways:
 
-- **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event.
+- **Manual Dispatch**: You can manually trigger the workflow using the `workflow_dispatch` event.
 
-- **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event.
+- **Workflow Call**: The workflow can also be triggered by another workflow using the `workflow_call` event.
 
 ## Workflow Inputs
 
@@ -52,7 +52,7 @@ action
 
 1. Lint the files
 
-1. Perform linting using lintr on the R package. Excludes files based on the changed files list.
+1. Perform linting using `lintr` on the R package. Excludes files based on the changed files list.
 
 1. Raise an error if lints are detected, prompting a review and adjustment of the code.
 

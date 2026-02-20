@@ -44,7 +44,7 @@ By default, we have `r-version=release`, and users can also other versions like
 
 - `release` means we are using latest stable version of `R`.
 - `oldrel` means we are using previous release of R (for example if current
-  release is `4.4`, oldrel will be `4.3`).
+  `release` is `4.4`, `oldrel` will be `4.3`).
 - `devel` refers to the development version of R, which contains the latest
   changes and features that are still under development. This version is
   typically used by developers who want to test new features. The "devel"

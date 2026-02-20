@@ -10,7 +10,9 @@ vignette: >
 
 # Spelling Workflow
 
-This GitHub Actions workflow performs spellchecking on the specified R files. The workflow is triggered manually (`workflow_dispatch`) and can also be invoked as a workflow call (`workflow_call`).
+This GitHub Actions workflow performs spell checking on the specified R files.
+The workflow is triggered manually (`workflow_dispatch`) and can also be invoked
+as a workflow call (`workflow_call`).
 
 ## Workflow Structure
 
@@ -22,7 +24,9 @@ This job runs spellcheck on R files.
 
 #### Inputs
 
-- `r-version`: The version of R to use. Default is 'release'.
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values). Default: `'release'`
 - `exclude`: List of paths to exclude (comma-separated list). Default is an empty string.
 
 #### Conditions
@@ -31,13 +35,10 @@ The spellcheck job is skipped if the commit message contains `[skip spellcheck]`
 
 #### Steps
 
-1. **Get branch names:** Extracts branch names.
-2. **Checkout repo (PR):** Checks out the repository based on the event type (pull request).
-3. **Checkout repository:** Checks out the repository for events other than pull requests.
-4. **Restore cache:** Restores cached dependencies.
-5. **Run Staged dependencies:** Runs staged dependencies action.
-6. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
-7. **Run Spellcheck:** Executes the spellcheck action on specified R files.
+1. Set up R environment using the [`setup_R`](setup_r.html) action
+1. Executes the
+[`insightsengineering/r-spellcheck-action`](https://github.com/insightsengineering/r-spellcheck-action)
+action on specified R files.
 
 ### Triggers
 
@@ -48,5 +49,6 @@ The spellcheck job is skipped if the commit message contains `[skip spellcheck]`
 
 - `contents: write`: Write permissions for repository contents.
 
-
-Note : It's possible to ignore some spell checks using `inst/WORDLIST` file. It's possible to update it automatically using directly `spelling::update_wordlist()`
+Note : It's possible to ignore some spell checks using `inst/WORDLIST` file.
+It's possible to update it automatically using directly
+`spelling::update_wordlist()`

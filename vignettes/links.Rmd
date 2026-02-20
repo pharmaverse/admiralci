@@ -20,9 +20,9 @@ This workflow is triggered in the following ways:
 
 2. **Pull Request Events**: Triggered on pull requests when opened, synchronized, reopened, or ready for review for the main, and pre-release branches.
 
-3. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event.
+3. **Manual Dispatch**: You can manually trigger the workflow using the `workflow_dispatch` event.
 
-4. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event.
+4. **Workflow Call**: The workflow can also be triggered by another workflow using the `workflow_call` event.
 
 ## Workflow Setup
 
@@ -37,7 +37,10 @@ This job validates URLs in documentation files. It runs on Ubuntu 20.04.
 
 1. **Checkout repo**: Checks out the repository.
 
-2. **Check URLs in docs**: Uses the lycheeverse/lychee-action to check URLs in documentation files. It excludes private URLs, GitHub repository URLs, and additional specified patterns.
+2. **Check URLs in docs**: Uses the
+[`lycheeverse/lychee-action`](https://github.com/lycheeverse/lychee-action) to
+check URLs in documentation files. It excludes private URLs, GitHub repository
+URLs, and additional specified patterns.
 
    - **Parameters**:
      - `fail`: true (Fails the workflow if broken links are found)
