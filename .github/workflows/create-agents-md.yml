@@ -111,13 +111,25 @@ jobs:
       - name: Check for AGENTS.md changes
         id: changes
         run: |
-          if git diff --quiet HEAD -- AGENTS.md tests/testthat/AGENTS.md; then
+          paths=(AGENTS.md)
+          if [ -f tests/testthat/AGENTS.md ]; then
+            paths+=("tests/testthat/AGENTS.md")
+          fi
+
+          # If no AGENTS files exist at all, treat as no changes
+          if [ "${#paths[@]}" -eq 0 ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No AGENTS.md files found"
+            exit 0
+          fi
+
+          if git diff --quiet HEAD -- "${paths[@]}"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No changes detected in AGENTS.md files"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
             echo "Changes detected:"
-            git diff --name-only HEAD -- AGENTS.md tests/testthat/AGENTS.md \
+            git diff --name-only HEAD -- "${paths[@]}" \
               | sed 's/^/  - /'
           fi
 
