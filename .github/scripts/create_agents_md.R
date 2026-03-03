@@ -46,12 +46,12 @@ cat(glue("Creating AGENTS.md files for package: {package_name}\n"))
 # Download helpers
 # ---------------------------------------------------------------------------
 
-#' Attempt to download a text file from `url` using several fallback methods.
+#' Attempt to download a text file from `download_url` using several fallback methods.
 #' Returns a character vector of lines, or NULL on failure.
-try_download <- function(url, description) {
+try_download <- function(download_url, description) {
   # Method 1 ── readLines via connection
   result <- tryCatch({
-    con <- url(url, open = "rt")
+    con <- base::url(download_url, open = "rt")
     on.exit(try(close(con), silent = TRUE))
     lines <- readLines(con, warn = FALSE)
     close(con); on.exit()
@@ -67,7 +67,7 @@ try_download <- function(url, description) {
   result <- tryCatch({
     tmp <- tempfile(fileext = ".Rmd")
     on.exit(unlink(tmp))
-    if (download.file(url, tmp, quiet = TRUE, method = "auto", timeout = 30) == 0 &&
+    if (download.file(download_url, tmp, quiet = TRUE, method = "auto", timeout = 30) == 0 &&
         file.exists(tmp) && file.size(tmp) > 100) {
       lines <- readLines(tmp, warn = FALSE)
       if (length(lines) > 10) {
@@ -85,7 +85,7 @@ try_download <- function(url, description) {
       tmp <- tempfile(fileext = ".Rmd")
       on.exit(unlink(tmp))
       ret <- system2("curl",
-        c("-sSL", "--connect-timeout", "10", "--max-time", "30", "-o", tmp, url),
+        c("-sSL", "--connect-timeout", "10", "--max-time", "30", "-o", tmp, download_url),
         stdout = FALSE, stderr = FALSE)
       if (ret == 0 && file.exists(tmp) && file.size(tmp) > 100) {
         lines <- readLines(tmp, warn = FALSE)
