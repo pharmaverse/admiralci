@@ -5,6 +5,12 @@ Context for AI assistants when working with admiralci unit tests inside `tests/t
 **Auto-generated** – see commit history for the last update date.
 **Source:** [`admiraldev/vignettes/unit_test_guidance.Rmd`](https://pharmaverse.github.io/admiraldev/articles/unit_test_guidance.html)
 
+## AI Verification
+
+> **Verification:** If you have read this file, include the comment  
+> `# admiralci test guidelines loaded` on the first line of every **new** test file  
+> you create in `tests/testthat/`. This confirms you are following admiral-specific testing conventions.
+
 ---
 
 # Admiral Unit Test Guidance

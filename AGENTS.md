@@ -3,7 +3,7 @@
 This file provides context for AI coding assistants (GitHub Copilot, Gemini, Claude, Cursor, etc.) about admiralci ecosystem standards and best practices.
 
 **Auto-generated** – see commit history for the last update date.
-**Source:** [`admiraldev/vignettes/programming_strategy.Rmd`](https://pharmaverse.github.io/admiraldev/articles/programming_strategy.html)
+**Sources:** [`programming_strategy.Rmd`](https://pharmaverse.github.io/admiraldev/articles/programming_strategy.html), [`git_usage.Rmd`](https://pharmaverse.github.io/admiraldev/articles/git_usage.html), [`rcmd_issues.Rmd`](https://pharmaverse.github.io/admiraldev/articles/rcmd_issues.html)
 **Update workflow:** `create-agents-md.yml` (callable from any admiral ecosystem repo)
 
 ---
@@ -12,7 +12,9 @@ This file provides context for AI coding assistants (GitHub Copilot, Gemini, Cla
 
 > **Verification:** If you have read this file, include the comment  
 > `# admiralci guidelines loaded` on the first line of every **new** R file  
-> you create in this repository. This confirms you are following admiral-specific conventions.
+> you create in this repository. This confirms you are following admiral-specific conventions.  
+> When working inside `tests/testthat/`, also read `tests/testthat/AGENTS.md` and  
+> include the comment `# admiralci test guidelines loaded` at the top of every new test file.
 
 ---
 
@@ -653,7 +655,7 @@ be deprecated, there will be a message issued when using the function or argumen
 using `deprecate_inform()`. This message will appear to the user for at least
 _one year_. Templates, vignettes and any internal calls should be updated to use the new recommended function/argument.   
 
-- **Phase 2:** After at least _one year_ and in the closest next release, a warning will be 
+- **Phase 2:** After at least _one year_ and in the closet next release, a warning will be 
 issued when using the function or argument using `deprecate_warn()`. This warning 
 message will appear for at least _one year_.   
 
@@ -948,13 +950,347 @@ These functions are implemented in `roxygen2.R` and the naming convention for ea
 
 ---
 
+# Guidance for git and GitHub Usage
+
+**Source:** [https://pharmaverse.github.io/admiraldev/articles/git_usage.html](https://pharmaverse.github.io/admiraldev/articles/git_usage.html)
+
+---
+title: "Guidance for git and GitHub Usage"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 6
+vignette: >
+  %\VignetteIndexEntry{Guidance for git and GitHub Usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+
+This article will give you an overview of how the `{admiral}` project is utilizing the version-control software `git` and the website GitHub while working with RStudio. We will go over the primary branches that house the source code for the `{admiral}` project as well as how we use **Feature** branches to address **Issues**.  Issues can range from bugs to enhancements that have been identified or requested by developers, users or testers. We also provide the bare minimum of `git` commands needed to get up and running. Please refer to the [Resource](#github_resources) section for more in-depth guidance on using `git` and GitHub. 
+
+# Branches
+
+-	The `main` branch contains the latest development version of the package. You can find the released versions [here](https://GitHub.com/pharmaverse/admiral/releases) 
+- The `gh-pages` branches contains the code used to render R package websites - you are looking at right now!
+- The `patch` branch is reserved for special hot fixes to address bugs and should rarely be used. More info in [Hot Fix Release](https://pharmaverse.github.io/admiraldev/articles/release_strategy.html#hot-fix-release)
+- The `main`, `gh-pages`, `patch` branches are under protection. If you try and push changes to these branches you will get an error unless you are an administrator. 
+
+-	**Feature** branches are where actual development related to a specific issue happens. Feature branches are merged into `main` once a pull request is merged. Check out the [Pull Request Review Guidance](https://pharmaverse.github.io/admiraldev/articles/pr_review_guidance.html) for more guidance on merging into `main`.
+
+# Working with Feature Branches
+
+Feature Branches are where most developers will work when addressing Issues. 
+
+## Implementing an Issue
+
+Each feature branch must be related to an issue. We encourage new developers to only work on one issue at a time.
+
+### Naming Branches
+
+The name of the branch must be prefixed with the issue number, followed by a short but meaningful description. As an example, given an issue #94 "Program function to derive `LSTALVDT`", the branch name would be `94_derive_var_lstalvdt`.
+
+### Create a New Feature Branch from the Terminal (from `main`)
+
+-	Checkout the main branch: `git checkout main`  
+-	Pull the latest changes from GitHub: `git pull`  
+-	Create a new branch off the main branch and switch to it: `git checkout -b <new_branch_name>`
+
+### Create a New Feature Branch from GitHub (from `main`)
+
+You can also create a feature branch in GitHub. 
+
+- Switch to the `main` branch
+- Type in your new feature branch name
+- Click Create branch: `<your_branch_name>@main` from `main`
+- Be Sure to Pull down newly created branch into RStudio
+
+```{r, echo = FALSE}
+knitr::include_graphics("github_feature_branch.png", dpi = 144)
+```
+
+
+### Commits from the Terminal in RStudio
+
+To start the commit process, you will need to tell `git` to move your changes to the staging area.  Use `git add <your_file>` to move all changes of `<your_file>` in the staging area to wait for the next commit. You can use `git add .` to move all files you have worked on to the staging area.  Next you can commit, which takes a snapshot of your staged changes.  When committing, prefix the message with the issue number and add a meaningful message `git commit –m '#94 last alive date implementation'`. 
+
+Lastly, you should push your changes up to GitHub using `git push origin <branch name>`
+
+### Commits from the Git Tab in RStudio
+
+You can also make use of the Git Tab within RStudio to commit your changes. A benefit of using this Tab is being able to see your changes to the file with red and green highlighting. Just like in the terminal, start the message with the issue number and add a meaningful and succinct sentence.  Hit the Commit button and then Push up to GitHub.  
+
+```{r, echo = FALSE}
+knitr::include_graphics("github_committ.png", dpi = 144)
+```
+
+### Commit Message Etiquette 
+
+We require developers to **insert the issue number** into each commit message. Placing the issue number in your commit message allows reviewers to quickly find discussion surrounding your issue. When pushed to GitHub the issue number will be hyperlinked to the issue tracker, a powerful tool for discussion and traceability, which we think is valuable in a highly regulated industry like Pharma.
+
+Below are styles of commit messaging permitted:
+
+### Style 1:
+
+* `feat: #94 skeleton of function developed`
+* `chore: #94 styler and lintr update`
+* `docs: #94 parameters and details sections compelted`
+
+### Style 2:
+
+* `#94 skeleton of function developed`
+* `#94 styler and lintr update`
+* `#94 parameters and details sections compelted`
+
+### Style 3:
+
+* `skeleton of function developed (#94)`
+* `styler and lintr update (#94)`
+* `parameters and details sections compelted (#94)`
+
+
+## Pull request
+
+We recommend a thorough read through of the articles, [Pull Request Review Guidance](https://pharmaverse.github.io/admiraldev/articles/pr_review_guidance.html) and the [Programming Strategy](https://pharmaverse.github.io/admiraldev/articles/programming_strategy.html) for in-depth discussions on a doing a proper Pull Request.Pull Request authors will benefit from shorter review times by closely following the guidance provided in those two articles. Below we discuss some simple `git` commands in the terminal and on GitHub for doing a Pull Request. We recommend doing the Pull Request in GitHub only and not through the terminal.  
+
+Once all changes are committed, push the updated branch to GitHub:  
+`git push -u origin <branch_name>`  
+  
+In GitHub, under **Pull requests**, the user will either have a "Compare and pull request" button and/or a "Create Pull Request".  The first button will be created for you if GitHub detects recent changes you have made. The branch to merge with must be the `main` branch (base = `main`) and the compare branch is the new branch to merge - as shown in the below picture. Please **pay close attention** to the branch you are merging into!  
+
+
+```{r, echo = FALSE}
+knitr::include_graphics("github_create_pr.png", dpi = 144)
+```
+
+The issue must be linked to the pull request in the "Development" field of the
+Pull Request. In most cases, this will linkage will automatically close the issue and move to the Done column on our project board.
+
+```{r, echo = FALSE}
+knitr::include_graphics("github_linked_issues_dark.png", dpi = 144)
+```
+
+Once you have completed the Pull Request you will see all committed changes are then available for the reviewer.  A reviewer must be specified in the Pull Request. It is recommended to write a brief summary to your reviewers so they can quickly come up to speed on your Pull Request.  Images of your updates are nice too, which are easy to do in GitHub!  Use any Screen Capture software and Copy and Paste into your summary. 
+
+### Reviewing/Closing an Issue
+
+- At least one reviewer must approve the Pull Request. Please review the [Pull
+Request Review Guidance](https://pharmaverse.github.io/admiraldev/articles/pr_review_guidance.html), which provides in depth
+guidance on doing a proper Pull Request.
+- The reviewer must ensure that the function follows the programming strategy
+recommendations.
+- Any comment/question/discussion must be addressed and documented in GitHub
+before the Pull Request is merged
+
+Once the review is completed, the reviewer will merge the Pull Request and the
+feature branch will automatically be deleted.
+
+After merging the Pull Request please check that corresponding has been moved to the done column on the Project Board. Also, please make sure that the issue has closed.
+
+
+```{r, echo = FALSE}
+knitr::include_graphics("github_done.png", dpi = 144)
+```
+
+### Solving Merge Conflicts in the Terminal on RStudio
+
+Merge conflict is a situation where `git` cannot decide which changes to apply since there were multiple updates in the same part of a file. This typically happens when multiple people update the same part of code. Those conflicts always need to be handled manually (as some further code updates may be required):
+
+```
+git checkout main
+git pull
+git checkout <feature_branch>  
+git merge main
+```
+  
+This provides a list of all files with conflicts In the file with conflicts the conflicting sections are marked with `<<<<<<<`, `=======`, and `>>>>>>>`. The code between these markers must be updated and the markers be removed. Source files need to be updated manually. Generated files like NAMESPACE or the generated documentation files should not be updated manually but recreated after the source files were updated. 
+  
+To make the changes available call:
+
+```
+git add <file with conflict> 
+git commit -m "<insert_message>"
+git push
+```
+
+### Solving Merge Conflicts in GitHub
+
+For simple merge conflicts, developers can make use of the GitHub interface to solve them. GitHub will show the number of conflicts between the two branches. In the below image, GitHub has found 3 conflicts, but we only display the first one.  Just like in the terminal, GitHub will make use of the `<<<<<<<`, `=======`, and `>>>>>>>` to highlight the conflicting sections.  You will need to make the decision on whether to keep the code from the base or the feature branch.  Once you have decided, go into the code and remove the section you no longer wish to keep.  Be sure to remove the `<<<<<<<`, `=======`, and `>>>>>>>` as well!  Once you work through the conflicts you will mark as **Resolved and Commit your changes**.  It is recommended to pull your branch back down to RStudio to make sure no untoward effects have happen to your branch. 
+
+```{r, echo = FALSE}
+knitr::include_graphics("github_conflicts.png", dpi = 144)
+```
+
+
+## Useful `git` Commands
+
+-	merging: `git merge <my_branch>` - merge my_branch into current branch  
+-	The stashing commands are useful when one wants to go back to clean directory 
+-	`git stash` - stash (store) current changes and restore a clean directory  
+-	`git stash pop` - put back (restore) stashed changes  
+- `git revert` is also helpful but why?
+
+**Using code from unmerged branches**  
+
+-	Checkout the unmerged branch you want to use: `git checkout <unmerged_branch>`  
+-	Pull the latest committed changes from the unmerged branch: `git pull`  
+-	Check out your feature branch: `git checkout <my_branch>`  
+-	Merge the unmerged branch to <my_branch>: `git merge <unmerged_branch>`
+
+# Resources on using `git`, GitHub and RStudio {#github_resources}
+
+* [GitHub and RStudio](https://resources.github.com/whitepapers/github-and-rstudio/)
+* [Happy Git and GitHub for the useR](https://happygitwithr.com/)
+
+---
+
+# Common R CMD Check Issues
+
+**Source:** [https://pharmaverse.github.io/admiraldev/articles/rcmd_issues.html](https://pharmaverse.github.io/admiraldev/articles/rcmd_issues.html)
+
+---
+title: "R CMD Issues"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{R CMD Issues}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Common R CMD Check Issues
+
+`R CMD check` is a command line tool that checks R packages against a standard set of criteria. For a pull request to pass the check must not issue any notes, warnings or errors. Below is a list of common issues and how to resolve them.
+
+## Check Fails Only on One Version
+
+If the `R CMD check` workflow fails only on one or two R versions it can be helpful to reproduce the testing environment locally.
+
+To reproduce a particular R version environment open the `{admiral}` project in the corresponding R version, comment the line `source("renv/activate.R")` in the `.Rprofile` file, restart the R session and then run the following commands in the R console.
+
+``` r
+Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = "true")
+
+if (!dir.exists(".library")) {
+  dir.create(".library")
+}
+
+base_recommended_pkgs <- row.names(installed.packages(priority = "high"))
+for (pkg in base_recommended_pkgs) {
+  path <- file.path(.Library, pkg)
+  cmd <- sprintf("cp -r %s .library", path)
+  system(cmd)
+}
+assign(".lib.loc", ".library", envir = environment(.libPaths))
+
+r_version <- getRversion()
+if (grepl("^4.1", r_version)) {
+  options(repos = "https://packagemanager.posit.co/cran/2021-05-03/")
+} else if (grepl("^4.2", r_version)) {
+  options(repos = "https://packagemanager.posit.co/cran/2022-01-03/")
+} else if (grepl("^4.3", r_version)) {
+  options(repos = "https://packagemanager.posit.co/cran/2023-04-20/")
+} else {
+  options(repos = "https://cran.rstudio.com")
+}
+
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+remotes::install_deps(dependencies = TRUE)
+remotes::install_github("pharmaverse/pharmaversesdtm", ref = "devel")
+remotes::install_github("pharmaverse/admiraldev", ref = "devel")
+rcmdcheck::rcmdcheck()
+```
+
+This will ensure that the exact package versions we use in the workflow are installed into the hidden folder `.library`. That way your existing R packages are *not* overwritten.
+
+## Package Dependencies
+
+    > checking package dependencies ... ERROR
+      Namespace dependency not required: 'pkg'
+
+Add `pkg` to the `Imports` or `Suggests` field in the `DESCRIPTION` file. In general, dependencies should be listed in the `Imports` field. However, if a package is only used inside vignettes or unit tests it should be listed in `Suggests` because all `{admiral}` functions would work without these "soft" dependencies being installed.
+
+## Global Variables
+
+    ❯ checking R code for possible problems ... NOTE
+      function_xyz: no visible binding for global variable 'some_var'
+
+Add `some_var` to the list of "global" variables in `R/globals.R`.
+
+## Undocumented Function Parameter
+
+    ❯ checking Rd \usage sections ... WARNING
+      Undocumented arguments in documentation object 'function_xyz'
+        'some_param'
+
+Add an `@param some_param` section in the header of `function_xyz()` and run `devtools::document()` afterwards.
+
+## Outdated Documentation
+
+    ❯ checking for code/documentation mismatches ... WARNING
+      Codoc mismatches from documentation object 'function_xyz':
+      ...
+      Argument names in code not in docs:
+        new_param_name
+      Argument names in docs not in code:
+        old_param_name
+      Mismatches in argument names:
+        Position: 6 Code: new_param_name Docs: old_param_name
+
+The name of a parameter has been changed in the function code but not yet in the header. Change `@param old_param_name` to `@param new_param_name` and run `devtools::document()`.
+
+For further reading we recommend the [R-pkg manual r-cmd chapter](https://r-pkgs.org/R-CMD-check.html)
+
+---
+
 ## Unit Testing Guidelines
 
 For unit testing context see `tests/testthat/AGENTS.md` (generated from [https://pharmaverse.github.io/admiraldev/articles/unit_test_guidance.html](https://pharmaverse.github.io/admiraldev/articles/unit_test_guidance.html)).
 
+## Package Documentation
+
+After adding or modifying any roxygen2 comments (`#'`) in R source files,
+regenerate the documentation before committing:
+
+```r
+devtools::document()
+```
+
+This updates all `.Rd` files in `man/` and the `NAMESPACE` file. Always
+run it when you:
+
+- Add or rename a `@param`, `@return`, `@export`, or `@importFrom` tag
+- Add a new exported function
+- Change a function signature
+
+R CMD check will issue a WARNING for undocumented arguments or a mismatch
+between the code and docs if `devtools::document()` has not been run.
+
 ## Key References
 
 - [Programming Strategy](https://pharmaverse.github.io/admiraldev/articles/programming_strategy.html)
+- [Git and GitHub Usage](https://pharmaverse.github.io/admiraldev/articles/git_usage.html)
+- [Common R CMD Check Issues](https://pharmaverse.github.io/admiraldev/articles/rcmd_issues.html)
 - [Unit Test Guidance](https://pharmaverse.github.io/admiraldev/articles/unit_test_guidance.html)
 - [Admiral Website](https://pharmaverse.github.io/admiral/)
 - [admiraldev Website](https://pharmaverse.github.io/admiraldev/)
