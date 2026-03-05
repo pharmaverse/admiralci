@@ -88,12 +88,24 @@ jobs:
         uses: actions/checkout@v4
 
       # ── 3. Fetch the admiralci script without polluting the workspace ──────
+      #    When running inside admiralci itself, use the current ref so that
+      #    feature-branch changes to the script are picked up for testing.
+      #    When called from another repo, always use main.
+      - name: Resolve admiralci ref
+        id: admiralci_ref
+        run: |
+          if [[ "${{ github.repository }}" == "pharmaverse/admiralci" ]]; then
+            echo "ref=${{ github.ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=main" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout admiralci (script access only)
         uses: actions/checkout@v4
         with:
           repository: pharmaverse/admiralci
           path: _admiralci
-          ref: main
+          ref: ${{ steps.admiralci_ref.outputs.ref }}
 
       # ── 4. Set up R ───────────────────────────────────────────────────────
       - name: Setup R
