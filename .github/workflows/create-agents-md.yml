@@ -160,9 +160,9 @@ jobs:
           echo "stamp=$(date -u +'%Y%m%d-%H%M%S')"     >> "$GITHUB_OUTPUT"
           echo "readable=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> "$GITHUB_OUTPUT"
 
-      # ── 10. Open a PR when files changed ──────────────────────────────────
+      # ── 10. Open a PR when files changed (skipped on push test triggers) ──
       - name: Create Pull Request
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true' && github.event_name != 'push'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -205,6 +205,21 @@ jobs:
           branch: update-agents-md-${{ steps.ts.outputs.stamp }}
           base: ${{ inputs.target_branch || 'main' }}
           delete-branch: true
+
+      # ── 10b. On push test runs, show generated content instead of a PR ────
+      - name: Show generated AGENTS.md (push test run only)
+        if: github.event_name == 'push'
+        run: |
+          echo "## Generated AGENTS.md (root)" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          head -80 AGENTS.md >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f tests/testthat/AGENTS.md ]; then
+            echo "## Generated tests/testthat/AGENTS.md" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            head -40 tests/testthat/AGENTS.md >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       # ── 11. Write a job summary ────────────────────────────────────────────
       - name: Job summary
