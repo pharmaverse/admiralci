@@ -2,12 +2,17 @@
 
 #' Create AGENTS.md Files from admiraldev Vignettes
 #'
-#' Downloads the admiraldev Programming Strategy and Unit Test Strategy
-#' vignettes and writes them as AGENTS.md context files that are picked up
-#' by AI coding assistants (GitHub Copilot, Gemini, Claude, etc.).
+#' Downloads the following admiraldev vignettes and writes them as AGENTS.md
+#' context files that are picked up by AI coding assistants (GitHub Copilot,
+#' Gemini, Claude, etc.):
+#'
+#'   - programming_strategy.Rmd
+#'   - git_usage.Rmd
+#'   - rcmd_issues.Rmd
+#'   - unit_test_guidance.Rmd
 #'
 #' Files created:
-#'   - AGENTS.md                      (root – Programming Strategy)
+#'   - AGENTS.md                      (root – Programming Strategy, Git, R CMD Check)
 #'   - tests/testthat/AGENTS.md       (testthat dir – Unit Test Strategy, if it exists)
 #'
 #' Usage:
@@ -130,13 +135,28 @@ programming_strategy <- try_download(
   "programming_strategy.Rmd"
 )
 
+git_usage <- try_download(
+  file.path(admiraldev_base, "git_usage.Rmd"),
+  "git_usage.Rmd"
+)
+
+rcmd_issues <- try_download(
+  file.path(admiraldev_base, "rcmd_issues.Rmd"),
+  "rcmd_issues.Rmd"
+)
+
 unit_test_guidance <- try_download(
   file.path(admiraldev_base, "unit_test_guidance.Rmd"),
   "unit_test_guidance.Rmd"
 )
 
-n_ok <- sum(!is.null(programming_strategy), !is.null(unit_test_guidance))
-cat(glue("Downloaded {n_ok}/2 admiraldev vignettes\n\n"))
+n_ok <- sum(
+  !is.null(programming_strategy),
+  !is.null(git_usage),
+  !is.null(rcmd_issues),
+  !is.null(unit_test_guidance)
+)
+cat(glue("Downloaded {n_ok}/4 admiraldev vignettes\n\n"))
 
 # ---------------------------------------------------------------------------
 # Root AGENTS.md  (Programming Strategy)
@@ -153,7 +173,7 @@ write_root_agents_md <- function() {
     ),
     "",
     "**Auto-generated** – see commit history for the last update date.",
-    glue("**Source:** [`admiraldev/vignettes/programming_strategy.Rmd`]({admiraldev_docs}/programming_strategy.html)"),
+    "**Sources:** [`programming_strategy.Rmd`](https://pharmaverse.github.io/admiraldev/articles/programming_strategy.html), [`git_usage.Rmd`](https://pharmaverse.github.io/admiraldev/articles/git_usage.html), [`rcmd_issues.Rmd`](https://pharmaverse.github.io/admiraldev/articles/rcmd_issues.html)",
     "**Update workflow:** `create-agents-md.yml` (callable from any admiral ecosystem repo)",
     "",
     "---",
@@ -173,7 +193,7 @@ write_root_agents_md <- function() {
   )
 
   body <- if (!is.null(programming_strategy)) {
-    c(
+    ps_section <- c(
       "# Admiral Programming Strategy",
       "",
       glue("**Source:** [{admiraldev_docs}/programming_strategy.html]({admiraldev_docs}/programming_strategy.html)"),
@@ -183,6 +203,31 @@ write_root_agents_md <- function() {
       "---",
       ""
     )
+    git_section <- if (!is.null(git_usage)) {
+      c(
+        "# Guidance for git and GitHub Usage",
+        "",
+        glue("**Source:** [{admiraldev_docs}/git_usage.html]({admiraldev_docs}/git_usage.html)"),
+        "",
+        fix_relative_links(git_usage),
+        "",
+        "---",
+        ""
+      )
+    } else character(0)
+    rcmd_section <- if (!is.null(rcmd_issues)) {
+      c(
+        "# Common R CMD Check Issues",
+        "",
+        glue("**Source:** [{admiraldev_docs}/rcmd_issues.html]({admiraldev_docs}/rcmd_issues.html)"),
+        "",
+        fix_relative_links(rcmd_issues),
+        "",
+        "---",
+        ""
+      )
+    } else character(0)
+    c(ps_section, git_section, rcmd_section)
   } else {
     c(
       "# Admiral Programming Strategy",
@@ -224,30 +269,6 @@ write_root_agents_md <- function() {
     "",
     glue("For unit testing context see `tests/testthat/AGENTS.md` (generated from [{admiraldev_docs}/unit_test_guidance.html]({admiraldev_docs}/unit_test_guidance.html))."),
     "",
-    "## Git Workflow",
-    "",
-    "### Branch Naming",
-    "",
-    "Always start branch names with the GitHub issue number followed by a short",
-    "kebab-case description:",
-    "",
-    "```",
-    "<issue-number>-<short-description>",
-    "```",
-    "",
-    "Examples:",
-    "- `123-derive-var-trtdurd`",
-    "- `456-fix-date-imputation`",
-    "- `789-add-adae-template`",
-    "",
-    "### Commit Messages",
-    "",
-    "Follow [Conventional Commits](https://www.conventionalcommits.org/):",
-    "- `feat: add derive_var_trtdurd()`",
-    "- `fix: correct date imputation edge case`",
-    "- `chore: update AGENTS.md from admiraldev`",
-    "- `docs: update NEWS.md for v1.2.0`",
-    "",
     "## Package Documentation",
     "",
     "After adding or modifying any roxygen2 comments (`#'`) in R source files,",
@@ -270,6 +291,8 @@ write_root_agents_md <- function() {
     "## Key References",
     "",
     glue("- [Programming Strategy]({admiraldev_docs}/programming_strategy.html)"),
+    glue("- [Git and GitHub Usage]({admiraldev_docs}/git_usage.html)"),
+    glue("- [Common R CMD Check Issues]({admiraldev_docs}/rcmd_issues.html)"),
     glue("- [Unit Test Guidance]({admiraldev_docs}/unit_test_guidance.html)"),
     "- [Admiral Website](https://pharmaverse.github.io/admiral/)",
     "- [admiraldev Website](https://pharmaverse.github.io/admiraldev/)",
