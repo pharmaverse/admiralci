@@ -18,6 +18,14 @@ name: Create AGENTS.md Files
 # files differ from what is already committed.
 
 on:
+  # ── Temporary: test trigger for feature branch (remove before merge) ─────
+  push:
+    branches:
+      - 231-add-workflow-to-create-ai-agentmd-files
+    paths:
+      - '.github/workflows/create-agents-md.yml'
+      - '.github/scripts/create_agents_md.R'
+
   # ── Allow direct scheduling when run from admiralci itself ──────────────
   schedule:
     - cron: '0 8 1 * *' # 1st of every month at 08:00 UTC
