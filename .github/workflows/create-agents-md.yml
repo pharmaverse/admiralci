@@ -45,6 +45,13 @@ on:
         required: false
         default: 'main'
         type: string
+      admiralci_ref:
+        description: >-
+          Branch or SHA of pharmaverse/admiralci to use for the script.
+          Defaults to main. Override only when testing a feature branch.
+        required: false
+        default: 'main'
+        type: string
 
   # ── Reusable workflow interface for calling repos ─────────────────────────
   workflow_call:
@@ -58,6 +65,13 @@ on:
         type: string
       target_branch:
         description: Base branch for the pull request
+        required: false
+        default: 'main'
+        type: string
+      admiralci_ref:
+        description: >-
+          Branch or SHA of pharmaverse/admiralci to use for the script.
+          Defaults to main. Override only when testing a feature branch.
         required: false
         default: 'main'
         type: string
@@ -91,27 +105,17 @@ jobs:
       #    github.workflow_ref is "owner/admiralci/.github/workflows/....yml@refs/heads/<branch>"
       #    Extract the ref after the last "@" so we always check out the same
       #    admiralci branch that this workflow file was loaded from.
-      - name: Resolve admiralci ref
-        id: admiralci_ref
-        run: |
-          WORKFLOW_REF="${{ github.workflow_ref }}"
-          ADMIRALCI_SHA="${{ github.workflow_sha }}"
-          echo "ref=${ADMIRALCI_SHA}" >> "$GITHUB_OUTPUT"
-          echo "workflow_ref: ${WORKFLOW_REF}"
-          echo "Resolved admiralci SHA: ${ADMIRALCI_SHA}"
-
       - name: Checkout admiralci (script access only)
         uses: actions/checkout@v4
         with:
           repository: pharmaverse/admiralci
           path: _admiralci
-          ref: ${{ steps.admiralci_ref.outputs.ref }}
+          ref: ${{ inputs.admiralci_ref || 'main' }}
 
       # ── DEBUG: verify checkout contents ───────────────────────────────────
       - name: Debug admiralci checkout
         run: |
-          echo "workflow_ref: ${{ github.workflow_ref }}"
-          echo "admiralci_ref: ${{ steps.admiralci_ref.outputs.ref }}"
+          echo "admiralci_ref input: ${{ inputs.admiralci_ref || 'main' }}"
           echo "--- _admiralci root ---"
           ls _admiralci/ || echo "(_admiralci dir missing)"
           echo "--- _admiralci/.github ---"
