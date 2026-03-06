@@ -112,17 +112,6 @@ jobs:
           path: _admiralci
           ref: ${{ inputs.admiralci_ref || 'main' }}
 
-      # ── DEBUG: verify checkout contents ───────────────────────────────────
-      - name: Debug admiralci checkout
-        run: |
-          echo "admiralci_ref input: ${{ inputs.admiralci_ref || 'main' }}"
-          echo "--- _admiralci root ---"
-          ls _admiralci/ || echo "(_admiralci dir missing)"
-          echo "--- _admiralci/.github ---"
-          ls _admiralci/.github/ || echo "(_admiralci/.github missing)"
-          echo "--- _admiralci/.github/scripts ---"
-          ls _admiralci/.github/scripts/ || echo "(_admiralci/.github/scripts missing)"
-
       # ── 4. Set up R ───────────────────────────────────────────────────────
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
