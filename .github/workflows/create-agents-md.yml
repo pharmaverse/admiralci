@@ -95,9 +95,10 @@ jobs:
         id: admiralci_ref
         run: |
           WORKFLOW_REF="${{ github.workflow_ref }}"
-          ADMIRALCI_REF="${WORKFLOW_REF##*@}"
-          echo "ref=${ADMIRALCI_REF}" >> "$GITHUB_OUTPUT"
-          echo "Resolved admiralci ref: ${ADMIRALCI_REF}"
+          ADMIRALCI_SHA="${{ github.workflow_sha }}"
+          echo "ref=${ADMIRALCI_SHA}" >> "$GITHUB_OUTPUT"
+          echo "workflow_ref: ${WORKFLOW_REF}"
+          echo "Resolved admiralci SHA: ${ADMIRALCI_SHA}"
 
       - name: Checkout admiralci (script access only)
         uses: actions/checkout@v4
