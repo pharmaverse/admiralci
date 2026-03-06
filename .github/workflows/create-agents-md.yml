@@ -18,17 +18,9 @@ name: Create AGENTS.md Files
 # files differ from what is already committed.
 
 on:
-  # ── Temporary: test trigger for feature branch (remove before merge) ─────
-  push:
-    branches:
-      - 231-add-workflow-to-create-ai-agentmd-files
-    paths:
-      - '.github/workflows/create-agents-md.yml'
-      - '.github/scripts/create_agents_md.R'
-
   # ── Allow direct scheduling when run from admiralci itself ──────────────
   schedule:
-    - cron: '0 8 1 * *' # 1st of every month at 08:00 UTC
+    - cron: '0 8 6 * *' # 6th of every month at 08:00 UTC
 
   # ── Manual trigger ───────────────────────────────────────────────────────
   workflow_dispatch:
@@ -165,9 +157,9 @@ jobs:
           echo "stamp=$(date -u +'%Y%m%d-%H%M%S')"     >> "$GITHUB_OUTPUT"
           echo "readable=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> "$GITHUB_OUTPUT"
 
-      # ── 10. Open a PR when files changed (skipped on push test triggers) ──
+      # ── 10. Open a PR when files changed ────────────────────────────────
       - name: Create Pull Request
-        if: steps.changes.outputs.changed == 'true' && github.event_name != 'push'
+        if: steps.changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -211,21 +203,6 @@ jobs:
           base: ${{ inputs.target_branch || 'main' }}
           delete-branch: true
 
-      # ── 10b. On push test runs, show generated content instead of a PR ────
-      - name: Show generated AGENTS.md (push test run only)
-        if: github.event_name == 'push'
-        run: |
-          echo "## Generated AGENTS.md (root)" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          head -80 AGENTS.md >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          if [ -f tests/testthat/AGENTS.md ]; then
-            echo "## Generated tests/testthat/AGENTS.md" >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-            head -40 tests/testthat/AGENTS.md >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-          fi
-
       # ── 11. Write a job summary ────────────────────────────────────────────
       - name: Job summary
         run: |
@@ -248,4 +225,4 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "**AI assistants supported:** GitHub Copilot · Gemini · Claude · Cursor · and more" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "**Next scheduled run:** 1st of next month at 08:00 UTC" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Next scheduled run:** 6th of next month at 08:00 UTC" >> "$GITHUB_STEP_SUMMARY"
