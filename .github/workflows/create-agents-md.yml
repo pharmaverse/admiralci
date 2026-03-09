@@ -20,7 +20,7 @@ name: Create AGENTS.md Files
 on:
   # ── Allow direct scheduling when run from admiralci itself ──────────────
   schedule:
-    - cron: '0 8 6 * *' # 6th of every month at 08:00 UTC
+    - cron: '0 8 15 * *' # 15th of every month at 08:00 UTC
 
   # ── Manual trigger ───────────────────────────────────────────────────────
   workflow_dispatch:
@@ -225,4 +225,4 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "**AI assistants supported:** GitHub Copilot · Gemini · Claude · Cursor · and more" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "**Next scheduled run:** 6th of next month at 08:00 UTC" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Next scheduled run:** 15th of next month at 08:00 UTC" >> "$GITHUB_STEP_SUMMARY"
