@@ -50,7 +50,7 @@ navbar:
         href: articles/code-coverage.html
       - text: Check Templates
         href: articles/check-templates.html
-      - text: Links (Check broken links)
+      - text: Check URLs
         href: articles/links.html
       - text: Lintr (Code lints)
         href: articles/lintr.html

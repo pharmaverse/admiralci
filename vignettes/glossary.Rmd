@@ -1,0 +1,38 @@
+---
+title: "Glossary of GitHub Actions Workflow Keywords"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Glossary of GitHub Actions Workflow Keywords}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This glossary lists keywords used in the GitHub Actions workflows and actions in this repository. Each entry includes a short description and a link to the official documentation.
+
+## Workflow and Action Keywords
+
+| Keyword                | Description                                                                 | Documentation Link                                                                 |
+|------------------------|-----------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| `on`                   | Specifies the events that trigger the workflow.                             | [on](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on) |
+| `workflow_dispatch`    | Allows manual triggering of workflows with optional inputs.                 | [workflow_dispatch](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch) |
+| `workflow_call`        | Enables a workflow to be called by other workflows.                         | [workflow_call](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) |
+| `inputs`               | Defines input parameters for workflows or actions.                          | [inputs](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#inputs) |
+| `secrets`              | Defines secrets passed to workflows or actions.                             | [secrets](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#secrets) |
+| `name`                 | Sets the name of the workflow, job, or step.                               | [name](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#name) |
+| `concurrency`          | Controls the concurrency of workflow runs.                                  | [concurrency](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency) |
+| `jobs`                 | Groups together all the jobs that run in the workflow.                      | [jobs](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobs) |
+| `runs-on`              | Specifies the type of machine to run the job on.                            | [runs-on](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idruns-on) |
+| `env`                  | Sets environment variables for jobs or steps.                               | [env](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#env) |
+| `if`                   | Condition to determine if a job or step should run.                        | [if](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#if) |
+| `steps`                | Lists the sequence of tasks to run as part of a job.                        | [steps](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsteps) |
+| `uses`                 | Specifies an action to use in a step.                                      | [uses](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsuses) |
+| `with`                 | Provides input parameters to an action.                                    | [with](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepswith) |
+| `run`                  | Runs a command-line script in a step.                                      | [run](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun) |
+| `shell`                | Specifies the shell to use for a `run` step.                               | [shell](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsshell) |
+| `id`                   | Sets an identifier for a step, used for referencing outputs.               | [id](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsid) |
+| `outputs`              | Defines outputs for jobs or steps.                                         | [outputs](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idoutputs) |
+| `needs`                | Specifies job dependencies.                                                | [needs](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idneeds) |
+
+---
+
+For more details, see the [GitHub Actions Workflow Syntax documentation](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
