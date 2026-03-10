@@ -236,6 +236,15 @@ jobs:
           EOF
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Determine website link
+        id: website_link
+        run: |
+          LINK="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.head_ref }}"
+          if [[ "${{ inputs.skip-multiversion-docs }}" == "true" ]]; then
+            LINK="$LINK/dev"
+          fi
+          echo "website_link=$LINK" >> $GITHUB_OUTPUT
 
       - name: Create comment
         if: github.event_name == 'pull_request'
@@ -243,7 +252,7 @@ jobs:
         with:
           header: "Documentation Website"
           message: |
-            The website/documentation is availables at https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.head_ref }}.
+            The website/documentation is availables at ${{ steps.website_link.outputs.website_link }}.
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
