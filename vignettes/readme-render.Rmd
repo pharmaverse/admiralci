@@ -46,5 +46,5 @@ Renders the README and optionally formats it.
 # Triggers
 
 - [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch)
-- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that_trigger_workflows#workflow_call)
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call)
 
