@@ -8,44 +8,38 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Man Pages Workflow
+# Purpose
 
-This GitHub Actions workflow is designed for generating and checking man pages
-in an R package using Roxygen. If the generated pages differ to those in the
-repo, workflow fails.
+The [Man Pages](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/man-pages.yml) workflow generates and checks manual pages in the R package using `{roxygen2}`. If the generated pages differ from those in the repository, the workflow fails.
 
-## Inputs
+# Inputs
 
 - `r-version`: The version of R to use. The value is passed to the
 [r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
-its documentation for permitted values). Default: `'release'`
+its documentation for permitted values).
+  
+  *Default:* `release`.
+- `install-package`: Should the package be installed?
+  
+  *Default:* `false`.
 
-## Workflow Triggers
+# Jobs
 
-This workflow is triggered in two ways:
+## `man` Job
 
-1. **Manual Dispatch**: You can manually trigger the workflow using the
-`workflow_dispatch` event. When triggered manually, you can specify the R
-version.
+Runs Roxygen to generate and check man pages in the package.
 
-2. **Workflow Call**: The workflow can also be triggered by another workflow
-using the `workflow_call` event. The R version is an input for this event.
+### Conditions
 
-## Workflow Setup
-
-- **Name**: Man Pages
-- **Concurrency**: Man page jobs are organized by the pull request number or branch.
-- **Cancel-in-progress**: Allows canceling in-progress man page jobs.
-
-## Job: `man`
-
-This job runs Roxygen to generate and check man pages in the R package.
+Executed unless the most recent commit message contains `[skip man]`.
 
 ### Steps
 
-1. Set up R environment using the [`setup_R`](setup_r.html) action
-1. **Generate man pages**: Runs `roxygen2::roxygenize()` to generate man pages.
-1. **Set-up safe dir**: Sets up a safe directory for git configuration.
-1. **Roxygen check**: Checks if manuals are up-to-date with Roxygen comments and
-provides guidance if differences are found. If differences are found, the
-workflow will fail, giving the command to run: `roxygen2::roxygenize('.')`
+1. Set up R environment using the [`setup_R`](setup_R.html) action with `roxygen2` and optional package installation.
+2. Generate man pages by running `roxygen2::roxygenize('.')`.
+4. Check if manuals are up-to-date with Roxygen comments. If differences are found, the workflow fails and provides instructions to rerun `roxygen2::roxygenize('.')`.
+
+# Triggers
+
+- [workflow_dispatch](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch): Manual trigger, allows specifying R version.
+- [workflow_call](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call): Triggered by another workflow, allows specifying R version and package installation.

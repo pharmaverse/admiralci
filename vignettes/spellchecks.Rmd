@@ -8,47 +8,43 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Spelling Workflow
+# Purpose
 
-This GitHub Actions workflow performs spell checking on the specified R files.
-The workflow is triggered manually (`workflow_dispatch`) and can also be invoked
-as a workflow call (`workflow_call`).
+The [Spelling](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellcheck.yml) workflow checks spelling in documentation files within the repository.
 
-## Workflow Structure
-
-The workflow consists of a single job: `spellcheck`.
-
-### `spellcheck` Job
-
-This job runs spellcheck on R files.
-
-#### Inputs
+# Inputs
 
 - `r-version`: The version of R to use. The value is passed to the
 [r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
-its documentation for permitted values). Default: `'release'`
-- `exclude`: List of paths to exclude (comma-separated list). Default is an empty string.
+its documentation for permitted values).
+  
+  *Default:* `release`.
 
-#### Conditions
+- `exclude`: List of paths to exclude (comma-separated list).
+  
+  *Default:* `""`.
 
-The spellcheck job is skipped if the commit message contains `[skip spellcheck]`.
+# Other Resources
 
-#### Steps
+Misspelled words can be ignored using the `inst/WORDLIST` file. Update it automatically with `spelling::update_wordlist()`.
 
-1. Set up R environment using the [`setup_R`](setup_r.html) action
-1. Executes the
-[`insightsengineering/r-spellcheck-action`](https://github.com/insightsengineering/r-spellcheck-action)
-action on specified R files.
+# Jobs
 
-### Triggers
+## `spellcheck` Job
 
-- `workflow_dispatch`: Manually triggered workflow with optional inputs.
-- `workflow_call`: Invoked as a workflow call.
+Runs spellcheck on R files.
 
-### Permissions
+### Conditions
 
-- `contents: write`: Write permissions for repository contents.
+Executed unless the commit message contains `[skip spellcheck]`.
 
-Note : It's possible to ignore some spell checks using `inst/WORDLIST` file.
-It's possible to update it automatically using directly
-`spelling::update_wordlist()`
+### Steps
+
+1. Set up R environment using the [`setup_R`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml) action.
+2. Run [`insightsengineering/r-spellcheck-action`](https://github.com/insightsengineering/r-spellcheck-action) to check spelling, using the specified inputs.
+
+# Triggers
+
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch): Manual trigger with optional inputs.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call): Invoked by other workflows.
+- [`pull_request`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request): On pull requests to the `main` branch.

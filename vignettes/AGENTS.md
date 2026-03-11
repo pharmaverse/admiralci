@@ -37,17 +37,27 @@ are rendered into articles for the package website via pkgdown.
 - Where relevant, link to other vignettes, documentation, or external resources.
 - For each workflow or action, include the following in this order:
   - A description of its purpose. Use heading "Purpose".
-  - A list of inputs and their defaults. Use heading "Inputs". If there are no
-    inputs, state that explicitly.
+  - A list of inputs and their defaults. Use heading "Inputs". Each input should
+    be an item of a list like
+    ```
+    - `<input name>`: `<input description>`.
+    
+      *Default:* `<default value>`.
+    ```
+    If there are no inputs, state that explicitly.
   - Optionally a section which describe any other resources affecting the
     workflow, e.g., `staged_dependencies.yaml` for the `setup_r` action. Use
     heading "Other Resources". If there are no other resources, omit this
     section.
-  - The jobs defined in the workflow or action. Use heading "Jobs". For each job display:
-    - a short description,
-    - if it is executed conditionally, the condition when it is executed,
+  - The jobs defined in the workflow or action. Use heading "Jobs". For each job
+    (heading "`<job name>` Job", e.g., "`check` Job" for the `check` job)
+    display:
+    - a short description, without adding a title like "Description:".
+    - if it is executed conditionally, the condition when it is executed. Use
+      heading "Conditions".
     - the steps performed. If other actions (internal or external) are used,
-    link to their vignettes or documentation.
+    link to their vignettes or documentation. Use heading "Steps". Use an
+    ordered list for the steps.
   - A list of events triggering the workflow (for workflows). Use heading
     "Triggers".
 - When stating github action keywords or events like `workflow_dispatch, link
@@ -69,6 +79,12 @@ are rendered into articles for the package website via pkgdown.
 
 ## Special Files
 
-- `glossary.Rmd`: Lists and explains keywords used in GitHub Actions and workflows.
+- `glossary.Rmd`: Lists and explains keywords used in GitHub Actions and
+  workflows. Use a list like
+  ```
+  - `<keyword>`: `<description>`.
+  ```
+  The keyword should be linked to the GitHub documentation.
+  The keyword should be ordered alphabetically.
 - `AGENTS.md`: This guidance document.
 - Other `.Rmd` files: Cover specific workflows, checks, or features.

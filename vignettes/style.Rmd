@@ -8,46 +8,37 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Style Workflow
+# Purpose
 
-This GitHub Actions workflow checks and enforces coding style using `{styler}`
-on R files. The workflow is triggered manually (`workflow_dispatch`) and can
-also be invoked as a workflow call (`workflow_call`).
-
-## Workflow Structure
-
-The workflow consists of a single job: `style`.
-
-### `style` Job
-
-This job performs code style checks and enforces styling using `{styler}`.
-
-#### Inputs
-
-- `r-version`: The version of R to use. The value is passed to the
-[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
-its documentation for permitted values). Default: `'release'`
-
-#### Conditions
-
-The style check job is skipped if the commit message contains `[skip style]`.
-
-#### Steps
-
-1. Set up R environment using the [`setup_R`](setup_r.html) action
-1. **Get changed files:** Retrieves the list of changed files.
-1. **Run styler:** Applies `{styler}` to the changed R files and checks for
-style violations. If violations are found, the workflow displays relevant
-information and version details (files with style violation will be displayed
-using `git diff` after running styler on the workflows)
-
-### Triggers
-
-- `workflow_dispatch`: Manually triggered workflow with optional inputs.
-- `workflow_call`: Invoked as a workflow call.
-
-### Permissions
-
-- `contents: write`: Write permissions for repository contents.
+The [`style.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/style.yml)
+workflow checks code style for changed files in the repository using [`styler`](https://github.com/r-lib/styler). 
 
 Note: It's possible to fix locally style issues using `styler::style_file()`.
+
+# Inputs
+
+- `r-version`: The version of R to use.
+
+  *Default:* `release`.
+
+# Jobs
+
+## `style` Job
+
+Runs code style checks using `styler` on changed files.
+
+### Conditions
+
+Skipped if the commit message contains `[skip style]`.
+
+### Steps
+
+1. Set up R environment using the [`setup_R`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml) action.
+2. Get changed files using [`Ana06/get-changed-files`](https://github.com/Ana06/get-changed-files).
+3. Run `styler` on changed R files and report any styling errors (files with style violation will be displayed
+using `git diff` after running styler on the workflows).
+
+# Triggers
+
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows)
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows)

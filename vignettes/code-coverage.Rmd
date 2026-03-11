@@ -8,22 +8,62 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Code Coverage Workflow
+# Purpose
 
-This GitHub Actions workflow is designed for testing and generating code
-coverage reports for an R package. It includes options to skip code coverage
-badge creation. This workflow measures code coverage for unit tests and reports
-the code coverage as a percentage of the _total number of lines covered by unit
-tests_ vs. the _total number of lines in the codebase_.
+The [code-coverage workflow](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/code-coverage.yml) measures unit test coverage for the package and generates coverage reports and badges.
 
-The `{covr}` R package is used to calculate the coverage.
+# Inputs
 
-Report summaries and badges for coverage are generated using a series of other GitHub Actions.
+- `r-version`: The version of R to use. Default: `'release'`. See [setup-r action inputs](https://github.com/r-lib/actions/tree/v2/setup-r).
+- `skip-coverage-badges`: Skip code coverage badge creation. Default: `false`.
 
-For this workflow to execute successfully, you will need to create an orphan branch called `badges` in your GitHub repository. You can do that using the following steps:
+# Triggers
 
-``` bash
-# Create orphan branch
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch): Manual trigger, allows specifying inputs.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call): Triggered by another workflow, allows specifying inputs.
+
+# Jobs
+
+## `coverage` Job
+
+Runs code coverage tests, generates coverage reports, and outputs the coverage percentage.
+
+### Conditions
+
+Executed unless the latest commit message contains `[skip coverage]`.
+
+### Steps
+
+- Set up R environment using [`setup_R`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml) action, installing `{covr}`.
+- Run coverage analysis with `{covr}`:
+    - Generate `coverage.xml`, `coverage.txt`, and `coverage-report.html`.
+- Check for existence of coverage reports.
+- Set coverage percentage as output.
+- If coverage reports exist and event is a pull request:
+    - Generate coverage summary report and badge using [CodeCoverageSummary](https://github.com/irongut/CodeCoverageSummary).
+    - Upload coverage report artifact.
+    - Add coverage summary as a pull request comment.
+
+## `badge` Job
+
+Generates a code coverage badge and commits it to the `badges` branch.
+
+### Conditions
+
+Runs if `skip-coverage-badges` is not `true`, commit message does not contain `[skip coverage]`, and branch is `main`.
+
+### Steps
+
+- Checkout the `badges` branch.
+- Generate badge SVG using [badge-action](https://github.com/emibcn/badge-action).
+- Commit badge to the branch.
+- Push badge updates.
+
+# Other Resources
+
+To enable badge creation, create an orphan `badges` branch in your repository:
+
+```bash
 git checkout --orphan badges
 # Back up files
 mv .git /tmp/.git-backup
@@ -36,60 +76,3 @@ echo "# Badges" > README.md
 # Add, commit and push your new branch
 git add . && git commit -m "Init badges" && git push origin badges
 ```
-
-## Inputs
-
-- `r-version`: The version of R to use. The value is passed to the
-[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
-its documentation for permitted values). Default: `'release'`
-
-- `skip-coverage-badges`: Skip code coverage badge creation. Default: `false`
-
-## Workflow Triggers
-
-This workflow is triggered in two ways:
-
-- **Manual Dispatch**: You can manually trigger the workflow using the `workflow_dispatch` event. When triggered manually, you can specify the R version and choose to skip code coverage badge creation.
-
-- **Workflow Call**: The workflow can also be triggered by another workflow using the `workflow_call` event. The R version and skip-coverage-badges options are inputs for this event.
-
-## Workflow Setup
-
-- **Name**: Code Coverage
-- **Concurrency**: Code coverage jobs are organized by the pull request number or branch.
-- **Cancel-in-progress**: Allows canceling in-progress code coverage jobs.
-
-## Job: `coverage`
-
-This job runs code coverage tests, generates coverage reports, and outputs the
-coverage percentage.
-
-### Steps
-
-1. Set up R environment using the [`setup_R`](setup_r.html) action
-
-1. **Run coverage**: Runs code coverage tests, generates coverage reports, and outputs the coverage percentage.
-
-1. **Check whether coverage reports exist**: Checks for the existence of coverage reports.
-
-1. **Set coverage percentage as output**: Sets the coverage percentage as an output variable.
-
-1. **Generate Coverage Summary Report**: Generates a coverage summary report, adds badges, and uploads the report for review.
-
-1. **Add Coverage PR Comment**: Adds a comment to the pull request with the coverage summary.
-
-## Job: `badge`
-
-This job generates a code coverage badge and commits it to the repository. It is
-triggered after the completion of the `coverage` job and only if for `push`
-events to `main`.
-
-### Steps
-
-1. **Checkout the badges branch in repo**: Checks out the badges branch for badge updates.
-
-2. **Generate the badge SVG image**: Generates the code coverage badge SVG image.
-
-3. **Commit badge**: Commits the updated badge to the badges branch.
-
-4. **Push badges**: Pushes the changes to the badges branch.

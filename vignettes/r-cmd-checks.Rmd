@@ -8,32 +8,31 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+# Purpose
 
-# R CMD Check Workflow
+The [`r-cmd-check.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-cmd-check.yml) workflow performs R CMD checks on the package across multiple operating systems and the latest released R version. This ensures package compatibility and quality.
 
-This GitHub Actions workflow performs R CMD checks on the latest released R
-version and on different operating systems (linux, macos, and windows).
+# Inputs
 
-## Workflow Structure
+- `error-on`: Input for the `error_on` parameter in `rcmdcheck::rcmdcheck()`.
+  
+  *Default:* `note`.
 
-The workflow consists of a single job: `R-CMD-check`.
+# Jobs
 
-### `R-CMD-check` Job
+## `R-CMD-check` Job
 
-This job runs R CMD checks on different operating systems. The checks are
-performed in parallel for each operating system.
+Runs R CMD checks in parallel on macOS, Windows, and Ubuntu using the latest R release.
 
+### Steps
 
-#### Inputs
+1. Set up R environment using the [`setup_R`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml) action.
+2. Run R CMD check using the [`check-r-package`](https://github.com/r-lib/actions/tree/v2/check-r-package) action.
 
-- `error-on`: Input for the 'error_on' parameter in `rcmdcheck::rcmdcheck()`. Defaults to `'note'`.
+# Triggers
 
-#### Steps
+The workflow is triggered by:
 
-1. Set up R environment using the [`setup_R` action](setup_r.html)
-2. Run R CMD check using the [`check-r-package` action](https://github.com/r-lib/actions/tree/v2/check-r-package)
-
-### Concurrency
-
-Concurrency settings are specified to manage concurrent workflow runs effectively.
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch)
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call)
 

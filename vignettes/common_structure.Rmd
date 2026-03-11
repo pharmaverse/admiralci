@@ -20,6 +20,9 @@ on:
     inputs:
 ```
 
+See [`common.yml.inactive`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/common.yml.inactive)
+for an example on how to call the `{admiralci}` workflows from other repositories.
+
 In most workflows the first step is to setup the R environment using the
 `setup_R` action. It checks out the repository, sets up the R environment
 according to the specified R version, installs the necessary dependencies, and
@@ -60,4 +63,4 @@ upstream dependencies:
 - `admiraldev` (utilities functions for the admiral package family)
 
 The dependencies are referred inside the `staged_dependencies.yaml` file in the
-root of the repository. The file is expected by the `setup_R` action.
+root of the repository. The file is expected by the [`setup_R`](setup_r.html) action.

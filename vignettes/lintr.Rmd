@@ -8,56 +8,48 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Lint Workflow
+# Purpose
 
-This GitHub Actions workflow performs linting tasks for an R package.
+The [`lintr`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/lintr.yml) workflow performs linting tasks, ensuring code style and quality.
 
-## Workflow Triggers
-
-This workflow is triggered in the following ways:
-
-- **Manual Dispatch**: You can manually trigger the workflow using the `workflow_dispatch` event.
-
-- **Workflow Call**: The workflow can also be triggered by another workflow using the `workflow_call` event.
-
-## Workflow Inputs
-
-The workflow accepts the following inputs during manual dispatch or workflow call:
+# Inputs
 
 - `r-version`: The version of R to use. The value is passed to the
 [r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
-its documentation for permitted values). Default: `'release'`
+its documentation for permitted values).  
+  *Default:* `'release'`
 
-- `lint-all-files`: Boolean indicating whether to lint all files every time. Default: `false`.
+- `lint-all-files`: Lint all files every time. If set to `false`, only files changed in the PR are linted.  
+  *Default:* `false`.
 
-- `install-package`: Should the package be installed? Default: `false`
+- `install-package`: Should the package be installed?  
+  *Default:* `false`.
 
-## Workflow Setup
+# Jobs
 
-- **Concurrency**: Lint jobs are organized by the pull request number or branch.
+## `lint` Job
 
-- **Cancel-in-progress**: Allows canceling in-progress lint jobs.
+Performs linting on the package.
 
-## Job: `lint`
+### Conditions
 
-This job performs linting tasks.
+Executed unless the latest commit message contains `[skip lint]`.
 
 ### Steps
 
-1. Set up R environment using the [`setup_R`](setup_r.html) action
+1. Set up R environment using [`setup_R`](setup_r.html) action, installing `lintr` and `cyclocomp`.
+1. Determine changed files using [`Ana06/get-changed-files`](https://github.com/Ana06/get-changed-files/tree/v2.2.0).
+1. Lint files using `lintr::lint_package()`, excluding files based on changed files and `.lintr`/`renv.lock` changes.
+1. Raise an error if lints are detected, prompting review and adjustment.
 
-1. Determine changed files using the
-[`Ana06/get-changed-files`](https://github.com/Ana06/get-changed-files/tree/v2.2.0)
-action
+# Triggers
 
-1. Lint the files
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch): Manual trigger.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call): Triggered by another workflow.
 
-1. Perform linting using `lintr` on the R package. Excludes files based on the changed files list.
+# Other Resources
 
-1. Raise an error if lints are detected, prompting a review and adjustment of the code.
-
-Note: a `.lintr` file can be configured at the upstream repository level, to be
-able for example to exclude some lint rules such as this example:
+A `.lintr` file can be configured to exclude specific lint rules, for example:
 
 ```
 exclusions: list(

@@ -36,13 +36,15 @@ navbar:
     basics:
       text: Basics
       menu:
-      - text: Common structure of the workflows
+      - text: Workflow Structure
         href: articles/common_structure.html
+      - text: Glossary
+        href: articles/glossary.html
     workflows_details:
       text: Workflows and Actions
       menu:
       - text: Workflows
-      - text: R-CMD CHECKS
+      - text: R CMD Checks
         href: articles/r-cmd-checks.html
       - text: CRAN Status
         href: articles/cran-status.html
@@ -52,25 +54,25 @@ navbar:
         href: articles/check-templates.html
       - text: Check URLs
         href: articles/links.html
-      - text: Lintr (Code lints)
+      - text: Lintr
         href: articles/lintr.html
-      - text: Style (Code style)
+      - text: Style
         href: articles/style.html
       - text: Spellchecks
         href: articles/spellchecks.html
-      - text: Man pages (Code Doc Rendering)
+      - text: Man Pages
         href: articles/man-pages.html
-      - text: Pkgdown (build and publish website)
+      - text: Pkgdown
         href: articles/pkgdown.html
-      - text: remove_pr_website (remove PR website)
+      - text: Remove PR Website
         href: articles/remove_pr_website.html
-      - text: Tweak Pages (fix pkgdown broken links)
+      - text: Tweak Pages
         href: articles/tweak-page-hooks.html
-      - text: Validation (build PDF validation report)
+      - text: Validation
         href: articles/validation.html
       - text: ----
       - text: Actions
-      - text: Set up R
+      - text: Set Up R
         href: articles/setup_r.html
 
     slack:
