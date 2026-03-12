@@ -20,8 +20,7 @@ Notes :
 * Some workflows are using github actions from
   [InsightsEngineering](https://github.com/insightsengineering/)
   group.
-* Most of the workflows are sharing the same steps (see [Common
-workflows
+* Most of the workflows are sharing the same steps (see [Common workflows
 structure](https://pharmaverse.github.io/admiralci/articles/common_structure.html))
 
 # Available workflows
@@ -30,88 +29,77 @@ The following workflows are available in this repository, and can be reused in
 your repository. Please note that it depends on the set up of your repository
 when they are triggered.
 
-## Workflows to be triggered by Admiral MR (feature branch to main branch)
+## Workflows to be triggered by MR (feature branch to main branch)
 
 ### Check Templates
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-templates.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/check-templates.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/check-templates.html)
 
-### lintr
+### Linting
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/lintr.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/lintr.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/lintr.html)
 
 ### Man Pages
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/man-pages.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/man-pages.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/man-pages.html)
 
 ### R CMD CHECKS
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-cmd-check.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/r-cmd-checks.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/r-cmd-checks.html)
 
 ### Check Spelling
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellchecks.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/spellchecks.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/spellchecks.html)
 
 ### Code Coverage
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/code-coverage.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/code-coverage.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/code-coverage.html)
 
-### Readme Render
+### `README` Render
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/readme-render.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/readme-render.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/readme-render.html)
 
 ### Style
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/style.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/style.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/style.html)
 
 ## Workflows to be triggered by a new release
 
 ### Validation
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-pkg-validation.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/validation.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/validation.html)
 
 ### Pkgdown
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/pkgdown.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/pkgdown.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/pkgdown.html)
 
-## cron Workflows
+## `cron` Workflows
 
-### Cran Status
+### CRAN Status
 
-* [Link to workflow code (yml
+* [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/cran-status.yml)
-* [Link to the
-  documentation](https://pharmaverse.github.io/admiralci/articles/cran-status.html)
+* [documentation](https://pharmaverse.github.io/admiralci/articles/cran-status.html)
 
 
 # How to use these workflows?
@@ -121,7 +109,7 @@ when they are triggered.
 You could add just _one_ file called `.github/workflows/common.yml` to
 directly import these workflows while receiving the latest updates and
 enhancements, given that the workflows defined in this repository are
-reusable via the \[`workflow_call`]\[workflow\_call] GitHub Actions
+reusable via the [`workflow_call`](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) GitHub Actions
 event.
 
 The contents of the `.github/workflows/common.yml` file are available in
@@ -160,11 +148,22 @@ bellow :
 * [r-lib-actions](https://github.com/r-lib/actions)
 * [InsightsEngineering](https://github.com/insightsengineering)
 * [lychee](https://github.com/lycheeverse/lychee)
-* [covr](https://covr.r-lib.org/)
-* [lintr](https://lintr.r-lib.org/)
-* [pkgdown](https://pkgdown.r-lib.org/)
+* [`covr`](https://covr.r-lib.org/)
+* [`lintr`](https://lintr.r-lib.org/)
+* [`pkgdown`](https://pkgdown.r-lib.org/)
 * [multi-version-docs](https://github.com/marketplace/actions/r-pkgdown-multi-version-docs)
 * [validation](https://github.com/marketplace/actions/r-package-validation-report)
 * [spelling](https://docs.ropensci.org/spelling/)
-* [styler](https://styler.r-lib.org/)
+* [`styler`](https://styler.r-lib.org/)
+* [workflow\_call](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
+* [r-lib-actions](https://github.com/r-lib/actions)
+* [InsightsEngineering](https://github.com/insightsengineering)
+* [lychee](https://github.com/lycheeverse/lychee)
+* [`covr`](https://covr.r-lib.org/)
+* [`lintr`](https://lintr.r-lib.org/)
+* [`pkgdown`](https://pkgdown.r-lib.org/)
+* [multi-version-docs](https://github.com/marketplace/actions/r-pkgdown-multi-version-docs)
+* [validation](https://github.com/marketplace/actions/r-package-validation-report)
+* [spelling](https://docs.ropensci.org/spelling/)
+* [`styler`](https://styler.r-lib.org/)
 * [workflow\_call](https://docs.github.com/en/actions/using-workflows/reusing-workflows)

@@ -30,13 +30,13 @@ Renders the README and optionally formats it.
 1. Get branch names ([tj-actions/branch-names@v8](https://github.com/tj-actions/branch-names)).
 2. Checkout repo (PR) ([actions/checkout@v4.2.2](https://github.com/actions/checkout), only for pull requests).
 3. Checkout repository ([actions/checkout@v4.2.2](https://github.com/actions/checkout), for other events).
-4. Restore cache ([actions/cache@v4](https://github.com/actions/cache)).
-5. Run staged dependencies ([insightsengineering/staged-dependencies-action@v1](https://github.com/insightsengineering/staged-dependencies-action)).
-6. Install dependencies from DESCRIPTION ([remotes::install_local](https://github.com/r-lib/remotes)).
-7. Render README to markdown ([rmarkdown::render](https://github.com/rstudio/rmarkdown)).
-8. Install Markdown formatter ([quilicicf/markdown-formatter](https://github.com/quilicicf/markdown-formatter), skipped if `skip-md-formatting` is `true`).
+4. Restore cache ([`actions/cache@v4`](https://github.com/actions/cache)).
+5. Run staged dependencies ([`insightsengineering/staged-dependencies-action@v1`](https://github.com/insightsengineering/staged-dependencies-action)).
+6. Install dependencies from DESCRIPTION ([`remotes::install_local()`](https://github.com/r-lib/remotes)).
+7. Render README to markdown ([`rmarkdown::render()`](https://github.com/rstudio/rmarkdown)).
+8. Install Markdown formatter ([`quilicicf/markdown-formatter`](https://github.com/quilicicf/markdown-formatter), skipped if `skip-md-formatting` is `true`).
 9. Add safe directory and set git user ([git config documentation](https://git-scm.com/docs/git-config)).
-10. Commit and push formatted README.md ([git commit](https://git-scm.com/docs/git-commit), [git push](https://git-scm.com/docs/git-push)).
+10. Commit and push formatted `README.md` ([git commit](https://git-scm.com/docs/git-commit), [git push](https://git-scm.com/docs/git-push)).
 
 ### Conditions
 

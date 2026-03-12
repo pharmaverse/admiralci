@@ -46,8 +46,6 @@ navbar:
       - text: Workflows
       - text: R CMD Checks
         href: articles/r-cmd-checks.html
-      - text: CRAN Status
-        href: articles/cran-status.html
       - text: Code Coverage
         href: articles/code-coverage.html
       - text: Check Templates
@@ -70,6 +68,8 @@ navbar:
         href: articles/tweak-page-hooks.html
       - text: Validation
         href: articles/validation.html
+      - text: CRAN Status
+        href: articles/cran-status.html
       - text: ----
       - text: Actions
       - text: Set Up R

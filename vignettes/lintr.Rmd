@@ -1,9 +1,9 @@
 ---
-title: "lintr"
+title: "Linting"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{lintr}
+  %\VignetteIndexEntry{Linting}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

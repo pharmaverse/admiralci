@@ -27,7 +27,7 @@ its documentation for permitted values).
 
 ## `man` Job
 
-Runs Roxygen to generate and check man pages in the package.
+Runs `roxygen2` to generate and check man pages in the package.
 
 ### Conditions
 
@@ -37,7 +37,7 @@ Executed unless the most recent commit message contains `[skip man]`.
 
 1. Set up R environment using the [`setup_R`](setup_R.html) action with `roxygen2` and optional package installation.
 2. Generate man pages by running `roxygen2::roxygenize('.')`.
-4. Check if manuals are up-to-date with Roxygen comments. If differences are found, the workflow fails and provides instructions to rerun `roxygen2::roxygenize('.')`.
+4. Check if manuals are up-to-date with `roxygen2` comments. If differences are found, the workflow fails and provides instructions to rerun `roxygen2::roxygenize('.')`.
 
 # Triggers
 

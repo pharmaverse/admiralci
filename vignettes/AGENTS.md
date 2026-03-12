@@ -68,8 +68,8 @@ are rendered into articles for the package website via pkgdown.
   `https://github.com/pharmaverse/admiralci/blob/main/`, e.g.,
   `.github/wortkflows/links.yml` should be linked to
   `https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/links.yml`.
-- Don't add references regarding how to create vignettes like rmarkdown or
-  pkgdown.
+- Don't add references regarding how to create vignettes like `rmarkdown` or
+  `pkgdown`.
 
 ## Updating Vignettes
 
