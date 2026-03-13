@@ -10,7 +10,7 @@ on:
           - devel
           - oldrel
       lint-all-files:
-        description: "Lint all files every time"
+        description: "Lint all files every time, if set to false, only changed files will be linted"
         default: "false"
         required: false
         type: string
@@ -27,7 +27,7 @@ on:
         required: false
         type: string
       lint-all-files:
-        description: "Lint all files every time"
+        description: "Lint all files every time, if set to false, only changed files will be linted"
         default: "false"
         required: false
         type: string
@@ -59,6 +59,8 @@ jobs:
 
       - name: Changed files
         id: files
+        # creates an output `added_modified` with the list of added and modified
+        # files in the PR, in JSON format
         uses: Ana06/get-changed-files@v2.2.0
         with:
           format: "json"

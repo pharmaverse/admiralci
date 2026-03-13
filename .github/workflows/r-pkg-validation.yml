@@ -1,3 +1,5 @@
+# to be revised in https://github.com/pharmaverse/admiralci/issues/226
+
 name: R Package Validation report
 
 on:

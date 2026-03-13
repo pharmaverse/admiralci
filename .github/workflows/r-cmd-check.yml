@@ -23,6 +23,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Use matrix strategy to create a job for each combination of OS and R
+        # version specified below
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
@@ -30,6 +32,8 @@ jobs:
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # check in https://github.com/pharmaverse/admiralci/issues/226 if this is
+      # still needed
       R_KEEP_PKG_SOURCE: yes
 
     steps:

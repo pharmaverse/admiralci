@@ -56,6 +56,9 @@ jobs:
         if: "!startsWith(github.event.comment.body, '/roxygenize')"
         run: |
           git status -s
+          # Check if `git status` lists the DESCRIPTION file or any man files,
+          # -n checks if the output of `git status` is not empty after filtering for
+          # DESCRIPTION and man files.
           if [[ -n `git status -s | grep -E "man|DESCRIPTION"` ]]
           then {
             ROXYGEN_VERSION="$(Rscript -e 'packageVersion("roxygen2")' | awk '{print $NF}')"
