@@ -1,0 +1,228 @@
+name: Create AGENTS.md Files
+
+# Reusable workflow – lives in pharmaverse/admiralci.
+#
+# Calling repos reference it as:
+#   uses: pharmaverse/admiralci/.github/workflows/create-agents-md.yml@main
+#
+# What it does
+# ────────────
+# Downloads the admiraldev Programming Strategy and Unit Test Strategy vignettes
+# and writes them into two AGENTS.md context files that are automatically picked
+# up by AI coding assistants (GitHub Copilot, Gemini, Claude, Cursor, etc.):
+#
+#   • AGENTS.md                 – root; Programming Strategy
+#   • tests/testthat/AGENTS.md  – testthat dir; Unit Test Strategy (when present)
+#
+# A pull request is opened against the target branch whenever the generated
+# files differ from what is already committed.
+
+on:
+  # ── Allow direct scheduling when run from admiralci itself ──────────────
+  schedule:
+    - cron: '0 8 15 * *' # 15th of every month at 08:00 UTC
+
+  # ── Manual trigger ───────────────────────────────────────────────────────
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: >
+          Package name (e.g. admiral, admiralonco).
+          Defaults to the calling repository name.
+        required: false
+        default: ''
+        type: string
+      target_branch:
+        description: Base branch for the pull request
+        required: false
+        default: 'main'
+        type: string
+      admiralci_ref:
+        description: >-
+          Branch or SHA of pharmaverse/admiralci to use for the script.
+          Defaults to main. Override only when testing a feature branch.
+        required: false
+        default: 'main'
+        type: string
+
+  # ── Reusable workflow interface for calling repos ─────────────────────────
+  workflow_call:
+    inputs:
+      package_name:
+        description: >
+          Package name (e.g. admiral, admiralonco).
+          Defaults to the calling repository name.
+        required: false
+        default: ''
+        type: string
+      target_branch:
+        description: Base branch for the pull request
+        required: false
+        default: 'main'
+        type: string
+      admiralci_ref:
+        description: >-
+          Branch or SHA of pharmaverse/admiralci to use for the script.
+          Defaults to main. Override only when testing a feature branch.
+        required: false
+        default: 'main'
+        type: string
+
+jobs:
+  create-agents-md:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # ── 1. Resolve the package name ────────────────────────────────────────
+      - name: Resolve package name
+        id: pkg
+        run: |
+          PKG="${{ inputs.package_name }}"
+          if [[ -z "$PKG" ]]; then
+            # GITHUB_REPOSITORY is "owner/repo" – drop the owner prefix
+            PKG="${GITHUB_REPOSITORY##*/}"
+          fi
+          echo "name=${PKG}" >> "$GITHUB_OUTPUT"
+          echo "Resolved package name: ${PKG}"
+
+      # ── 2. Check out the calling (or self) repository ─────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 3. Fetch the admiralci script without polluting the workspace ──────
+      #    github.workflow_ref is "owner/admiralci/.github/workflows/....yml@refs/heads/<branch>"
+      #    Extract the ref after the last "@" so we always check out the same
+      #    admiralci branch that this workflow file was loaded from.
+      - name: Checkout admiralci (script access only)
+        uses: actions/checkout@v4
+        with:
+          repository: pharmaverse/admiralci
+          path: _admiralci
+          ref: ${{ inputs.admiralci_ref || 'main' }}
+
+      # ── 4. Set up R ───────────────────────────────────────────────────────
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+
+      # ── 5. Install R dependencies ─────────────────────────────────────────
+      - name: Install R dependencies
+        run: Rscript -e "install.packages('glue', repos = 'https://cloud.r-project.org')"
+
+      # ── 6. Generate AGENTS.md files ───────────────────────────────────────
+      - name: Create AGENTS.md files
+        run: |
+          Rscript _admiralci/.github/scripts/create_agents_md.R \
+            "${{ steps.pkg.outputs.name }}"
+
+      # ── 7. Remove the temporary admiralci checkout ────────────────────────
+      - name: Remove admiralci checkout
+        run: rm -rf _admiralci
+
+      # ── 8. Detect whether any AGENTS.md was actually modified ─────────────
+      - name: Check for AGENTS.md changes
+        id: changes
+        run: |
+          paths=(AGENTS.md)
+          if [ -f tests/testthat/AGENTS.md ]; then
+            paths+=("tests/testthat/AGENTS.md")
+          fi
+
+          # If no AGENTS files exist at all, treat as no changes
+          if [ "${#paths[@]}" -eq 0 ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No AGENTS.md files found"
+            exit 0
+          fi
+
+          if git diff --quiet HEAD -- "${paths[@]}"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected in AGENTS.md files"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Changes detected:"
+            git diff --name-only HEAD -- "${paths[@]}" \
+              | sed 's/^/  - /'
+          fi
+
+      # ── 9. Capture a timestamp for the PR branch name ─────────────────────
+      - name: Get timestamp
+        id: ts
+        run: |
+          echo "stamp=$(date -u +'%Y%m%d-%H%M%S')"     >> "$GITHUB_OUTPUT"
+          echo "readable=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> "$GITHUB_OUTPUT"
+
+      # ── 10. Open a PR when files changed ────────────────────────────────
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            chore: update AGENTS.md from admiraldev vignettes
+
+            - Synced admiraldev Programming Strategy
+            - Synced admiraldev Unit Test Strategy
+            - Auto-generated on ${{ steps.ts.outputs.readable }}
+          title: "chore: update AGENTS.md from admiraldev (${{ steps.ts.outputs.stamp }})"
+          body: |
+            ## 📋 admiraldev Documentation Sync – AGENTS.md
+
+            This PR updates the AI assistant context files for
+            **${{ steps.pkg.outputs.name }}** with the latest admiraldev guidelines.
+
+            ### Updated files
+
+            | File | Content |
+            | --- | --- |
+            | `AGENTS.md` | admiraldev Programming Strategy |
+            | `tests/testthat/AGENTS.md` | admiraldev Unit Test Strategy (if directory exists) |
+
+            ### Why these files?
+
+            `AGENTS.md` files are read automatically by GitHub Copilot, Gemini,
+            Claude, Cursor, and other AI coding assistants. Keeping them in sync
+            with the latest admiraldev vignettes ensures that AI suggestions
+            follow current admiral ecosystem conventions.
+
+            **Source vignettes**
+            - [`programming_strategy.Rmd`](https://pharmaverse.github.io/admiraldev/articles/programming_strategy.html)
+            - [`unit_test_guidance.Rmd`](https://pharmaverse.github.io/admiraldev/articles/unit_test_guidance.html)
+
+            **Generated:** ${{ steps.ts.outputs.readable }}
+
+            ---
+            *Auto-generated by `pharmaverse/admiralci` –
+            [`.github/workflows/create-agents-md.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/create-agents-md.yml)*
+          branch: update-agents-md-${{ steps.ts.outputs.stamp }}
+          base: ${{ inputs.target_branch || 'main' }}
+          delete-branch: true
+
+      # ── 11. Write a job summary ────────────────────────────────────────────
+      - name: Job summary
+        run: |
+          echo "## 📋 AGENTS.md Sync Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Package:** ${{ steps.pkg.outputs.name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Run date:** ${{ steps.ts.outputs.readable }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "${{ steps.changes.outputs.changed }}" == "true" ]]; then
+            echo "✅ **Pull Request opened**" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Branch: \`update-agents-md-${{ steps.ts.outputs.stamp }}\`" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Target:  \`${{ inputs.target_branch || 'main' }}\`" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "**Files updated:**" >> "$GITHUB_STEP_SUMMARY"
+            echo "- 📄 \`AGENTS.md\` – admiraldev Programming Strategy" >> "$GITHUB_STEP_SUMMARY"
+            echo "- 📄 \`tests/testthat/AGENTS.md\` – admiraldev Unit Test Strategy" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "ℹ️ **No changes** – AGENTS.md files are already up to date." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**AI assistants supported:** GitHub Copilot · Gemini · Claude · Cursor · and more" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Next scheduled run:** 15th of next month at 08:00 UTC" >> "$GITHUB_STEP_SUMMARY"
