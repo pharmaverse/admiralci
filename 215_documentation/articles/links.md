@@ -1,0 +1,63 @@
+# Check URLs Workflow
+
+## Purpose
+
+Validates URLs in documentation files to ensure all links are working
+and up-to-date.
+
+Source:
+[`.github/workflows/links.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/links.yml)
+
+## Inputs
+
+No explicit workflow inputs.
+
+## Other Resources
+
+- `.lycheeignore`: Can be used to ignore specific links during checks.
+
+## Jobs
+
+### Job: `links`
+
+Validates links in documentation files.
+
+#### Condition
+
+Runs unless the commit message contains `[skip links]`.
+
+#### Steps
+
+1.  **Checkout repo**  
+    Uses [actions/checkout](https://github.com/actions/checkout) to
+    check out the repository.
+2.  **Check URLs in docs**  
+    Uses
+    [lycheeverse/lychee-action](https://github.com/lycheeverse/lychee-action)
+    to check URLs in documentation files.
+    - Excludes private URLs, GitHub repository URLs, and specified
+      patterns.
+    - Checks files with extensions: `.md`, `.html`, `.Rmd`, `.yaml`,
+      `.yml`.
+    - Fails the workflow if broken links are found.
+    - Provides a summary and saves results to `links-results.md`.
+
+## Triggers
+
+The workflow is triggered by the following [GitHub Actions
+events](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows):
+
+- [`push`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push):
+  On pushes to `main`, `devel`, and `pre-release` branches.
+- [`pull_request`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request):
+  On pull requests (opened, synchronize, reopened, ready_for_review)
+  targeting `main`, `devel`, or `pre-release`.
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch):
+  Manual trigger.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call):
+  Triggered by another workflow.
+
+## Concurrency
+
+- Jobs are grouped by pull request number or branch and cancel
+  in-progress jobs for the same group.

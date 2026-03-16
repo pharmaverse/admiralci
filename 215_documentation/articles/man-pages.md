@@ -1,0 +1,49 @@
+# Man Pages
+
+## Purpose
+
+The [Man
+Pages](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/man-pages.yml)
+workflow generates and checks manual pages in the R package using
+[roxygen2](https://roxygen2.r-lib.org/). If the generated pages differ
+from those in the repository, the workflow fails.
+
+## Inputs
+
+- `r-version`: The version of R to use. The value is passed to the
+  [r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r)
+  action (see its documentation for permitted values).
+
+  *Default:* `release`.
+
+- `install-package`: Should the package be installed?
+
+  *Default:* `false`.
+
+## Jobs
+
+### `man` Job
+
+Runs `roxygen2` to generate and check man pages in the package.
+
+#### Conditions
+
+Executed unless the most recent commit message contains `[skip man]`.
+
+#### Steps
+
+1.  Set up R environment using the
+    [`setup_R`](https:/pharmaverse.github.io/admiralci/215_documentation/articles/setup_R.md)
+    action with `roxygen2` and optional package installation.
+2.  Generate man pages by running `roxygen2::roxygenize('.')`.
+3.  Check if manuals are up-to-date with `roxygen2` comments. If
+    differences are found, the workflow fails and provides instructions
+    to rerun `roxygen2::roxygenize('.')`.
+
+## Triggers
+
+- [workflow_dispatch](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch):
+  Manual trigger, allows specifying R version.
+- [workflow_call](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call):
+  Triggered by another workflow, allows specifying R version and package
+  installation.

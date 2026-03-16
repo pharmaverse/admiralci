@@ -1,0 +1,63 @@
+# Linting
+
+## Purpose
+
+The
+[`lintr`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/lintr.yml)
+workflow performs linting tasks, ensuring code style and quality.
+
+## Inputs
+
+- `r-version`: The version of R to use. The value is passed to the
+  [r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r)
+  action (see its documentation for permitted values).  
+  *Default:* `'release'`
+
+- `lint-all-files`: Lint all files every time. If set to `false`, only
+  files changed in the PR are linted.  
+  *Default:* `false`.
+
+- `install-package`: Should the package be installed?  
+  *Default:* `false`.
+
+## Jobs
+
+### `lint` Job
+
+Performs linting on the package.
+
+#### Conditions
+
+Executed unless the latest commit message contains `[skip lint]`.
+
+#### Steps
+
+1.  Set up R environment using
+    [`setup_R`](https:/pharmaverse.github.io/admiralci/215_documentation/articles/setup_r.md)
+    action, installing `lintr` and `cyclocomp`.
+2.  Determine changed files using
+    [`Ana06/get-changed-files`](https://github.com/Ana06/get-changed-files/tree/v2.2.0).
+3.  Lint files using
+    [`lintr::lint_package()`](https://lintr.r-lib.org/reference/lint.html),
+    excluding files based on changed files and `.lintr`/`renv.lock`
+    changes.
+4.  Raise an error if lints are detected, prompting review and
+    adjustment.
+
+## Triggers
+
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch):
+  Manual trigger.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call):
+  Triggered by another workflow.
+
+## Other Resources
+
+A `.lintr` file can be configured to exclude specific lint rules, for
+example:
+
+    exclusions: list(
+        "R/data.R" = Inf,
+        "inst" = list(undesirable_function_linter = Inf),
+        "vignettes" = list(undesirable_function_linter = Inf)
+      )

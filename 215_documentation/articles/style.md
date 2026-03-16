@@ -1,0 +1,43 @@
+# Style
+
+## Purpose
+
+The
+[`style.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/style.yml)
+workflow checks code style for changed files in the repository using
+[`styler`](https://github.com/r-lib/styler).
+
+Note: It’s possible to fix locally style issues using
+[`styler::style_file()`](https://styler.r-lib.org/reference/style_file.html).
+
+## Inputs
+
+- `r-version`: The version of R to use.
+
+  *Default:* `release`.
+
+## Jobs
+
+### `style` Job
+
+Runs code style checks using `styler` on changed files.
+
+#### Conditions
+
+Skipped if the commit message contains `[skip style]`.
+
+#### Steps
+
+1.  Set up R environment using the
+    [`setup_R`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml)
+    action.
+2.  Get changed files using
+    [`Ana06/get-changed-files`](https://github.com/Ana06/get-changed-files).
+3.  Run `styler` on changed R files and report any styling errors (files
+    with style violation will be displayed using `git diff` after
+    running `styler` on the workflows).
+
+## Triggers
+
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows)
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows)

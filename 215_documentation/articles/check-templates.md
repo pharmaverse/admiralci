@@ -1,0 +1,50 @@
+# Check Templates
+
+## Purpose
+
+Checks template scripts in the R package to ensure they run
+successfully.
+
+## Inputs
+
+- `r-version`: The version of R to use. The value is passed to the
+  [r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r)
+  action (see its documentation for permitted values).
+
+  **Default:** `'release'`
+
+## Jobs
+
+### Job: `check_templates`
+
+Verifies template scripts in the package.
+
+#### Conditions
+
+Executed unless the commit message contains `[skip check_templates]`.
+
+#### Steps
+
+1.  **Set up R environment**  
+    Uses
+    [`setup_R`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml)
+    action with `install-package: true`.
+
+2.  **Run Template Scripts**
+
+    - Reads the package description to get the package name.
+    - Identifies `.R` scripts in the `templates` directory.
+    - Runs each script using `Rscript --vanilla`.
+    - If any script fails (exit code 1), the workflow stops and reports
+      the failed scripts.
+    - If all succeed, reports success.
+
+## Triggers
+
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch):
+  Manual trigger, allows specifying `r-version`.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call):
+  Triggered by another workflow, accepts `r-version` input.
+
+[Source
+file](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-templates.yml)
