@@ -45,13 +45,19 @@ versions like `devel` and `oldrel` .
 - `devel` refers to the development version of R, which contains the
   latest changes and features that are still under development. This
   version is typically used by developers who want to test new features.
-  The “devel” version may be less stable.
+  The `devel` version may be less stable.
 
 ### Upstream Dependencies
 
 For upstream dependencies the current development version will be
-installed, except for releases and patch releases. The `admiral` package
-has the following upstream dependencies:
+installed, except for releases and patch releases. The admiral packages
+and their upstream dependencies are developed simultaneously and
+released together. Using the development version of the upstream
+dependencies ensures that the development version is in a good state for
+the next release and that problems induced by changes in the upstream
+dependencies are detected early.
+
+The `admiral` package has the following upstream dependencies:
 
 - `pharmaversesdtm` (SDTM test data)
 - `admiraldev` (utilities functions for the admiral package family)

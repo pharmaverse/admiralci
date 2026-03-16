@@ -72,10 +72,8 @@ document.addEventListener("DOMContentLoaded", function () {
     <li><a class="dropdown-item" href="articles/style.html">Style</a></li>
     <li><a class="dropdown-item" href="articles/spellchecks.html">Spellchecks</a></li>
     <li><a class="dropdown-item" href="articles/man-pages.html">Man Pages</a></li>
-    <li><a class="dropdown-item" href="articles/pkgdown.html">Pkgdown</a></li>
+    <li><a class="dropdown-item" href="articles/pkgdown.html">Create Website (pkgdown)</a></li>
     <li><a class="dropdown-item" href="articles/remove_pr_website.html">Remove PR Website</a></li>
-    <li><a class="dropdown-item" href="articles/tweak-page-hooks.html">Tweak Pages</a></li>
-    <li><a class="dropdown-item" href="articles/validation.html">Validation</a></li>
     <li><a class="dropdown-item" href="articles/cran-status.html">CRAN Status</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Actions</h6></li>
@@ -122,107 +120,106 @@ document.addEventListener("DOMContentLoaded", function () {
 <li>Most of the workflows are sharing the same steps (see <a href="https://pharmaverse.github.io/admiralci/articles/common_structure.html" class="external-link">Common workflows structure</a>)</li>
 </ul>
 </div>
-</div>
-<div class="section level1">
-<h1 id="available-workflows">Available workflows<a class="anchor" aria-label="anchor" href="#available-workflows"></a>
-</h1>
-<p>The following workflows are available in this repository, and can be reused in your repository. Please note that it depends on the set up of your repository when they are triggered.</p>
 <div class="section level2">
-<h2 id="workflows-to-be-triggered-by-mr-feature-branch-to-main-branch">Workflows to be triggered by MR (feature branch to main branch)<a class="anchor" aria-label="anchor" href="#workflows-to-be-triggered-by-mr-feature-branch-to-main-branch"></a>
+<h2 id="available-workflows">Available workflows<a class="anchor" aria-label="anchor" href="#available-workflows"></a>
 </h2>
+<p>The following workflows are available in this repository, and can be reused in your repository. Please note that when they are triggered depends on the set up of your repository.</p>
 <div class="section level3">
-<h3 id="check-templates">Check Templates<a class="anchor" aria-label="anchor" href="#check-templates"></a>
+<h3 id="workflows-to-be-triggered-by-mr-feature-branch-to-main-branch">Workflows to be triggered by MR (feature branch to main branch)<a class="anchor" aria-label="anchor" href="#workflows-to-be-triggered-by-mr-feature-branch-to-main-branch"></a>
 </h3>
+<div class="section level4">
+<h4 id="check-templates">Check Templates<a class="anchor" aria-label="anchor" href="#check-templates"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-templates.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/check-templates.html" class="external-link">documentation</a></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="linting">Linting<a class="anchor" aria-label="anchor" href="#linting"></a>
-</h3>
+<div class="section level4">
+<h4 id="linting">Linting<a class="anchor" aria-label="anchor" href="#linting"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/lintr.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/lintr.html" class="external-link">documentation</a></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="man-pages">Man Pages<a class="anchor" aria-label="anchor" href="#man-pages"></a>
-</h3>
+<div class="section level4">
+<h4 id="man-pages">Man Pages<a class="anchor" aria-label="anchor" href="#man-pages"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/man-pages.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/man-pages.html" class="external-link">documentation</a></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="r-cmd-checks">R CMD CHECKS<a class="anchor" aria-label="anchor" href="#r-cmd-checks"></a>
-</h3>
+<div class="section level4">
+<h4 id="r-cmd-checks">R CMD CHECKS<a class="anchor" aria-label="anchor" href="#r-cmd-checks"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-cmd-check.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/r-cmd-checks.html" class="external-link">documentation</a></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="check-spelling">Check Spelling<a class="anchor" aria-label="anchor" href="#check-spelling"></a>
-</h3>
+<div class="section level4">
+<h4 id="check-spelling">Check Spelling<a class="anchor" aria-label="anchor" href="#check-spelling"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellchecks.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/spellchecks.html" class="external-link">documentation</a></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="code-coverage">Code Coverage<a class="anchor" aria-label="anchor" href="#code-coverage"></a>
-</h3>
+<div class="section level4">
+<h4 id="code-coverage">Code Coverage<a class="anchor" aria-label="anchor" href="#code-coverage"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/code-coverage.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/code-coverage.html" class="external-link">documentation</a></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="readme-render">
+<div class="section level4">
+<h4 id="readme-render">
 <code>README</code> Render<a class="anchor" aria-label="anchor" href="#readme-render"></a>
-</h3>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/readme-render.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/readme-render.html" class="external-link">documentation</a></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="style">Style<a class="anchor" aria-label="anchor" href="#style"></a>
-</h3>
+<div class="section level4">
+<h4 id="style">Style<a class="anchor" aria-label="anchor" href="#style"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/style.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/style.html" class="external-link">documentation</a></li>
 </ul>
 </div>
 </div>
-<div class="section level2">
-<h2 id="workflows-to-be-triggered-by-a-new-release">Workflows to be triggered by a new release<a class="anchor" aria-label="anchor" href="#workflows-to-be-triggered-by-a-new-release"></a>
-</h2>
 <div class="section level3">
-<h3 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
+<h3 id="workflows-to-be-triggered-by-a-new-release">Workflows to be triggered by a new release<a class="anchor" aria-label="anchor" href="#workflows-to-be-triggered-by-a-new-release"></a>
 </h3>
+<div class="section level4">
+<h4 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-pkg-validation.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/validation.html" class="external-link">documentation</a></li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="pkgdown">Pkgdown<a class="anchor" aria-label="anchor" href="#pkgdown"></a>
-</h3>
+<div class="section level4">
+<h4 id="pkgdown">Pkgdown<a class="anchor" aria-label="anchor" href="#pkgdown"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/pkgdown.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/pkgdown.html" class="external-link">documentation</a></li>
 </ul>
 </div>
 </div>
-<div class="section level2">
-<h2 id="cron-workflows">
-<code>cron</code> Workflows<a class="anchor" aria-label="anchor" href="#cron-workflows"></a>
-</h2>
 <div class="section level3">
-<h3 id="cran-status">CRAN Status<a class="anchor" aria-label="anchor" href="#cran-status"></a>
+<h3 id="cron-workflows">
+<code>cron</code> Workflows<a class="anchor" aria-label="anchor" href="#cron-workflows"></a>
 </h3>
+<div class="section level4">
+<h4 id="cran-status">CRAN Status<a class="anchor" aria-label="anchor" href="#cran-status"></a>
+</h4>
 <ul>
 <li><a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/cran-status.yml" class="external-link">workflow code (YAML file)</a></li>
 <li><a href="https://pharmaverse.github.io/admiralci/articles/cran-status.html" class="external-link">documentation</a></li>
@@ -230,32 +227,32 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>
 </div>
 </div>
-<div class="section level1">
-<h1 id="how-to-use-these-workflows">How to use these workflows?<a class="anchor" aria-label="anchor" href="#how-to-use-these-workflows"></a>
-</h1>
 <div class="section level2">
-<h2 id="reuse-recommended">Reuse (recommended)<a class="anchor" aria-label="anchor" href="#reuse-recommended"></a>
+<h2 id="how-to-use-these-workflows">How to use these workflows?<a class="anchor" aria-label="anchor" href="#how-to-use-these-workflows"></a>
 </h2>
+<div class="section level3">
+<h3 id="reuse-recommended">Reuse (recommended)<a class="anchor" aria-label="anchor" href="#reuse-recommended"></a>
+</h3>
 <p>You could add just <em>one</em> file called <code>.github/workflows/common.yml</code> to directly import these workflows while receiving the latest updates and enhancements, given that the workflows defined in this repository are reusable via the <a href="https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow" class="external-link"><code>workflow_call</code></a> GitHub Actions event.</p>
 <p>The contents of the <code>.github/workflows/common.yml</code> file are available in the <a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/common.yml.inactive" class="external-link"><code>common.yml.inactive</code></a> file in this repository. It can be customized by modifying the global variables (look for the <code>env:</code> key) or inputs of the called workflows (look for the <code>with:</code> keys) in the file.</p>
 <p>To modify when the workflows are triggered, you can modify the <code>if:</code> key.</p>
 </div>
-<div class="section level2">
-<h2 id="copy-as-is-not-recommended">Copy as-is (not recommended)<a class="anchor" aria-label="anchor" href="#copy-as-is-not-recommended"></a>
-</h2>
+<div class="section level3">
+<h3 id="copy-as-is-not-recommended">Copy as-is (not recommended)<a class="anchor" aria-label="anchor" href="#copy-as-is-not-recommended"></a>
+</h3>
 <p>Alternatively, if you want a high level of customization, you could simply copy the workflows as-is from this repository to your repository and modify them to your liking. We do not recommend this approach. For example, you might miss some updated or even bugs fixes from <code>admiralci</code> workflows. If you need some updates in some existing workflows, please <a href="https://github.com/pharmaverse/admiralci/issues" class="external-link">raise an issue</a>.</p>
 </div>
-<div class="section level2">
-<h2 id="where-to-see-these-workflows-in-action">Where to see these workflows in action?<a class="anchor" aria-label="anchor" href="#where-to-see-these-workflows-in-action"></a>
-</h2>
 <div class="section level3">
-<h3 id="pull-request">Pull Request<a class="anchor" aria-label="anchor" href="#pull-request"></a>
+<h3 id="where-to-see-these-workflows-in-action">Where to see these workflows in action?<a class="anchor" aria-label="anchor" href="#where-to-see-these-workflows-in-action"></a>
 </h3>
+<div class="section level4">
+<h4 id="pull-request">Pull Request<a class="anchor" aria-label="anchor" href="#pull-request"></a>
+</h4>
 <p>At the bottom of a pull request, you can check on the status of each workflow: <img src="reference/figures/pr_workflows.jpg"></p>
 </div>
-<div class="section level3">
-<h3 id="actions-tab">Actions Tab<a class="anchor" aria-label="anchor" href="#actions-tab"></a>
-</h3>
+<div class="section level4">
+<h4 id="actions-tab">Actions Tab<a class="anchor" aria-label="anchor" href="#actions-tab"></a>
+</h4>
 <p>Alternatively, you can check on the workflows on the Actions tab in the repository as well: <img src="reference/figures/actions_tab_workflows.jpg"></p>
 <p>Most of our workflows are using Github Marketplace actions, referenced bellow :</p>
 <ul>
@@ -285,7 +282,13 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>
 </div>
 </div>
-
+<div class="section level2">
+<h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
+</h2>
+<p>Along with the authors and contributors, thanks to the following people for their work on the repository:</p>
+<p>Adam Forys, Daphne Grasselly, Dinakar Kulkarni, Franciszek Walkowiak</p>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -312,11 +315,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Dinakar Kulkarni <br><small class="roles"> Author, maintainer </small>   </li>
-<li>Stefan Bundfuss <br><small class="roles"> Author </small> <a href="https://orcid.org/0009-0005-0027-1198" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Daphne Grasselly <br><small class="roles"> Author </small>   </li>
-<li>Adam Forys <br><small class="roles"> Author </small>   </li>
-<li>Franciszek Walkowiak <br><small class="roles"> Author </small>   </li>
+<li>Stefan Bundfuss <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0005-0027-1198" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
@@ -327,7 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Dinakar Kulkarni, Stefan Bundfuss, Daphne Grasselly, Adam Forys, Franciszek Walkowiak.</p>
+  <p>Developed by Stefan Bundfuss.</p>
 </div>
 
 <div class="pkgdown-footer-right">

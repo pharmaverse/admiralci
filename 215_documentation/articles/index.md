@@ -17,7 +17,8 @@
 - [Linting](https:/pharmaverse.github.io/admiralci/215_documentation/articles/lintr.md):
 - [Man
   Pages](https:/pharmaverse.github.io/admiralci/215_documentation/articles/man-pages.md):
-- [pkgdown](https:/pharmaverse.github.io/admiralci/215_documentation/articles/pkgdown.md):
+- [Create Website
+  (pkgdown)](https:/pharmaverse.github.io/admiralci/215_documentation/articles/pkgdown.md):
 - [R CMD
   CHECKS](https:/pharmaverse.github.io/admiralci/215_documentation/articles/r-cmd-checks.md):
 - [Render

@@ -15,6 +15,9 @@ No explicit workflow inputs.
 ## Other Resources
 
 - `.lycheeignore`: Can be used to ignore specific links during checks.
+  See
+  [`admiral/.lycheeignore`](https://github.com/pharmaverse/admiral/blob/main/.lycheeignore)
+  for an example.
 
 ## Jobs
 

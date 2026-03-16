@@ -69,10 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
     <li><a class="dropdown-item" href="../articles/style.html">Style</a></li>
     <li><a class="dropdown-item" href="../articles/spellchecks.html">Spellchecks</a></li>
     <li><a class="dropdown-item" href="../articles/man-pages.html">Man Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/pkgdown.html">Pkgdown</a></li>
+    <li><a class="dropdown-item" href="../articles/pkgdown.html">Create Website (pkgdown)</a></li>
     <li><a class="dropdown-item" href="../articles/remove_pr_website.html">Remove PR Website</a></li>
-    <li><a class="dropdown-item" href="../articles/tweak-page-hooks.html">Tweak Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/validation.html">Validation</a></li>
     <li><a class="dropdown-item" href="../articles/cran-status.html">CRAN Status</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Actions</h6></li>
@@ -158,15 +156,21 @@ example if current <code>release</code> is <code>4.4</code>,
 <code>devel</code> refers to the development version of R, which
 contains the latest changes and features that are still under
 development. This version is typically used by developers who want to
-test new features. The “devel” version may be less stable.</li>
+test new features. The <code>devel</code> version may be less
+stable.</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="upstream-dependencies">Upstream Dependencies<a class="anchor" aria-label="anchor" href="#upstream-dependencies"></a>
 </h3>
 <p>For upstream dependencies the current development version will be
-installed, except for releases and patch releases. The
-<code>admiral</code> package has the following upstream
+installed, except for releases and patch releases. The admiral packages
+and their upstream dependencies are developed simultaneously and
+released together. Using the development version of the upstream
+dependencies ensures that the development version is in a good state for
+the next release and that problems induced by changes in the upstream
+dependencies are detected early.</p>
+<p>The <code>admiral</code> package has the following upstream
 dependencies:</p>
 <ul>
 <li>
@@ -187,7 +191,7 @@ repository. The file is expected by the <a href="setup_r.html"><code>setup_R</co
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Dinakar Kulkarni, Stefan Bundfuss, Daphne Grasselly, Adam Forys, Franciszek Walkowiak.</p>
+  <p>Developed by Stefan Bundfuss.</p>
 </div>
 
 <div class="pkgdown-footer-right">

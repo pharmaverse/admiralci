@@ -61,3 +61,6 @@ example:
         "inst" = list(undesirable_function_linter = Inf),
         "vignettes" = list(undesirable_function_linter = Inf)
       )
+
+or the standard admiral `lintr` configuration
+[`admiraldev/.lintr.R`](https://github.com/pharmaverse/admiraldev/blob/main/.lintr.R).

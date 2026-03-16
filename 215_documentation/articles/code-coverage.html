@@ -69,10 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
     <li><a class="dropdown-item" href="../articles/style.html">Style</a></li>
     <li><a class="dropdown-item" href="../articles/spellchecks.html">Spellchecks</a></li>
     <li><a class="dropdown-item" href="../articles/man-pages.html">Man Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/pkgdown.html">Pkgdown</a></li>
+    <li><a class="dropdown-item" href="../articles/pkgdown.html">Create Website (pkgdown)</a></li>
     <li><a class="dropdown-item" href="../articles/remove_pr_website.html">Remove PR Website</a></li>
-    <li><a class="dropdown-item" href="../articles/tweak-page-hooks.html">Tweak Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/validation.html">Validation</a></li>
     <li><a class="dropdown-item" href="../articles/cran-status.html">CRAN Status</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Actions</h6></li>
@@ -137,18 +135,6 @@ creation. Default: <code>false</code>.</li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="triggers">Triggers<a class="anchor" aria-label="anchor" href="#triggers"></a>
-</h2>
-<ul>
-<li>
-<a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch" class="external-link"><code>workflow_dispatch</code></a>:
-Manual trigger, allows specifying inputs.</li>
-<li>
-<a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call" class="external-link"><code>workflow_call</code></a>:
-Triggered by another workflow, allows specifying inputs.</li>
-</ul>
-</div>
-<div class="section level2">
 <h2 id="jobs">Jobs<a class="anchor" aria-label="anchor" href="#jobs"></a>
 </h2>
 <div class="section level3">
@@ -166,7 +152,7 @@ coverage percentage.</p>
 <div class="section level4">
 <h4 id="steps">Steps<a class="anchor" aria-label="anchor" href="#steps"></a>
 </h4>
-<ul>
+<ol style="list-style-type: decimal">
 <li>Set up R environment using <a href="https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml" class="external-link"><code>setup_R</code></a>
 action, installing <a href="https://covr.r-lib.org" class="external-link">covr</a>.</li>
 <li>Run coverage analysis with <a href="https://covr.r-lib.org" class="external-link">covr</a>:
@@ -178,13 +164,14 @@ action, installing <a href="https://covr.r-lib.org" class="external-link">covr</
 <li>Check for existence of coverage reports.</li>
 <li>Set coverage percentage as output.</li>
 <li>If coverage reports exist and event is a pull request:
-<ul>
+<ol style="list-style-type: lower-alpha">
 <li>Generate coverage summary report and badge using <a href="https://github.com/irongut/CodeCoverageSummary" class="external-link"><code>CodeCoverageSummary</code></a>.</li>
-<li>Upload coverage report artifact.</li>
+<li>Upload coverage report artifact. I link to download the artifact is
+provided in the log.</li>
 <li>Add coverage summary as a pull request comment.</li>
-</ul>
+</ol>
 </li>
-</ul>
+</ol>
 </div>
 </div>
 <div class="section level3">
@@ -203,31 +190,41 @@ is <code>main</code>.</p>
 <div class="section level4">
 <h4 id="steps-1">Steps<a class="anchor" aria-label="anchor" href="#steps-1"></a>
 </h4>
-<ul>
+<ol style="list-style-type: decimal">
 <li>Checkout the <code>badges</code> branch.</li>
 <li>Generate badge SVG using <a href="https://github.com/emibcn/badge-action" class="external-link">badge-action</a>.</li>
 <li>Commit badge to the branch.</li>
 <li>Push badge updates.</li>
-</ul>
+</ol>
 </div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="other-resources">Other Resources<a class="anchor" aria-label="anchor" href="#other-resources"></a>
+<h2 id="triggers">Triggers<a class="anchor" aria-label="anchor" href="#triggers"></a>
+</h2>
+<ul>
+<li>
+<a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch" class="external-link"><code>workflow_dispatch</code></a>:
+Manual trigger, allows specifying inputs.</li>
+<li>
+<a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call" class="external-link"><code>workflow_call</code></a>:
+Triggered by another workflow, allows specifying inputs.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
 </h2>
 <p>To enable badge creation, create an orphan <code>badges</code> branch
 in your repository:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">--orphan</span> badges</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># Back up files</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">mv</span> .git /tmp/.git-backup</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Remove everything else</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> <span class="pp">*</span> .<span class="pp">*</span></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co"># Restore git files</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">mv</span> /tmp/.git-backup .git</span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co"># Create a README file</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"# Badges"</span> <span class="op">&gt;</span> README.md</span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co"># Add, commit and push your new branch</span></span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">git</span> add . <span class="kw">&amp;&amp;</span> <span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Init badges"</span> <span class="kw">&amp;&amp;</span> <span class="fu">git</span> push origin badges</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># Remove everything (except .git)</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">git</span> rm <span class="at">-rf</span> .</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Create a README file</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"# Orphan branch for badges"</span> <span class="op">&gt;</span> README.md</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co"># Add, commit and push your new branch</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">git</span> add README.md</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Init badges"</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">git</span> push origin badges</span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -236,7 +233,7 @@ in your repository:</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Dinakar Kulkarni, Stefan Bundfuss, Daphne Grasselly, Adam Forys, Franciszek Walkowiak.</p>
+  <p>Developed by Stefan Bundfuss.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -20,7 +20,8 @@ compatibility and quality.
 ### `R-CMD-check` Job
 
 Runs R CMD checks in parallel on macOS, Windows, and Ubuntu using the
-latest R release.
+latest R release with latest packages installed that are listed in the
+`Imports` of `DESCRIPTION` file.
 
 #### Steps
 

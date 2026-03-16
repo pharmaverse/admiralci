@@ -43,6 +43,9 @@ dependencies, e.g.:
     - repo: pharmaverse/admiraldev
       host: https://github.com
 
+For these dependencies, the action will install the development version
+(`main` branch) from GitHub instead of the CRAN version.
+
 ## Jobs
 
 ### Main Job
@@ -54,7 +57,10 @@ Sets up the R environment and installs dependencies.
 - The job always runs.
 - The step “Install Development Versions of Dependencies” is skipped for
   commits with `[skip vbump]` in the message or for patch releases
-  (`refs/heads/patch`).
+  (`refs/heads/patch`) because for releases it is assumed that the
+  upstream dependencies are already at CRAN at the point of the release
+  of the package and for patch releases it is assumed that only the
+  package itself is being updated and not the upstream dependencies.
 
 #### Steps
 

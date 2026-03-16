@@ -69,10 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
     <li><a class="dropdown-item" href="../articles/style.html">Style</a></li>
     <li><a class="dropdown-item" href="../articles/spellchecks.html">Spellchecks</a></li>
     <li><a class="dropdown-item" href="../articles/man-pages.html">Man Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/pkgdown.html">Pkgdown</a></li>
+    <li><a class="dropdown-item" href="../articles/pkgdown.html">Create Website (pkgdown)</a></li>
     <li><a class="dropdown-item" href="../articles/remove_pr_website.html">Remove PR Website</a></li>
-    <li><a class="dropdown-item" href="../articles/tweak-page-hooks.html">Tweak Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/validation.html">Validation</a></li>
     <li><a class="dropdown-item" href="../articles/cran-status.html">CRAN Status</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Actions</h6></li>
@@ -143,7 +141,8 @@ parameter in <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck
 <code>R-CMD-check</code> Job<a class="anchor" aria-label="anchor" href="#r-cmd-check-job"></a>
 </h3>
 <p>Runs R CMD checks in parallel on macOS, Windows, and Ubuntu using the
-latest R release.</p>
+latest R release with latest packages installed that are listed in the
+<code>Imports</code> of <code>DESCRIPTION</code> file.</p>
 <div class="section level4">
 <h4 id="steps">Steps<a class="anchor" aria-label="anchor" href="#steps"></a>
 </h4>
@@ -172,7 +171,7 @@ action.</li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Dinakar Kulkarni, Stefan Bundfuss, Daphne Grasselly, Adam Forys, Franciszek Walkowiak.</p>
+  <p>Developed by Stefan Bundfuss.</p>
 </div>
 
 <div class="pkgdown-footer-right">

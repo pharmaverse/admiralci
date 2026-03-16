@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>pkgdown • admiralci</title>
+<title>Create Website (pkgdown) • admiralci</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="pkgdown">
+<meta property="og:title" content="Create Website (pkgdown)">
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   // Select all navbar links that have an aria-label
@@ -69,10 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
     <li><a class="dropdown-item" href="../articles/style.html">Style</a></li>
     <li><a class="dropdown-item" href="../articles/spellchecks.html">Spellchecks</a></li>
     <li><a class="dropdown-item" href="../articles/man-pages.html">Man Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/pkgdown.html">Pkgdown</a></li>
+    <li><a class="dropdown-item" href="../articles/pkgdown.html">Create Website (pkgdown)</a></li>
     <li><a class="dropdown-item" href="../articles/remove_pr_website.html">Remove PR Website</a></li>
-    <li><a class="dropdown-item" href="../articles/tweak-page-hooks.html">Tweak Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/validation.html">Validation</a></li>
     <li><a class="dropdown-item" href="../articles/cran-status.html">CRAN Status</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Actions</h6></li>
@@ -107,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>pkgdown</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Create Website (pkgdown)</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/pharmaverse/admiralci/blob/215_documentation/vignettes/pkgdown.Rmd" class="external-link"><code>vignettes/pkgdown.Rmd</code></a></small>
@@ -123,6 +121,21 @@ document.addEventListener("DOMContentLoaded", function () {
 package using <a href="https://pkgdown.r-lib.org/" class="external-link"><code>pkgdown</code></a>. Supports
 multi-version documentation and custom tweaks for pharmaverse
 packages.</p>
+<p>The website is deployed to the <code>gh-pages</code> branch of the
+repository.</p>
+<p>If triggered by a pull request, the website is stored in a
+subdirectory named after the feature branch, and a comment with the
+website link is posted on the PR. This is helpful for the review of the
+pull request. The subdirectory should be removed after the PR is merged.
+This can be done by the <a href="remove_pr_website.html"><code>remove_pr_website</code>
+workflow</a>. In the <a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/common.yml.inactive" class="external-link"><code>common.yml.inactive</code>
+file</a> the PR website is created only if <code>[create website]</code>
+is in the PR title.</p>
+<p>If multi-version documentation is enabled
+(<code>skip-multiversion-docs: false</code>) and the workflow is
+triggered by a push to a branch or tag (usually this happens when a pull
+request is merged or a release is created), the website is stored in a
+subdirectory named after the branch or tag.</p>
 <p>Source: <a href="https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/pkgdown.yml" class="external-link"><code>.github/workflows/pkgdown.yml</code></a></p>
 </div>
 <div class="section level2">
@@ -231,6 +244,21 @@ action.</li>
 <li><a href="https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call" class="external-link"><code>workflow_call</code></a></li>
 </ul>
 </div>
+<div class="section level2">
+<h2 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
+</h2>
+<p>To enable website creation, create an orphan <code>gh-pages</code>
+branch in your repository:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">--orphan</span> gh-pages</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co"># Remove everything (except .git)</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">git</span> rm <span class="at">-rf</span> .</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Create a README file</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"# Orphan branch for website"</span> <span class="op">&gt;</span> README.md</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co"># Add, commit and push your new branch</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">git</span> add README.md</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Init gh-pages"</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">git</span> push origin gh-pages</span></code></pre></div>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
@@ -238,7 +266,7 @@ action.</li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Dinakar Kulkarni, Stefan Bundfuss, Daphne Grasselly, Adam Forys, Franciszek Walkowiak.</p>
+  <p>Developed by Stefan Bundfuss.</p>
 </div>
 
 <div class="pkgdown-footer-right">

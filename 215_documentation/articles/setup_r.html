@@ -69,10 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
     <li><a class="dropdown-item" href="../articles/style.html">Style</a></li>
     <li><a class="dropdown-item" href="../articles/spellchecks.html">Spellchecks</a></li>
     <li><a class="dropdown-item" href="../articles/man-pages.html">Man Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/pkgdown.html">Pkgdown</a></li>
+    <li><a class="dropdown-item" href="../articles/pkgdown.html">Create Website (pkgdown)</a></li>
     <li><a class="dropdown-item" href="../articles/remove_pr_website.html">Remove PR Website</a></li>
-    <li><a class="dropdown-item" href="../articles/tweak-page-hooks.html">Tweak Pages</a></li>
-    <li><a class="dropdown-item" href="../articles/validation.html">Validation</a></li>
     <li><a class="dropdown-item" href="../articles/cran-status.html">CRAN Status</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Actions</h6></li>
@@ -163,6 +161,9 @@ dependencies, e.g.:</p>
   host: https://github.com
 - repo: pharmaverse/admiraldev
   host: https://github.com</code></pre>
+<p>For these dependencies, the action will install the development
+version (<code>main</code> branch) from GitHub instead of the CRAN
+version.</p>
 </div>
 <div class="section level2">
 <h2 id="jobs">Jobs<a class="anchor" aria-label="anchor" href="#jobs"></a>
@@ -178,7 +179,11 @@ dependencies, e.g.:</p>
 <li>The job always runs.</li>
 <li>The step “Install Development Versions of Dependencies” is skipped
 for commits with <code>[skip vbump]</code> in the message or for patch
-releases (<code>refs/heads/patch</code>).</li>
+releases (<code>refs/heads/patch</code>) because for releases it is
+assumed that the upstream dependencies are already at CRAN at the point
+of the release of the package and for patch releases it is assumed that
+only the package itself is being updated and not the upstream
+dependencies.</li>
 </ul>
 </div>
 <div class="section level4">
@@ -220,7 +225,7 @@ for the action definition.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Dinakar Kulkarni, Stefan Bundfuss, Daphne Grasselly, Adam Forys, Franciszek Walkowiak.</p>
+  <p>Developed by Stefan Bundfuss.</p>
 </div>
 
 <div class="pkgdown-footer-right">
