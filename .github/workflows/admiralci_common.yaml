@@ -43,7 +43,7 @@ jobs:
         shell: bash
   docs:
     name: Documentation
-    uses: pharmaverse/admiralci/.github/workflows/pkgdown.yml@main
+    uses: pharmaverse/admiralci/.github/workflows/pkgdown.yml@215_documentation
     if: >
       github.event_name == 'push' ||
       startsWith(github.ref, 'refs/tags/v') ||
