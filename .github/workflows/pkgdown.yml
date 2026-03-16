@@ -38,6 +38,11 @@ on:
         default: >-
           ^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$
         type: string
+      no-dev-website:
+        description: "Should be set to true if multi-version is skipped but the website isn't build in the dev subdirectory"
+        default: false
+        required: false
+        type: boolean
   workflow_call:
     inputs:
       r-version:
@@ -79,6 +84,11 @@ on:
         default: >-
           ^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$
         type: string
+      no-dev-website:
+        description: "Should be set to true if multi-version is skipped but the website isn't build in the dev subdirectory"
+        default: false
+        required: false
+        type: boolean
     secrets:
       GITHUB_PAT:
         required: false
@@ -227,7 +237,7 @@ jobs:
         id: website_link
         run: |
           LINK="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.head_ref }}"
-          if [[ "${{ inputs.skip-multiversion-docs }}" == "true" ]]; then
+          if [[ "${{ inputs.skip-multiversion-docs }}" == "true" && "${{ inputs.no-dev-website }}" == "false" ]]; then
             # If multiversion docs are skipped it is assumed that development
             # mode has been used when building the website with pgkdown, i.e.,
             # it is created in the `dev` subdirectory
@@ -241,7 +251,7 @@ jobs:
         with:
           header: "Documentation Website"
           message: |
-            The website/documentation is availables at ${{ steps.website_link.outputs.website_link }}.
+            The website/documentation is available at ${{ steps.website_link.outputs.website_link }}.
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
