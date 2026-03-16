@@ -60,14 +60,10 @@ navbar:
         href: articles/spellchecks.html
       - text: Man Pages
         href: articles/man-pages.html
-      - text: Pkgdown
+      - text: Create Website (pkgdown)
         href: articles/pkgdown.html
       - text: Remove PR Website
         href: articles/remove_pr_website.html
-      - text: Tweak Pages
-        href: articles/tweak-page-hooks.html
-      - text: Validation
-        href: articles/validation.html
       - text: CRAN Status
         href: articles/cran-status.html
       - text: ----

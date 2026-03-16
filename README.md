@@ -23,88 +23,88 @@ Notes :
 * Most of the workflows are sharing the same steps (see [Common workflows
 structure](https://pharmaverse.github.io/admiralci/articles/common_structure.html))
 
-# Available workflows
+## Available workflows
 
 The following workflows are available in this repository, and can be reused in
-your repository. Please note that it depends on the set up of your repository
-when they are triggered.
+your repository. Please note that when they are triggered depends on the 
+set up of your repository.
 
-## Workflows to be triggered by MR (feature branch to main branch)
+### Workflows to be triggered by MR (feature branch to main branch)
 
-### Check Templates
+#### Check Templates
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-templates.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/check-templates.html)
 
-### Linting
+#### Linting
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/lintr.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/lintr.html)
 
-### Man Pages
+#### Man Pages
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/man-pages.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/man-pages.html)
 
-### R CMD CHECKS
+#### R CMD CHECKS
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-cmd-check.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/r-cmd-checks.html)
 
-### Check Spelling
+#### Check Spelling
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellchecks.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/spellchecks.html)
 
-### Code Coverage
+#### Code Coverage
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/code-coverage.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/code-coverage.html)
 
-### `README` Render
+#### `README` Render
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/readme-render.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/readme-render.html)
 
-### Style
+#### Style
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/style.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/style.html)
 
-## Workflows to be triggered by a new release
+### Workflows to be triggered by a new release
 
-### Validation
+#### Validation
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-pkg-validation.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/validation.html)
 
-### Pkgdown
+#### Pkgdown
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/pkgdown.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/pkgdown.html)
 
-## `cron` Workflows
+### `cron` Workflows
 
-### CRAN Status
+#### CRAN Status
 
 * [workflow code (YAML
   file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/cran-status.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/cran-status.html)
 
 
-# How to use these workflows?
+## How to use these workflows?
 
-## Reuse (recommended)
+### Reuse (recommended)
 
 You could add just _one_ file called `.github/workflows/common.yml` to
 directly import these workflows while receiving the latest updates and
@@ -121,7 +121,7 @@ file in this repository. It can be customized by modifying the global variables
 
 To modify when the workflows are triggered, you can modify the `if:` key.
 
-## Copy as-is (not recommended)
+### Copy as-is (not recommended)
 
 Alternatively, if you want a high level of customization, you could
 simply copy the workflows as-is from this repository to your repository
@@ -130,14 +130,14 @@ example, you might miss some updated or even bugs fixes from `admiralci`
 workflows. If you need some updates in some existing workflows, please
 [raise an issue](https://github.com/pharmaverse/admiralci/issues).
 
-## Where to see these workflows in action?
+### Where to see these workflows in action?
 
-### Pull Request
+#### Pull Request
 
 At the bottom of a pull request, you can check on the status of each
 workflow: ![](man/figures/pr_workflows.jpg)
 
-### Actions Tab
+#### Actions Tab
 
 Alternatively, you can check on the workflows on the Actions tab in the
 repository as well: ![](man/figures/actions_tab_workflows.jpg)
@@ -167,3 +167,10 @@ bellow :
 * [spelling](https://docs.ropensci.org/spelling/)
 * [`styler`](https://styler.r-lib.org/)
 * [workflow\_call](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
+
+## Acknowledgments
+
+Along with the authors and contributors, thanks to the following people for
+their work on the repository:
+
+Adam Forys, Daphne Grasselly, Dinakar Kulkarni, Franciszek Walkowiak

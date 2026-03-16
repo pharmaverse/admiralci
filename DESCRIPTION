@@ -3,12 +3,8 @@ Type: Package
 Title: CI/CD Workflows for Admiral
 Version: 0.0.1
 Authors@R: c(
-    person("Dinakar", "Kulkarni", role = c("aut", "cre"), email = "admiralci@pharmaverse.com"),
-    person("Stefan", "Bundfuss", role = "aut",
-           comment = c(ORCID = "0009-0005-0027-1198")),
-    person("Daphne", "Grasselly", role = c("aut")),
-    person("Adam", "Forys", role = c("aut")),
-    person("Franciszek", "Walkowiak", role = c("aut")))
+    person("Stefan", "Bundfuss", role = c("aut", "cre"), email = "admiralci@pharmaverse.com",
+           comment = c(ORCID = "0009-0005-0027-1198")))
 Description: A set of common CI/CD workflows originally designed and developed for
     Admiral R package hosted in the Pharmaverse GitHub organization.
 License: Apache License (>= 2)

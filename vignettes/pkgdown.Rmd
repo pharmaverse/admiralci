@@ -1,16 +1,33 @@
 ---
-title: "pkgdown"
+title: "Create Website (pkgdown)"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{pkgdown}
+  %\VignetteIndexEntry{Create Website (pkgdown)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 # Purpose
 
-Automates the generation and deployment of documentation for the R package using [`pkgdown`](https://pkgdown.r-lib.org/). Supports multi-version documentation and custom tweaks for pharmaverse packages.
+Automates the generation and deployment of documentation for the R package using
+[`pkgdown`](https://pkgdown.r-lib.org/). Supports multi-version documentation
+and custom tweaks for pharmaverse packages.
+
+The website is deployed to the `gh-pages` branch of the repository.
+
+If triggered by a pull request, the website is stored in a subdirectory named
+after the feature branch, and a comment with the website link is posted on the
+PR. This is helpful for the review of the pull request. The subdirectory should
+be removed after the PR is merged. This can be done by the [`remove_pr_website`
+workflow](remove_pr_website.html). In the [`common.yml.inactive` file
+](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/common.yml.inactive)
+the PR website is created only if `[create website]` is in the PR title. 
+
+If multi-version documentation is enabled (`skip-multiversion-docs: false`) and
+the workflow is triggered by a push to a branch or tag (usually this happens
+when a pull request is merged or a release is created), the website is stored in
+a subdirectory named after the branch or tag.
 
 Source: [`.github/workflows/pkgdown.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/pkgdown.yml)
 
@@ -76,3 +93,19 @@ Executed if `skip-multiversion-docs` is `false` and commit message does not cont
 
 - [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch)
 - [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call)
+
+# Requirements
+
+To enable website creation, create an orphan `gh-pages` branch in your repository:
+
+```bash
+git checkout --orphan gh-pages
+# Remove everything (except .git)
+git rm -rf .
+# Create a README file
+echo "# Orphan branch for website" > README.md
+# Add, commit and push your new branch
+git add README.md
+git commit -m "Init gh-pages"
+git push origin gh-pages
+```
