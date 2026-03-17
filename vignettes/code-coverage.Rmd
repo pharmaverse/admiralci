@@ -36,7 +36,7 @@ Executed unless the latest commit message contains `[skip coverage]`.
 1. Set coverage percentage as output.
 1. If coverage reports exist and event is a pull request:
     a. Generate coverage summary report and badge using [`CodeCoverageSummary`](https://github.com/irongut/CodeCoverageSummary).
-    a. Upload coverage report artifact. I link to download the artifact is
+    a. Upload coverage report artifact. A link to download the artifact is
     provided in the log.
     a. Add coverage summary as a pull request comment.
 
