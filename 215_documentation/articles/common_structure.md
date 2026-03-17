@@ -57,10 +57,13 @@ dependencies ensures that the development version is in a good state for
 the next release and that problems induced by changes in the upstream
 dependencies are detected early.
 
-The `admiral` package has the following upstream dependencies:
+The [admiral](https://pharmaverse.github.io/admiral/) package has the
+following upstream dependencies:
 
-- `pharmaversesdtm` (SDTM test data)
-- `admiraldev` (utilities functions for the admiral package family)
+- [pharmaversesdtm](https://pharmaverse.github.io/pharmaversesdtm/)
+  (SDTM test data)
+- [admiraldev](https://pharmaverse.github.io/admiraldev/) (utilities
+  functions for the admiral package family)
 
 The dependencies are referred inside the `staged_dependencies.yaml` file
 in the root of the repository. The file is expected by the
