@@ -39,7 +39,7 @@ Executed unless the latest commit message contains `[skip coverage]`.
 5.  If coverage reports exist and event is a pull request:
     1.  Generate coverage summary report and badge using
         [`CodeCoverageSummary`](https://github.com/irongut/CodeCoverageSummary).
-    2.  Upload coverage report artifact. I link to download the artifact
+    2.  Upload coverage report artifact. A link to download the artifact
         is provided in the log.
     3.  Add coverage summary as a pull request comment.
 
