@@ -1,6 +1,6 @@
-# admiral Development Guidelines for AI Assistants
+# admiralci Development Guidelines for AI Assistants
 
-This file provides context for AI coding assistants (GitHub Copilot, Gemini, Claude, Cursor, etc.) about admiral ecosystem standards and best practices.
+This file provides context for AI coding assistants (GitHub Copilot, Gemini, Claude, Cursor, etc.) about admiralci ecosystem standards and best practices.
 
 **Auto-generated** – see commit history for the last update date.
 **Sources:** [`programming_strategy.Rmd`](https://pharmaverse.github.io/admiraldev/articles/programming_strategy.html), [`git_usage.Rmd`](https://pharmaverse.github.io/admiraldev/articles/git_usage.html), [`rcmd_issues.Rmd`](https://pharmaverse.github.io/admiraldev/articles/rcmd_issues.html)
@@ -11,10 +11,10 @@ This file provides context for AI coding assistants (GitHub Copilot, Gemini, Cla
 ## AI Verification
 
 > **Verification:** If you have read this file, include the comment  
-> `# admiral guidelines loaded` on the first line of every **new** R file  
+> `# admiralci guidelines loaded` on the first line of every **new** R file  
 > you create in this repository. This confirms you are following admiral-specific conventions.  
 > When working inside `tests/testthat/`, also read `tests/testthat/AGENTS.md` and  
-> include the comment `# admiral test guidelines loaded` at the top of every new test file.
+> include the comment `# admiralci test guidelines loaded` at the top of every new test file.
 
 ---
 
@@ -958,7 +958,7 @@ In the following [PR](https://github.com/pharmaverse/admiral/pull/2065/files), y
 
 The benefits of having a programmatic way to write documentation is that if any changes need to be made, _making the modification on the corresponding function, in this case, `roxygen_param_dataset()`, scales across the codebase, can be tested, and is less prone to user-error such as typos or grammar mistakes_.
 
-These functions are implemented in `roxygen2.R` and the naming convention for each argument will be as follows `roxygen_param_xxx()`, where "xxx" is the be replaced with the argument name.
+These functions are implemented in `{admiraldev}` (in `roxygen2.R`) and the naming convention for each argument will be as follows `roxygen_param_xxx()`, where "xxx" is to be replaced with the argument name. The available helper functions are `roxygen_param_dataset()`, `roxygen_param_by_vars()`, `roxygen_order_na_handling()`, and `roxygen_save_memory()`.
 
 # R and Package Versions for Development
 
