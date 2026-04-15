@@ -97,6 +97,8 @@ jobs:
   remove_docs:
     name: Remove PR Website
     uses: pharmaverse/admiralci/.github/workflows/remove_pr_website.yml@main
+    # The remove_pr_website workflow checks the type of event, i.e., it deletes
+    # the PR website only when the event type is 'closed'.
     if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[create website]')
     secrets:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
