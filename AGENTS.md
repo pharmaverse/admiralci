@@ -1,6 +1,6 @@
-# admiral Development Guidelines for AI Assistants
+# admiralci Development Guidelines for AI Assistants
 
-This file provides context for AI coding assistants (GitHub Copilot, Gemini, Claude, Cursor, etc.) about admiral ecosystem standards and best practices.
+This file provides context for AI coding assistants (GitHub Copilot, Gemini, Claude, Cursor, etc.) about admiralci ecosystem standards and best practices.
 
 **Auto-generated** – see commit history for the last update date.
 **Sources:** [`programming_strategy.Rmd`](https://pharmaverse.github.io/admiraldev/articles/programming_strategy.html), [`git_usage.Rmd`](https://pharmaverse.github.io/admiraldev/articles/git_usage.html), [`rcmd_issues.Rmd`](https://pharmaverse.github.io/admiraldev/articles/rcmd_issues.html)
@@ -11,10 +11,10 @@ This file provides context for AI coding assistants (GitHub Copilot, Gemini, Cla
 ## AI Verification
 
 > **Verification:** If you have read this file, include the comment  
-> `# admiral guidelines loaded` on the first line of every **new** R file  
+> `# admiralci guidelines loaded` on the first line of every **new** R file  
 > you create in this repository. This confirms you are following admiral-specific conventions.  
 > When working inside `tests/testthat/`, also read `tests/testthat/AGENTS.md` and  
-> include the comment `# admiral test guidelines loaded` at the top of every new test file.
+> include the comment `# admiralci test guidelines loaded` at the top of every new test file.
 
 ---
 
@@ -148,7 +148,8 @@ documentation of `set_admiral_options()`.
 
 ## Function Names
 
-* Function names should start with a verb and use snake case, e.g. `derive_var_base()`. 
+Function names should start with a verb and use snake case, e.g.,
+`derive_var_base()`.
 
 | Function name prefix                         | Description                                                                                         |
 |----------------------------------------------|-----------------------------------------------------------------------------------------------------|
@@ -157,7 +158,8 @@ documentation of `set_admiral_options()`.
 | `derive_var_` (e.g. `derive_var_trtdurd`)    | Functions which add a single variable                                                               |
 | `derive_vars_` (e.g. `derive_vars_dt`)       | Functions which add multiple variables                                                              |
 | `derive_param_` (e.g. `derive_param_os`)     | Functions which add a single parameter                                                              |
-| `compute_` /  `calculate_` / ...             | Functions that take vectors as input and return a vector                                            |
+| `derive_*_records` (e.g., `derive_summary_records`) | Functions that add records to the input dataset |
+| `compute_` / `convert_` / `impute_` / `transform_` | Functions that take vectors as input and return a vector                                            |
 | `create_`  /  `consolidate_`                 | Functions that create datasets without keeping the original observations                            |
 | `get_`                                       | Usually utility functions that return very specific objects that get passed through other functions |
 | `filter_`                                    | Functions that filter observations based on conditions associated with common clinical trial syntax |
@@ -170,8 +172,7 @@ documentation of `set_admiral_options()`.
 
 | Other Common Function Name Terms             | Description                                                                                         |
 |----------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| `_merged_` / `_joined_` / `_extreme_`        | Functions that follow the [generic function user-guide](https://pharmaverse.github.io/admiral/articles/generic.html).                                              |
-
+| `_merged_` / `_joined_` / `_extreme_`        | Functions that follow the [generic function user-guide](https://pharmaverse.github.io/admiral/cran-release/articles/generic.html)                                              |
 
 
 Please note that the appropriate *var*/*vars* prefix should be used for all cases in which the function creates any variable(s), regardless of the presence of a `new_var` argument in the function call. 
@@ -367,7 +368,7 @@ These custom assertion functions should either return an error in case of an inv
 
 For the most common types of input arguments like a single variable, a list of
 variables, a dataset, ... functions for checking are available (see
-[assertions](https://pharmaverse.github.io/admiral/reference/index.html#section-assertions)).
+[assertions](https://pharmaverse.github.io/admiraldev/dev/reference/index.html#assertion-functions)).
 
 Arguments which expect keywords should handle them in a case-insensitive manner,
 e.g., both `date_imputation = "FIRST"` and `date_imputation = "first"` should be
@@ -958,7 +959,7 @@ In the following [PR](https://github.com/pharmaverse/admiral/pull/2065/files), y
 
 The benefits of having a programmatic way to write documentation is that if any changes need to be made, _making the modification on the corresponding function, in this case, `roxygen_param_dataset()`, scales across the codebase, can be tested, and is less prone to user-error such as typos or grammar mistakes_.
 
-These functions are implemented in `roxygen2.R` and the naming convention for each argument will be as follows `roxygen_param_xxx()`, where "xxx" is the be replaced with the argument name.
+These functions are implemented in `{admiraldev}` (in `roxygen2.R`) and the naming convention for each argument will be as follows `roxygen_param_xxx()`, where "xxx" is to be replaced with the argument name. The available helper functions are `roxygen_param_dataset()`, `roxygen_param_by_vars()`, `roxygen_order_na_handling()`, and `roxygen_save_memory()`.
 
 # R and Package Versions for Development
 
@@ -1032,6 +1033,12 @@ devtools::check()
 ```
 
 Runs the full `R CMD check` suite locally. The PR CI will fail if check produces any errors, warnings, or notes. See the [R CMD Issues](https://pharmaverse.github.io/admiraldev/articles/rcmd_issues.html) vignette for guidance on resolving common failures.
+
+# Use of AI
+
+`{admiral}` has no prohibition on the use of AI from contributors. However, contributors still need to follow all [contributor guidelines](https://pharmaverse.github.io/admiral/cran-release/CONTRIBUTING.html) as well as ensuring their contributions do not violate copyright, regardless of whether AI tools were used in their creation. The admiral core team has created the  [`AGENTS.md`](https://github.com/pharmaverse/admiral/blob/main/AGENTS.md) file to provide the AI with guidance on admiral's particular needs, as well as the contribution guidelines that should be followed. The AGENTS.md file encodes admiral-specific conventions around coding style, testing expectations, and deprecation patterns that general-purpose AI tools won’t know by default. To gain a better understanding of the [`AGENTS.md`](https://github.com/pharmaverse/admiral/blob/main/AGENTS.md) file we recommend to read more on this topic [here](https://agents.md). 
+
+
 
 ---
 
