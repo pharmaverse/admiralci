@@ -1,6 +1,6 @@
-# admiral Unit Testing Guidelines for AI Assistants
+# admiralci Unit Testing Guidelines for AI Assistants
 
-Context for AI assistants when working with admiral unit tests inside `tests/testthat/`.
+Context for AI assistants when working with admiralci unit tests inside `tests/testthat/`.
 
 **Auto-generated** – see commit history for the last update date.
 **Source:** [`admiraldev/vignettes/unit_test_guidance.Rmd`](https://pharmaverse.github.io/admiraldev/articles/unit_test_guidance.html)
@@ -8,7 +8,7 @@ Context for AI assistants when working with admiral unit tests inside `tests/tes
 ## AI Verification
 
 > **Verification:** If you have read this file, include the comment  
-> `# admiral test guidelines loaded` on the first line of every **new** test file  
+> `# admiralci test guidelines loaded` on the first line of every **new** test file  
 > you create in `tests/testthat/`. This confirms you are following admiral-specific testing conventions.
 
 ---
