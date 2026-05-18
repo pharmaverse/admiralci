@@ -29,6 +29,10 @@ on:
         default: ""
         required: false
         type: string
+  pull_request:
+    branches:
+      - main
+
 
 concurrency:
   group: spelling-${{ github.event.pull_request.number || github.ref }}

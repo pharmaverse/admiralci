@@ -1,39 +1,111 @@
 ---
-title: "pkgdown"
+title: "Create Website (pkgdown)"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{pkgdown}
+  %\VignetteIndexEntry{Create Website (pkgdown)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# pkgdown Workflow
+# Purpose
 
-This GitHub Actions workflow automates the generation and deployment of documentation for an R package using `pkgdown`. The workflow supports multiple versions and offers flexibility in customization.
-This workflow uses rmarkdown to be able to generate html documentation from `Rmd` files (vignettes folder). This documentation is then stored in `gh-pages` branch (an orphan branch) and published.
-Note : this workflow is using [InsightEngineering pkgdown multiversion action](https://github.com/insightsengineering/r-pkgdown-multiversion) action.
+Automates the generation and deployment of documentation for the R package using
+[`pkgdown`](https://pkgdown.r-lib.org/). Supports multi-version documentation
+and custom tweaks for pharmaverse packages.
 
-## Inputs
+The website is deployed to the `gh-pages` branch of the repository.
 
-### Required Inputs
+If triggered by a pull request, the website is stored in a subdirectory named
+after the feature branch, and a comment with the website link is posted on the
+PR. This is helpful for the review of the pull request. The subdirectory should
+be removed after the PR is merged. This can be done by the [`remove_pr_website`
+workflow](remove_pr_website.html). In the [`common.yml.inactive` file
+](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/common.yml.inactive)
+the PR website is created only if `[create website]` is in the PR title. 
 
-- `r-version`: The version of R to use. Default: '4.1'.
+If multi-version documentation is enabled (`skip-multiversion-docs: false`) and
+the workflow is triggered by a push to a branch or tag (usually this happens
+when a pull request is merged or a release is created), the website is stored in
+a subdirectory named after the branch or tag.
 
-### Optional Inputs
+Source: [`.github/workflows/pkgdown.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/pkgdown.yml)
 
-- `skip-multiversion-docs`: Skip the creation of multi-version docs. Default: false. If set to True, a subfolder will be created under `gh-pages` (with the current github reference (branch/tag) name)
-- `multiversion-docs-landing-page`: Ref to use for the multiversion docs landing page. Default: main.
-- `latest-tag-alt-name`: An alternate name to use for 'latest-tag' for multiversion pkgdown docs. Default: "".
-- `branches-or-tags-to-list`: Regular expression defining branches or tags listed under the 'Versions' dropdown menu. Default: `^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$`.
+# Inputs
 
-## Workflow Structure
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values).
+  
+  *Default:* `release`
+- `install-package`: Should the package be installed?
+  
+  *Default:* `true`
+- `skip-multiversion-docs`: Skip creation of multi-version docs.
+  
+  *Default:* `true` (workflow_dispatch), `false` (workflow_call)
+- `insert-tweak-page-hook`: Customizes `pkgdown::tweak_page` to fix rdrr.io links.
+  
+  *Default:* `true`
+- `multiversion-docs-landing-page`: Ref for multiversion docs landing page.
+  
+  *Default:* `main`
+- `latest-tag-alt-name`: Alternate name for 'latest-tag' in multiversion docs.
+  
+  *Default:* `""`
+- `branches-or-tags-to-list`: Regular expression for branches/tags listed under 'Versions' dropdown.
+  
+  *Default:* `^main$|^devel$|^pre-release$|^latest-tag$|^cran-release$|^develop$|^v([0-9]+\\.)?([0-9]+\\.)?([0-9]+)$`
+- `GITHUB_PAT`: GitHub API access token (optional, for downstream ops/rendering).
 
-### `pkgdown` Job
+# Jobs
 
-This job runs the `pkgdown` process to generate documentation. It checks for `[skip docs]` in the commit message and, if not present, proceeds with the documentation generation. The documentation includes an additional script to fix rdrr.io links for pharmaverse packages.
+## pkgdown Job
 
-### `multi-version-docs` Job
+Generates and deploys documentation.
 
-This job, if triggered, deploys the multi-version documentation to the `gh-pages` branch. It checks for the `skip-multiversion-docs` input and `[skip docs]` in the commit message before proceeding.
+### Conditions
 
+Executed if the commit message does not contain `[skip docs]`.
+
+### Steps
+
+1. Setup R environment using [`setup_R`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml) action, installing `pkgdown`.
+3. Optionally add a script to fix `rdrr.io` links for pharmaverse packages if `insert-tweak-page-hook` is `true`.
+4. Publish documentation using `pkgdown::deploy_to_branch()`, optionally in a subdirectory for multi-version docs or pull requests.
+5. Determine website link for documentation.
+6. If triggered by a [`pull_request`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request), comment the website link on the PR.
+
+## Multi-version docs Job
+
+Deploys multi-version documentation.
+
+### Conditions
+
+Executed if `skip-multiversion-docs` is `false` and commit message does not contain `[skip docs]`.
+
+### Steps
+
+1. Checkout repository at `gh-pages` branch.
+3. Create and publish multi-version docs using [`r-pkgdown-multiversion`](https://github.com/insightsengineering/r-pkgdown-multiversion) action.
+
+# Triggers
+
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch)
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call)
+
+# Requirements
+
+To enable website creation, create an orphan `gh-pages` branch in your repository:
+
+```bash
+git checkout --orphan gh-pages
+# Remove everything (except .git)
+git rm -rf .
+# Create a README file
+echo "# Orphan branch for website" > README.md
+# Add, commit and push your new branch
+git add README.md
+git commit -m "Init gh-pages"
+git push origin gh-pages
+```

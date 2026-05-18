@@ -11,7 +11,7 @@ vignette: >
 # R Package Validation Report Workflow
 
 This GitHub Actions workflow generates a validation report for an R package. The report is triggered by manual dispatch, workflow call, or the publication of a release.
-It's mainly using [the validatoR](https://github.com/insightsengineering/thevalidatoR) downstream action.
+It's mainly using [`thevalidatoR`](https://github.com/insightsengineering/thevalidatoR) downstream action.
 
 ## Workflow Structure
 

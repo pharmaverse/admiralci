@@ -8,53 +8,38 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Man Pages Workflow
+# Purpose
 
-This GitHub Actions workflow is designed for generating and checking man pages in an R package using Roxygen. It uses a matrix strategy to test different versions of R.
+The [Man Pages](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/man-pages.yml) workflow generates and checks manual pages in the R package using `{roxygen2}`. If the generated pages differ from those in the repository, the workflow fails.
 
-## Inputs
+# Inputs
 
-### `r-version`
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values).
+  
+  *Default:* `release`.
+- `install-package`: Should the package be installed?
+  
+  *Default:* `false`.
 
-- **Description**: The version of R to use for testing.
-- **Default**: '4.1'
-- **Options**: '4.1', '4.2', '4.3'
-- **Required**: No
+# Jobs
 
-## Workflow Triggers
+## `man` Job
 
-This workflow is triggered in two ways:
+Runs `roxygen2` to generate and check man pages in the package.
 
-1. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event. When triggered manually, you can specify the R version.
+### Conditions
 
-2. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event. The R version is an input for this event.
-
-## Workflow Setup
-
-- **Name**: Man Pages
-- **Concurrency**: Man page jobs are organized by the pull request number or branch.
-- **Cancel-in-progress**: Allows canceling in-progress man page jobs.
-
-## Job: `lint`
-
-This job runs Roxygen to generate and check man pages in the R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+Executed unless the most recent commit message contains `[skip man]`.
 
 ### Steps
 
-#### Boilerplate Steps
+1. Set up R environment using the [`setup_R`](setup_R.html) action with `roxygen2` and optional package installation.
+2. Generate man pages by running `roxygen2::roxygenize('.')`.
+4. Check if manuals are up-to-date with `roxygen2` comments. If differences are found, the workflow fails and provides instructions to rerun `roxygen2::roxygenize('.')`.
 
-1. **Get branch names**: Retrieves branch names for further processing.
-2. **Checkout repo (PR)**: Checks out the repository for pull requests.
-3. **Checkout repository**: Checks out the repository for non-pull request events.
-4. **Normalize inputs**: Normalizes input values, including determining the R version.
+# Triggers
 
-5. **Restore cache**: Restores the cache for staged dependencies.
-6. **Run Staged dependencies**: Runs the staged dependencies action.
-7. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
-
-#### Roxygen Workflow
-
-8. **Generate man pages**: Runs `roxygen2::roxygenize()` to generate man pages.
-9. **Set-up safe dir**: Sets up a safe directory for git configuration.
-10. **Roxygen check**: Checks if manuals are up-to-date with Roxygen comments and provides guidance if differences are found. If differences are found, the workflow will fail, giving the cmd to run to the admiral devs : 
-`roxygen2::roxygenize('.', roclets = c('rd', 'collate', 'namespace'))`
+- [workflow_dispatch](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch): Manual trigger, allows specifying R version.
+- [workflow_call](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call): Triggered by another workflow, allows specifying R version and package installation.

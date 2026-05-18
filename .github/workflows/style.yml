@@ -39,6 +39,12 @@ jobs:
 
       - name: Get changed files
         id: changed-files
+        # creates an output `all` with the list of all changed files in the PR,
+        # in csv format
+        
+        # to be revised in https://github.com/pharmaverse/admiralci/issues/226
+        # if it could be simplified by updating the `filter` option of the
+        # action and using the `added_modified` output instead of `all`
         uses: Ana06/get-changed-files@v2.3.0
         with:
           format: csv

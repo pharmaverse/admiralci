@@ -4,66 +4,79 @@ template:
   bootstrap: 5
   params:
     bootswatch: flatly
+  light-switch: true
+  bslib:
+    preset: "flatly"
+    primary: "#2c3e50"
+    navbar-bg: "#2c3e50"
+  includes:
+    css: pkgdown/extra.css
+    in_header: |
+      <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Select all navbar links that have an aria-label
+        var navLinks = document.querySelectorAll('.navbar-nav .nav-link[aria-label]');
+
+        navLinks.forEach(function (link) {
+          // Initialize Bootstrap 5 Tooltip
+          link.setAttribute('title', link.getAttribute('aria-label'));
+          new bootstrap.Tooltip(link, {
+            placement: 'bottom', // Tooltip appears below the icon
+            trigger: 'hover'
+          });
+        });
+      });
+      </script>
 
 navbar:
   structure:
     left: [basics, workflows_details]
-    right: [search, slack, newissue, github]
+    right: [search, slack, newissue, github, lightswitch]
   components:
     basics:
       text: Basics
       menu:
-      - text: Common structure of the workflows
+      - text: Workflow Structure
         href: articles/common_structure.html
-      - text: Cheatsheet
-        href: articles/cheatsheet.html
+      - text: Glossary
+        href: articles/glossary.html
     workflows_details:
-      text: Workflows Details
+      text: Workflows and Actions
       menu:
-      - text: R CMD CHECKS
+      - text: Workflows
+      - text: R CMD Checks
         href: articles/r-cmd-checks.html
-      - text: Cran Status
-        href: articles/cran-status.html
       - text: Code Coverage
         href: articles/code-coverage.html
       - text: Check Templates
         href: articles/check-templates.html
-      - text: Links (Check broken links)
+      - text: Check URLs
         href: articles/links.html
-      - text: Lintr (Code lints)
+      - text: Lintr
         href: articles/lintr.html
-      - text: Style (Code style)
+      - text: Style
         href: articles/style.html
       - text: Spellchecks
         href: articles/spellchecks.html
-      - text: Man pages (Code Doc Rendering)
+      - text: Man Pages
         href: articles/man-pages.html
-      - text: Readme Render (Readme.Rmd -> Readme.md)
-        href: articles/readme-render.html
-      - text: Pkgdown (build doc from Vignettes)
+      - text: Create Website (pkgdown)
         href: articles/pkgdown.html
-      - text: Tweak Pages (fix pkgdown broken links)
-        href: articles/tweak-page-hooks.html
-      - text: Pkgdown (build doc from Vignettes)
-        href: articles/pkgdown.html
-      - text: Validation (build PDF validation report)
-        href: articles/validation.html
-      - text: Push Docker Images
-        href: articles/push-docker.html
-      - text: Codespaces
-        href: articles/docker_and_codespaces.html
-      - text: Propagate (share codespaces conf)
-        href: articles/propagate.html
-      - text: Check R latest version
-        href: articles/check-r-tags.html
-       
+      - text: Remove PR Website
+        href: articles/remove_pr_website.html
+      - text: CRAN Status
+        href: articles/cran-status.html
+      - text: ----
+      - text: Actions
+      - text: Set Up R
+        href: articles/setup_r.html
 
     slack:
       icon: fa-slack
       href: https://app.slack.com/client/T028PB489D3/C02M8KN8269
-      aria-label: Slack
+      aria-label: Join the pharmaverse Slack!
     newissue:
       icon: fa-bug
       href: https://github.com/pharmaverse/admiralci/issues/new/choose
-      aria-label: New Issue
+      aria-label: Report an Issue
 

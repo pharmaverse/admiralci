@@ -1,0 +1,86 @@
+---
+title: "setup_R Action"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{setup_R Action}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Purpose
+
+The `setup_R` action sets up the R environment for CI/CD workflows. It checks out the repository, configures the R version, installs dependencies, and optionally installs the package itself. It also installs development versions of upstream dependencies as defined in `staged_dependencies.yaml`.
+
+# Inputs
+
+- `r-version`: R version to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values).
+
+  *Default:* `'release'`.
+
+- `http-user-agent`: HTTP user agent string.
+
+  *Default:* `'default'`.
+
+- `extra-packages`: Extra packages to install (in addition to the dependencies of the package and the `remotes` and `yaml` package). Comma separated list.
+
+  *Default:* `''`.
+
+- `install-package`: Should the package be installed?
+
+  *Default:* `false`.
+
+# Other Resources
+
+The action expects the file [`staged_dependencies.yaml`](https://github.com/pharmaverse/admiralci/blob/main/staged_dependencies.yaml) to be present in the root of the repository. It defines upstream dependencies, e.g.:
+
+```
+upstream_repos:
+- repo: pharmaverse/pharmaversesdtm
+  host: https://github.com
+- repo: pharmaverse/admiraldev
+  host: https://github.com
+```
+
+For these dependencies, the action will install the development version (`main`
+branch) from GitHub instead of the CRAN version.
+
+# Jobs
+
+## Main Job
+
+Sets up the R environment and installs dependencies.
+
+### Conditions
+
+- The job always runs.
+- The step "Install Development Versions of Dependencies" is skipped for commits
+with `[skip vbump]` in the message or for patch releases (`refs/heads/patch`)
+because for releases it is assumed that the upstream dependencies are already at
+CRAN at the point of the release of the package and for patch releases it is
+assumed that only the package itself is being updated and not the upstream
+dependencies.
+
+### Steps
+
+1. **Checkout repository**  
+   Uses [`actions/checkout`](https://github.com/actions/checkout) to check out the repository.
+
+2. **Set up R**  
+   Uses [`r-lib/setup-r`](https://github.com/r-lib/actions/tree/v2/setup-r) to set up the R environment with the specified R version and HTTP user agent.
+
+3. **Install dependencies**  
+   Uses [`r-lib/setup-r-dependencies`](https://github.com/r-lib/actions/tree/v2/setup-r-dependencies) to install package dependencies and any extra packages.
+
+4. **Install Development Versions of Upstream Dependencies**  
+   Installs development versions of upstream dependencies defined in `staged_dependencies.yaml`, except for releases and patch releases.
+
+5. **Install package**  
+   If `install-package` is `true`, installs the package using `pak::pkg_install(".")`.
+
+# Source
+
+See [`setup_R/action.yaml`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml)
+for the action definition.

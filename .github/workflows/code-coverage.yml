@@ -8,7 +8,7 @@ on:
         type: choice
         options:
           - devel
-          - latest
+          - oldrel
       skip-coverage-badges:
         description: "Skip code coverage badge creation"
         default: false

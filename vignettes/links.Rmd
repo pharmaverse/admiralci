@@ -1,52 +1,58 @@
 ---
-title: "Links"
-output: 
-  rmarkdown::html_vignette
+title: "Check URLs Workflow"
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Links}
+  %\VignetteIndexEntry{Check URLs Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# Check URLs Workflow
+# Purpose
 
-This GitHub Actions workflow checks URLs in documentation files. It runs on the main, and pre-release branches for push events and specified pull request events.
+Validates URLs in documentation files to ensure all links are working and up-to-date.
 
-## Workflow Triggers
+Source: [`.github/workflows/links.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/links.yml)
 
-This workflow is triggered in the following ways:
+# Inputs
 
-1. **Push Events**: Triggered on pushes to the main, and pre-release branches.
+No explicit workflow inputs.
 
-2. **Pull Request Events**: Triggered on pull requests when opened, synchronized, reopened, or ready for review for the main, and pre-release branches.
+# Other Resources
 
-3. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event.
+- `.lycheeignore`: Can be used to ignore specific links during checks. See
+ [`admiral/.lycheeignore`](https://github.com/pharmaverse/admiral/blob/main/.lycheeignore)
+ for an example.
 
-4. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event.
-
-## Workflow Setup
-
-- **Concurrency**: URL check jobs are organized by the pull request number or branch.
-- **Cancel-in-progress**: Allows canceling in-progress URL check jobs.
+# Jobs
 
 ## Job: `links`
 
-This job validates URLs in documentation files. It runs on Ubuntu 20.04.
+Validates links in documentation files.
+
+### Condition
+
+Runs unless the commit message contains `[skip links]`.
 
 ### Steps
 
-1. **Checkout repo**: Checks out the repository.
+1. **Checkout repo**  
+   Uses [actions/checkout](https://github.com/actions/checkout) to check out the repository.
+2. **Check URLs in docs**  
+   Uses [lycheeverse/lychee-action](https://github.com/lycheeverse/lychee-action) to check URLs in documentation files.  
+   - Excludes private URLs, GitHub repository URLs, and specified patterns.
+   - Checks files with extensions: `.md`, `.html`, `.Rmd`, `.yaml`, `.yml`.
+   - Fails the workflow if broken links are found.
+   - Provides a summary and saves results to `links-results.md`.
 
-2. **Check URLs in docs**: Uses the lycheeverse/lychee-action to check URLs in documentation files. It excludes private URLs, GitHub repository URLs, and additional specified patterns.
+# Triggers
 
-   - **Parameters**:
-     - `fail`: true (Fails the workflow if broken links are found)
-     - `jobSummary`: true (Provides a summary of link check results)
-     - `format`: markdown (Outputs results in markdown format)
-     - `output`: links-results.md (Saves link check results to a file)
-     - `args`: Additional arguments for link checking (includes exclusion patterns and file extensions)
-   
-   - **Environment Variables**:
-     - `GITHUB_TOKEN`: GitHub token for authentication.
+The workflow is triggered by the following [GitHub Actions events](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows):
 
-Note: It's possible to ignore some links checks using `.lycheeignore` file.
+- [`push`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push): On pushes to `main`, `devel`, and `pre-release` branches.
+- [`pull_request`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request): On pull requests (opened, synchronize, reopened, ready_for_review) targeting `main`, `devel`, or `pre-release`.
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch): Manual trigger.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call): Triggered by another workflow.
+
+# Concurrency
+
+- Jobs are grouped by pull request number or branch and cancel in-progress jobs for the same group.

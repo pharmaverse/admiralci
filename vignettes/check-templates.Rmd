@@ -8,57 +8,43 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Check Templates Workflow
+# Purpose
 
-This GitHub Actions workflow is designed to check templates in an R package. It utilizes a matrix strategy to test different versions of R.
+Checks template scripts in the R package to ensure they run successfully.
 
-## Inputs
+# Inputs
 
-### `r-version`
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values). 
 
-- **Description**: The version of R to use for testing.
-- **Default**: '4.1'
-- **Options**: '4.1', '4.2', '4.3'
-- **Required**: No
+  **Default:** `'release'`
 
-## Workflow Triggers
-
-This workflow is triggered in two ways:
-
-1. **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event. When triggered manually, you can specify the R version to use.
-
-2. **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event. The R version is an input for this event.
-
-## Workflow Setup
-
-- **Name**: Check Templates
-- **Concurrency**: Templates are checked concurrently based on the branch or pull request number.
+# Jobs
 
 ## Job: `check_templates`
 
-This job verifies templates in the R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+Verifies template scripts in the package.
+
+### Conditions
+
+Executed unless the commit message contains `[skip check_templates]`.
 
 ### Steps
 
-#### Boilerplate Steps
+1. **Set up R environment**  
+   Uses [`setup_R`](https://github.com/pharmaverse/admiralci/blob/main/.github/actions/setup_R/action.yaml) action with `install-package: true`.
 
-These steps perform initial setup, such as checking out the repository, normalizing inputs, and restoring the cache.
+2. **Run Template Scripts**  
+   - Reads the package description to get the package name.
+   - Identifies `.R` scripts in the `templates` directory.
+   - Runs each script using `Rscript --vanilla`.
+   - If any script fails (exit code 1), the workflow stops and reports the failed scripts.
+   - If all succeed, reports success.
 
-1. **Get branch names**: Retrieves branch names for further processing.
-2. **Checkout repo (PR)**: Checks out the repository for pull requests.
-3. **Checkout repository**: Checks out the repository for non-pull request events.
-4. **Add safe directory**: Adds a safe directory to the configuration.
-5. **Normalize inputs**: Normalizes input values, including determining the R version and branch.
+# Triggers
 
-#### Staged Dependencies
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch): Manual trigger, allows specifying `r-version`.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call): Triggered by another workflow, accepts `r-version` input.
 
-These steps handle staged dependencies, including cache restoration and running the staged dependencies action.
-
-6. **Restore cache**: Restores the cache for staged dependencies.
-7. **Run Staged dependencies**: Runs the staged dependencies action.
-8. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
-
-#### Install and Run Templates
-
-9. **Install package**: Builds and installs the R package.
-10. **Run Template Scripts**: Reads the package description, identifies template scripts, and executes them. If any script fails, the workflow stops and provides an error message.
+[Source file](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/check-templates.yml)

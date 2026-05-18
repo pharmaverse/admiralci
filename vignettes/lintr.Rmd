@@ -1,80 +1,55 @@
 ---
-title: "LintR"
+title: "Linting"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LintR}
+  %\VignetteIndexEntry{Linting}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
----
-title: GitHub Actions Workflow Documentation
-author: Your Name
-date: \today
----
+# Purpose
 
-# Lint Workflow
+The [`lintr`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/lintr.yml) workflow performs linting tasks, ensuring code style and quality.
 
-This GitHub Actions workflow performs linting tasks for an R package. It runs on a docker container instance using `admiralci` images (`ghcr.io/pharmaverse/admiralci-${{ inputs.r-version }}:latest`) for the R environment.
+# Inputs
 
-## Workflow Triggers
+- `r-version`: The version of R to use. The value is passed to the
+[r-lib/setup-r](https://github.com/r-lib/actions/tree/v2/setup-r) action (see
+its documentation for permitted values).  
+  *Default:* `'release'`
 
-This workflow is triggered in the following ways:
+- `lint-all-files`: Lint all files every time. If set to `false`, only files changed in the PR are linted.  
+  *Default:* `false`.
 
-- **Manual Dispatch**: You can manually trigger the workflow using the "workflow_dispatch" event.
+- `install-package`: Should the package be installed?  
+  *Default:* `false`.
 
-- **Workflow Call**: The workflow can also be triggered by another workflow using the "workflow_call" event.
+# Jobs
 
-## Workflow Inputs
+## `lint` Job
 
-The workflow accepts the following inputs during manual dispatch or workflow call:
+Performs linting on the package.
 
-- `r-version`: The version of R to use, with options '4.1', '4.2', and '4.3'.
+### Conditions
 
-- `lint-all-files`: Boolean indicating whether to lint all files every time.
-
-- `latest-lintr`: Boolean indicating whether to install the latest lintr CRAN release.
-
-- `install-package`: Boolean indicating whether to install the R package locally.
-
-## Workflow Setup
-
-- **Concurrency**: Lint jobs are organized by the pull request number or branch.
-
-- **Cancel-in-progress**: Allows canceling in-progress lint jobs.
-
-## Job: `lint`
-
-This job performs linting tasks.
+Executed unless the latest commit message contains `[skip lint]`.
 
 ### Steps
 
-1. **Get branch names**: Gets the branch names using the tj-actions/branch-names action.
+1. Set up R environment using [`setup_R`](setup_r.html) action, installing `lintr` and `cyclocomp`.
+1. Determine changed files using [`Ana06/get-changed-files`](https://github.com/Ana06/get-changed-files/tree/v2.2.0).
+1. Lint files using `lintr::lint_package()`, excluding files based on changed files and `.lintr`/`renv.lock` changes.
+1. Raise an error if lints are detected, prompting review and adjustment.
 
-2. **Checkout repo (PR)**: Checks out the repository for pull requests.
+# Triggers
 
-3. **Checkout repository**: Checks out the repository for non-pull request events.
+- [`workflow_dispatch`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch): Manual trigger.
+- [`workflow_call`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call): Triggered by another workflow.
 
-4. **Normalize inputs**: Normalizes the R version input.
+# Other Resources
 
-5. **Restore cache**: Restores the cache for staged dependencies.
-
-6. **Run Staged dependencies**: Runs staged dependencies action to set up the environment.
-
-7. **Install dependencies from DESCRIPTION:** install dependencies from DESCRIPTION (in case of missing dependencies in parent admiralci docker image)
-
-8. **Install latest release of lintr**: Installs the latest release of lintr from the CRAN repository if specified.
-
-9. **Install package**: Installs the R package locally if specified.
-
-10. **Changed files**: Gets the list of changed files using the Ana06/get-changed-files action.
-
-11. **Lint**: Performs linting using lintr on the R package. Excludes files based on the changed files list.
-
-12. **Error if lints are detected**: Raises an error if lints are detected, prompting a review and adjustment of the code.
-
-Note : a `.lintr` file can be configured at the upstream repository level, to be able for example to exclude some lint rules such as this example :
+A `.lintr` file can be configured to exclude specific lint rules, for example:
 
 ```
 exclusions: list(
@@ -83,3 +58,4 @@ exclusions: list(
     "vignettes" = list(undesirable_function_linter = Inf)
   )
 ```
+or the standard admiral `lintr` configuration [`admiraldev/.lintr.R`](https://github.com/pharmaverse/admiraldev/blob/main/.lintr.R).
