@@ -147,7 +147,7 @@ bellow :
 
 * [r-lib-actions](https://github.com/r-lib/actions)
 * [InsightsEngineering](https://github.com/insightsengineering)
-* [lychee](https://github.com/lycheeverse/lychee)
+* `tools::check_package_urls()` (the URL check used by CRAN)
 * [`covr`](https://covr.r-lib.org/)
 * [`lintr`](https://lintr.r-lib.org/)
 * [`pkgdown`](https://pkgdown.r-lib.org/)
@@ -158,7 +158,7 @@ bellow :
 * [workflow\_call](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
 * [r-lib-actions](https://github.com/r-lib/actions)
 * [InsightsEngineering](https://github.com/insightsengineering)
-* [lychee](https://github.com/lycheeverse/lychee)
+* `tools::check_package_urls()` (the URL check used by CRAN)
 * [`covr`](https://covr.r-lib.org/)
 * [`lintr`](https://lintr.r-lib.org/)
 * [`pkgdown`](https://pkgdown.r-lib.org/)

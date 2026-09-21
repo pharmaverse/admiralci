@@ -18,7 +18,23 @@ on:
       - devel
       - pre-release
   workflow_dispatch:
+    inputs:
+      r-version:
+        description: "The version of R to use"
+        default: "release"
+        required: false
+        type: choice
+        options:
+          - devel
+          - release
+          - oldrel
   workflow_call:
+    inputs:
+      r-version:
+        description: "The version of R to use"
+        default: "release"
+        required: false
+        type: string
 
 concurrency:
   group: links-${{ github.event.pull_request.number || github.ref }}
@@ -30,27 +46,114 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       !contains(github.event.commits[0].message, '[skip links]')
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4.2.2
 
-      - name: Check URLs in docs
-        uses: lycheeverse/lychee-action@v2
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
         with:
-          fail: true
-          jobSummary: true
-          format: markdown
-          output: links-results.md
-          args: >-
-            --exclude-private
-            --exclude "https://github.com.*.git|lycheeverse.*"
-            --verbose
-            --no-progress
-            ${{ inputs.additional_args }}
-            **/*.md
-            **/*.html
-            **/*.Rmd
-            **/*.yaml
-            **/*.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          r-version: ${{ inputs.r-version || 'release' }}
+          use-public-rspm: true
+
+      # pandoc and xml2 are required by tools to extract URLs from README.md and NEWS.md
+      - name: Setup pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Install R packages
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: any::curl, any::xml2
+
+      - name: Check URLs as CRAN does
+        run: |
+          # Check URLs the same way `R CMD check --as-cran` does
+          if ("check_package_urls" %in% getNamespaceExports("tools")) {
+            res <- tools::check_package_urls(".")
+          } else {
+            # check_package_urls() is only exported from R >= 4.5.0
+            res <- tools:::check_url_db(
+              tools:::url_db_from_package_sources("."),
+              parallel = TRUE
+            )
+          }
+
+          # Drop URLs matching any pattern listed in .lycheeignore
+          ignore <- character()
+          if (file.exists(".lycheeignore")) {
+            ignore <- trimws(readLines(".lycheeignore", warn = FALSE))
+            ignore <- ignore[nzchar(ignore) & !startsWith(ignore, "#")]
+          }
+          is_ignored <- function(url) {
+            any(vapply(ignore, function(pattern) {
+              tryCatch(
+                grepl(pattern, url, perl = TRUE),
+                error = function(e) grepl(pattern, url, fixed = TRUE)
+              )
+            }, logical(1)))
+          }
+          if (NROW(res) > 0 && length(ignore) > 0) {
+            ignored <- vapply(res$URL, is_ignored, logical(1))
+            if (any(ignored)) {
+              cat("Ignoring URLs listed in .lycheeignore:\n")
+              cat(paste("-", unique(res$URL[ignored])), sep = "\n")
+            }
+            res <- res[!ignored, , drop = FALSE]
+          }
+
+          # Write markdown report to file and job summary
+          md_escape <- function(x) gsub("|", "\\|", x, fixed = TRUE)
+          if (NROW(res) == 0) {
+            md <- c(
+              "# URL Check",
+              "",
+              ":white_check_mark: No problems found by `tools::check_package_urls()`."
+            )
+          } else {
+            from <- vapply(res$From, paste, character(1), collapse = ", ")
+            status <- ifelse(nzchar(res$Status), res$Status, "-")
+            new <- ifelse(nzchar(res$New), paste("Moved to", res$New), "")
+            details <- trimws(paste(res$Message, new))
+            md <- c(
+              "# URL Check",
+              "",
+              sprintf(
+                ":x: `tools::check_package_urls()` found %d problematic URL(s) which CRAN will flag.",
+                NROW(res)
+              ),
+              "",
+              "If a URL is valid but cannot be reached from CI, add it to `.lycheeignore`.",
+              "",
+              "| URL | Found in | Status | Details |",
+              "|-----|----------|--------|---------|",
+              sprintf(
+                "| %s | %s | %s | %s |",
+                md_escape(res$URL), md_escape(from), md_escape(status), md_escape(details)
+              )
+            )
+          }
+          writeLines(md, "links-results.md")
+          summary_file <- Sys.getenv("GITHUB_STEP_SUMMARY")
+          if (nzchar(summary_file)) {
+            cat(md, file = summary_file, sep = "\n", append = TRUE)
+          }
+
+          if (NROW(res) > 0) {
+            print(res)
+            stop(
+              "Found problematic URLs. See the job summary or links-results.md for details.",
+              call. = FALSE
+            )
+          }
+          cat("All URLs are OK.\n")
+        shell: Rscript {0}
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: links-results
+          path: links-results.md
+          if-no-files-found: ignore
