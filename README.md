@@ -12,7 +12,7 @@ package quality standards without compromising performance, security, or
 reproducibility.
 
 Please refer to the
-[`.github/workflows`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows)
+[`.github/workflows`](https://github.com/pharmaverse/admiralci/tree/main/.github/workflows)
 directory to view the source code for the GitHub Actions workflows.
 
 Notes :
@@ -58,7 +58,7 @@ set up of your repository.
 #### Check Spelling
 
 * [workflow code (YAML
-  file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellchecks.yml)
+  file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellcheck.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/spellchecks.html)
 
 #### Code Coverage
