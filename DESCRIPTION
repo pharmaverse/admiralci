@@ -13,7 +13,6 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
 Depends: R (>= 3.5)
 Suggests:
     lintr,
@@ -33,3 +32,4 @@ Suggests:
     devtools,
     rstudioapi
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.1.0
