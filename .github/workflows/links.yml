@@ -70,14 +70,14 @@ jobs:
       - name: Check URLs as CRAN does
         run: |
           # Check URLs the same way `R CMD check --as-cran` does
+          # The URL database is only needed to report how many URLs were
+          # checked, it is collected by check_package_urls() as well
+          db <- tools:::url_db_from_package_sources(".")
           if ("check_package_urls" %in% getNamespaceExports("tools")) {
             res <- tools::check_package_urls(".")
           } else {
             # check_package_urls() is only exported from R >= 4.5.0
-            res <- tools:::check_url_db(
-              tools:::url_db_from_package_sources("."),
-              parallel = TRUE
-            )
+            res <- tools:::check_url_db(db, parallel = TRUE)
           }
 
           # Drop URLs matching any pattern listed in .lycheeignore
@@ -94,29 +94,78 @@ jobs:
               )
             }, logical(1)))
           }
+          ignored_urls <- character()
           if (NROW(res) > 0 && length(ignore) > 0) {
             ignored <- vapply(res$URL, is_ignored, logical(1))
             if (any(ignored)) {
+              ignored_urls <- unique(res$URL[ignored])
               cat("Ignoring URLs listed in .lycheeignore:\n")
-              cat(paste("-", unique(res$URL[ignored])), sep = "\n")
+              cat(paste("-", ignored_urls), sep = "\n")
             }
             res <- res[!ignored, , drop = FALSE]
           }
 
+          # Locate the source lines a URL occurs in, to ease fixing it
+          source_files <- list.files(
+            ".",
+            pattern = "\\.(R|Rd|Rmd|md|yml|yaml)$|^(DESCRIPTION|NEWS|CITATION)$",
+            ignore.case = TRUE, recursive = TRUE, all.files = TRUE
+          )
+          source_files <- source_files[
+            !startsWith(source_files, ".git/") & source_files != "links-results.md"
+          ]
+          source_lines <- lapply(source_files, function(file) {
+            tryCatch(readLines(file, warn = FALSE), error = function(e) character())
+          })
+          names(source_lines) <- source_files
+          max_hits <- 20
+          locate <- function(url) {
+            # The URL must not be followed by a character which would make it
+            # part of a longer URL, e.g., ".../admiral" must not match
+            # ".../admiral/reference"
+            pattern <- paste0("\\Q", url, "\\E(?![[:alnum:]/_~:?#@&%+=-]|\\.[[:alnum:]])")
+            hits <- unlist(lapply(source_files, function(file) {
+              found <- grep(pattern, source_lines[[file]], perl = TRUE)
+              if (length(found) > 0) sprintf("%s:%s", file, found) else NULL
+            }))
+            if (length(hits) == 0) {
+              "not found in the sources"
+            } else if (length(hits) > max_hits) {
+              c(hits[seq_len(max_hits)], sprintf("... and %d more", length(hits) - max_hits))
+            } else {
+              hits
+            }
+          }
+
           # Write markdown report to file and job summary
           md_escape <- function(x) gsub("|", "\\|", x, fixed = TRUE)
+          advice <- paste(
+            "If the URLs are acceptable, e.g., they are valid but cannot be reached from CI,",
+            "add them to the `.lycheeignore` file."
+          )
           if (NROW(res) == 0) {
-            md <- c(
+            summary_md <- c(
               "# URL Check",
               "",
-              ":white_check_mark: No problems found by `tools::check_package_urls()`."
+              ":white_check_mark: No problems found by `tools::check_package_urls()`.",
+              "",
+              sprintf("Checked %d URL(s) in the package sources.", NROW(db)),
+              if (length(ignored_urls) > 0) {
+                c(
+                  "",
+                  "The following URLs were ignored because they are listed in `.lycheeignore`:",
+                  "",
+                  paste("-", ignored_urls)
+                )
+              }
             )
+            details_md <- NULL
           } else {
             from <- vapply(res$From, paste, character(1), collapse = ", ")
             status <- ifelse(nzchar(res$Status), res$Status, "-")
             new <- ifelse(nzchar(res$New), paste("Moved to", res$New), "")
             details <- trimws(paste(res$Message, new))
-            md <- c(
+            summary_md <- c(
               "# URL Check",
               "",
               sprintf(
@@ -124,7 +173,7 @@ jobs:
                 NROW(res)
               ),
               "",
-              "If a URL is valid but cannot be reached from CI, add it to `.lycheeignore`.",
+              advice,
               "",
               "| URL | Found in | Status | Details |",
               "|-----|----------|--------|---------|",
@@ -133,17 +182,69 @@ jobs:
                 md_escape(res$URL), md_escape(from), md_escape(status), md_escape(details)
               )
             )
+            # The report contains more than the job summary: where each URL
+            # occurs in the sources and what to change it to
+            details_md <- c(
+              "",
+              "## Details",
+              unlist(lapply(seq_len(NROW(res)), function(i) {
+                c(
+                  "",
+                  sprintf("### %s", res$URL[i]),
+                  "",
+                  sprintf("- Status: %s %s", status[i], res$Message[i]),
+                  if (nzchar(res$New[i])) {
+                    sprintf("- Redirects to: %s (use this URL instead)", res$New[i])
+                  },
+                  if (nzchar(res$CRAN[i])) sprintf("- CRAN: %s", res$CRAN[i]),
+                  "- Occurs in:",
+                  paste("  -", locate(res$URL[i]))
+                )
+              }))
+            )
           }
-          writeLines(md, "links-results.md")
+          report_md <- c(
+            summary_md,
+            details_md,
+            "",
+            "---",
+            "",
+            sprintf(
+              "Produced by `tools::check_package_urls()` for %s@%s on %s.",
+              Sys.getenv("GITHUB_REPOSITORY", "the package"),
+              substr(Sys.getenv("GITHUB_SHA", "local"), 1, 7),
+              format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z")
+            )
+          )
+          writeLines(report_md, "links-results.md")
           summary_file <- Sys.getenv("GITHUB_STEP_SUMMARY")
           if (nzchar(summary_file)) {
-            cat(md, file = summary_file, sep = "\n", append = TRUE)
+            cat(
+              c(summary_md, "", "The `links-results.md` artifact lists where each URL occurs."),
+              file = summary_file, sep = "\n", append = TRUE
+            )
           }
 
           if (NROW(res) > 0) {
-            print(res)
+            # Include the URLs in the error itself, so that all the information
+            # is in one place instead of being printed before the error
             stop(
-              "Found problematic URLs. See the job summary or links-results.md for details.",
+              paste(
+                c(
+                  paste(
+                    "Found problematic URLs. See the job summary or download the",
+                    "links-results.md artifact using the link at the bottom of the",
+                    "\"Upload results\" section for further details.",
+                    advice
+                  ),
+                  "",
+                  sprintf(
+                    "* %s (%s %s) in %s",
+                    res$URL, status, res$Message, from
+                  )
+                ),
+                collapse = "\n"
+              ),
               call. = FALSE
             )
           }

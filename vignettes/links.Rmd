@@ -57,10 +57,16 @@ Runs unless the commit message contains `[skip links]`.
      equivalent internal functions of `{tools}` for R < 4.5.0). This checks URLs
      in `DESCRIPTION`, `man/*.Rd`, `CITATION`, `NEWS`, `README.md`, and `NEWS.md`.
    - Removes URLs matching a pattern from `.lycheeignore`.
-   - Writes the results to `links-results.md` and the job summary.
-   - Fails the workflow if any problematic URLs remain.
-6. **Upload results**  
-   Uploads `links-results.md` as the `links-results` artifact.
+   - Writes a table of the problematic URLs to the job summary and a more
+     detailed report to `links-results.md`.
+   - Fails the workflow if any problematic URLs remain. The error message lists
+     them.
+6. **Upload results**
+   Uploads `links-results.md` as the `links-results` artifact. In addition to
+   the table shown in the job summary, the report lists for each problematic
+   URL the files and line numbers it occurs in and, for a URL which was moved,
+   the URL to use instead. If the check passed, it states how many URLs were
+   checked and which ones were ignored.
 
 # Triggers
 
