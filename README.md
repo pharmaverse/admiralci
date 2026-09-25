@@ -18,7 +18,7 @@ directory to view the source code for the GitHub Actions workflows.
 Notes :
 
 * Some workflows are using github actions from
-  [InsightsEngineering](https://github.com/insightsengineering/)
+  [InsightsEngineering](https://github.com/insightsengineeringaaa/)
   group.
 * Most of the workflows are sharing the same steps (see [Common workflows
 structure](https://pharmaverse.github.io/admiralci/articles/common_structure.html))
