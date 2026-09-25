@@ -69,8 +69,9 @@ jobs:
 
       - name: Check URLs as CRAN does
         run: |
-          # Collect the URLs CRAN checks, i.e., those in DESCRIPTION, the Rd
-          # files, CITATION, NEWS, README.md, and NEWS.md
+          # The URLs CRAN checks, i.e., those in DESCRIPTION, the Rd files,
+          # CITATION, NEWS, README.md, and NEWS.md. Only collected to report
+          # how many URLs were checked, check_package_urls() collects them too.
           db <- tools:::url_db_from_package_sources(".")
 
           # CRAN does not check the vignette sources, so collect their URLs as
@@ -89,16 +90,26 @@ jobs:
             urls <- if (!out$status) tools:::.get_urls_from_HTML_file(html) else character()
             tools:::url_db(urls, rep.int(file, length(urls)))
           }))
-          if (!is.null(vignette_db)) {
-            vignette_db <- vignette_db[grepl("^https?://", vignette_db$URL), , drop = FALSE]
-            db <- rbind(db, vignette_db)
+          if (is.null(vignette_db)) {
+            vignette_db <- tools:::url_db(character(), character())
           }
+          # URLs which occur in the package sources as well are checked below
+          vignette_db <- vignette_db[
+            grepl("^https?://", vignette_db$URL) & !vignette_db$URL %in% db$URL, ,
+            drop = FALSE
+          ]
 
-          # Check the URLs the same way `R CMD check --as-cran` does. For the
-          # URLs collected above by url_db_from_package_sources() this is what
-          # tools::check_package_urls() does, it is not called directly because
-          # the vignette URLs are checked as well.
-          res <- tools:::check_url_db(db, parallel = TRUE)
+          # Check the URLs the same way `R CMD check --as-cran` does
+          if ("check_package_urls" %in% getNamespaceExports("tools")) {
+            res <- tools::check_package_urls(".")
+          } else {
+            # check_package_urls() is only exported from R >= 4.5.0
+            res <- tools:::check_url_db(db, parallel = TRUE)
+          }
+          # Check the vignette URLs the same way, CRAN just does not check them
+          if (NROW(vignette_db) > 0) {
+            res <- rbind(res, tools:::check_url_db(vignette_db, parallel = TRUE))
+          }
 
           # Drop URLs matching any pattern listed in .lycheeignore
           ignore <- character()
@@ -183,7 +194,7 @@ jobs:
               "",
               sprintf(
                 "Checked %d URL(s) in the package sources and the vignettes.",
-                NROW(db)
+                NROW(db) + NROW(vignette_db)
               ),
               if (length(ignored_urls) > 0) {
                 c(
