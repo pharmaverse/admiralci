@@ -9,17 +9,25 @@ vignette: >
 
 # Purpose
 
-Validates URLs in documentation files to ensure all links are working and up-to-date.
+Validates URLs in the package sources in the same way CRAN does, i.e. using
+`tools::check_package_urls()`, which is what `R CMD check --as-cran` runs. This
+ensures that any URL flagged by this workflow would also be flagged by CRAN
+(and vice versa).
 
 Source: [`.github/workflows/links.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/links.yml)
 
 # Inputs
 
-No explicit workflow inputs.
+| Name | Description | Default |
+|------|-------------|---------|
+| `r-version` | The version of R to use | `"release"` |
 
 # Other Resources
 
-- `.lycheeignore`: Can be used to ignore specific links during checks. See
+- `.lycheeignore`: Can be used to ignore specific links during checks (e.g.,
+ URLs which are valid but cannot be reached from GitHub runners). Each line is
+ treated as a regular expression and any URL matching one of them is ignored.
+ Empty lines and lines starting with `#` are skipped. See
  [`admiral/.lycheeignore`](https://github.com/pharmaverse/admiral/blob/main/.lycheeignore)
  for an example.
 
@@ -27,7 +35,7 @@ No explicit workflow inputs.
 
 ## Job: `links`
 
-Validates links in documentation files.
+Validates URLs in the package sources.
 
 ### Condition
 
@@ -37,12 +45,28 @@ Runs unless the commit message contains `[skip links]`.
 
 1. **Checkout repo**  
    Uses [actions/checkout](https://github.com/actions/checkout) to check out the repository.
-2. **Check URLs in docs**  
-   Uses [lycheeverse/lychee-action](https://github.com/lycheeverse/lychee-action) to check URLs in documentation files.  
-   - Excludes private URLs, GitHub repository URLs, and specified patterns.
-   - Checks files with extensions: `.md`, `.html`, `.Rmd`, `.yaml`, `.yml`.
-   - Fails the workflow if broken links are found.
-   - Provides a summary and saves results to `links-results.md`.
+2. **Setup R**  
+   Uses [r-lib/actions/setup-r](https://github.com/r-lib/actions/tree/v2-branch/setup-r) to install R.
+3. **Setup pandoc**  
+   Uses [r-lib/actions/setup-pandoc](https://github.com/r-lib/actions/tree/v2-branch/setup-pandoc) to install pandoc.
+   It is required (together with `{xml2}`) to extract URLs from `README.md` and `NEWS.md`.
+4. **Install R packages**  
+   Installs `{curl}` and `{xml2}`.
+5. **Check URLs as CRAN does**  
+   - Runs `tools::check_package_urls()` on the repository (falls back to the
+     equivalent internal functions of `{tools}` for R < 4.5.0). This checks URLs
+     in `DESCRIPTION`, `man/*.Rd`, `CITATION`, `NEWS`, `README.md`, and `NEWS.md`.
+   - Removes URLs matching a pattern from `.lycheeignore`.
+   - Writes a table of the problematic URLs to the job summary and a more
+     detailed report to `links-results.md`.
+   - Fails the workflow if any problematic URLs remain. The error message lists
+     them.
+6. **Upload results**
+   Uploads `links-results.md` as the `links-results` artifact. In addition to
+   the table shown in the job summary, the report lists for each problematic
+   URL the files and line numbers it occurs in and, for a URL which was moved,
+   the URL to use instead. If the check passed, it states how many URLs were
+   checked and which ones were ignored.
 
 # Triggers
 

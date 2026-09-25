@@ -7,6 +7,7 @@ Github
 Grasselly
 InsightsEngineering
 Kulkarni
+ORCID
 Pharmaverse
 Pkgdown
 README
@@ -18,9 +19,8 @@ formatter
 github
 insightsEngineering
 io
-lychee
-lycheeverse
 multiversion
+pandoc
 pharmaverse
 pkgdown
 rdrr

@@ -10,7 +10,7 @@ vignette: >
 
 # Purpose
 
-The [`r-cmd-check.yml`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/r-cmd-check.yml) workflow performs R CMD checks on the package across multiple operating systems and the latest released R version. This ensures package compatibility and quality.
+The [`r-cmd-check.yml`](https://github.com/pharmavhhherse/admiralci/blob/main/.github/workflows/r-cmd-check.yml) workflow performs R CMD checks on the package across multiple operating systems and the latest released R version. This ensures package compatibility and quality.
 
 # Inputs
 
