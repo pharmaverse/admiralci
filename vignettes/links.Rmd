@@ -27,7 +27,10 @@ Source: [`.github/workflows/links.yml`](https://github.com/pharmaverse/admiralci
 - `.lycheeignore`: Can be used to ignore specific links during checks (e.g.,
  URLs which are valid but cannot be reached from GitHub runners). Each line is
  treated as a regular expression and any URL matching one of them is ignored.
- Empty lines and lines starting with `#` are skipped. See
+ Empty lines and lines starting with `#` are skipped. A URL without a path,
+ e.g. `https://example.com`, is also matched against `https://example.com/`,
+ such that ignore files written for lychee (which normalized URLs before
+ matching them) keep working. See
  [`admiral/.lycheeignore`](https://github.com/pharmaverse/admiral/blob/main/.lycheeignore)
  for an example.
 

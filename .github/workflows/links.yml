@@ -106,12 +106,24 @@ jobs:
             ignore <- trimws(readLines(".lycheeignore", warn = FALSE))
             ignore <- ignore[nzchar(ignore) & !startsWith(ignore, "#")]
           }
+          # `.lycheeignore` was written for lychee, which normalizes a URL
+          # before matching it, i.e., a URL without a path like
+          # "https://example.com" becomes "https://example.com/". The URLs
+          # collected here are the ones written in the sources, so match the
+          # patterns against the normalized URL as well. Otherwise an entry
+          # like "https://example.com/" would no longer ignore the URL.
+          normalize_url <- function(url) {
+            sub("^(https?://[^/?#]+)($|[?#])", "\\1/\\2", url)
+          }
           is_ignored <- function(url) {
+            urls <- unique(c(url, normalize_url(url)))
             any(vapply(ignore, function(pattern) {
-              tryCatch(
-                grepl(pattern, url, perl = TRUE),
-                error = function(e) grepl(pattern, url, fixed = TRUE)
-              )
+              any(vapply(urls, function(url) {
+                tryCatch(
+                  grepl(pattern, url, perl = TRUE),
+                  error = function(e) grepl(pattern, url, fixed = TRUE)
+                )
+              }, logical(1)))
             }, logical(1)))
           }
           ignored_urls <- character()
