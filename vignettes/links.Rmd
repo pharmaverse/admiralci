@@ -53,9 +53,12 @@ Runs unless the commit message contains `[skip links]`.
 4. **Install R packages**  
    Installs `{curl}` and `{xml2}`.
 5. **Check URLs as CRAN does**  
-   - Runs `tools::check_package_urls()` on the repository (falls back to the
-     equivalent internal functions of `{tools}` for R < 4.5.0). This checks URLs
-     in `DESCRIPTION`, `man/*.Rd`, `CITATION`, `NEWS`, `README.md`, and `NEWS.md`.
+   - Checks the URLs in `DESCRIPTION`, `man/*.Rd`, `CITATION`, `NEWS`,
+     `README.md`, and `NEWS.md` in the same way `tools::check_package_urls()`
+     does, i.e., the same way CRAN does.
+   - Checks the URLs in the vignette sources (`vignettes/**/*.Rmd`, `*.qmd`,
+     `*.md`) as well. CRAN does not check these. Only absolute `http(s)` URLs
+     are checked, i.e., links to other vignettes or to help pages are skipped.
    - Removes URLs matching a pattern from `.lycheeignore`.
    - Writes a table of the problematic URLs to the job summary and a more
      detailed report to `links-results.md`.
