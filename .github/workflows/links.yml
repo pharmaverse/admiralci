@@ -83,10 +83,21 @@ jobs:
             pattern = "[.](Rmd|qmd|md)$", ignore.case = TRUE,
             recursive = TRUE, full.names = TRUE
           )
+          # pandoc does not understand the chunk headers of R Markdown, e.g.
+          # ```{r setup, include = FALSE}. It then pairs up the fences wrongly
+          # and treats the rest of the file as code, i.e., no links are found
+          # after the first chunk. Thus the chunks are removed beforehand.
+          # Their URLs are not links anyway.
+          remove_chunks <- function(lines) {
+            fence <- grepl("^[[:space:]]*```", lines)
+            lines[!(cumsum(fence) %% 2 == 1 | fence)]
+          }
           vignette_db <- do.call(rbind, lapply(vignette_files, function(file) {
+            md <- tempfile(fileext = ".md")
             html <- tempfile(fileext = ".html")
-            on.exit(unlink(html))
-            out <- tools:::.pandoc_md_for_CRAN(file, html)
+            on.exit(unlink(c(md, html)))
+            writeLines(remove_chunks(readLines(file, warn = FALSE)), md)
+            out <- tools:::.pandoc_md_for_CRAN(md, html)
             urls <- if (!out$status) tools:::.get_urls_from_HTML_file(html) else character()
             tools:::url_db(urls, rep.int(file, length(urls)))
           }))

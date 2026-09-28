@@ -62,6 +62,8 @@ Runs unless the commit message contains `[skip links]`.
    - Checks the URLs in the vignette sources (`vignettes/**/*.Rmd`, `*.qmd`,
      `*.md`) as well. CRAN does not check these. Only absolute `http(s)` URLs
      are checked, i.e., links to other vignettes or to help pages are skipped.
+     Code chunks are removed before the URLs are collected, so URLs which only
+     occur in code are not checked.
    - Removes URLs matching a pattern from `.lycheeignore`.
    - Writes a table of the problematic URLs to the job summary and a more
      detailed report to `links-results.md`.
