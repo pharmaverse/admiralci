@@ -69,6 +69,10 @@ jobs:
 
       - name: Check URLs as CRAN does
         run: |
+          # An error message is truncated at `warning.length` characters, which
+          # would cut off the list of URLs at the end of this script
+          options(warning.length = 8170L)
+
           # The URLs CRAN checks, i.e., those in DESCRIPTION, the Rd files,
           # CITATION, NEWS, README.md, and NEWS.md. Only collected to report
           # how many URLs were checked, check_package_urls() collects them too.
@@ -83,11 +87,11 @@ jobs:
             pattern = "[.](Rmd|qmd|md)$", ignore.case = TRUE,
             recursive = TRUE, full.names = TRUE
           )
-          # pandoc does not understand the chunk headers of R Markdown, e.g.
-          # ```{r setup, include = FALSE}. It then pairs up the fences wrongly
-          # and treats the rest of the file as code, i.e., no links are found
-          # after the first chunk. Thus the chunks are removed beforehand.
-          # Their URLs are not links anyway.
+          # pandoc does not reliably parse the code chunks of R Markdown
+          # vignettes. For some vignettes it treats the text after a chunk as
+          # code, such that its links are not found at all. Thus the chunks are
+          # removed before the file is converted. Their URLs are not links
+          # anyway.
           remove_chunks <- function(lines) {
             fence <- grepl("^[[:space:]]*```", lines)
             lines[!(cumsum(fence) %% 2 == 1 | fence)]
@@ -287,7 +291,17 @@ jobs:
 
           if (NROW(res) > 0) {
             # Include the URLs in the error itself, so that all the information
-            # is in one place instead of being printed before the error
+            # is in one place instead of being printed before the error. Long
+            # lists are cut off, the report contains all of them.
+            urls_listed <- one_line(sprintf(
+              "* %s (%s %s) in %s", res$URL, status, res$Message, from
+            ))
+            if (length(urls_listed) > 25) {
+              urls_listed <- c(
+                urls_listed[1:25],
+                sprintf("... and %d more, see the report", length(urls_listed) - 25)
+              )
+            }
             stop(
               paste(
                 c(
@@ -298,10 +312,7 @@ jobs:
                     advice
                   ),
                   "",
-                  one_line(sprintf(
-                    "* %s (%s %s) in %s",
-                    res$URL, status, res$Message, from
-                  ))
+                  urls_listed
                 ),
                 collapse = "\n"
               ),
