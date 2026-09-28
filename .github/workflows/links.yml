@@ -181,7 +181,10 @@ jobs:
           }
 
           # Write markdown report to file and job summary
-          md_escape <- function(x) gsub("|", "\\|", x, fixed = TRUE)
+          # A message can span several lines, e.g., for a host which cannot be
+          # resolved. Collapse it, such that it does not break the table.
+          one_line <- function(x) trimws(gsub("[[:space:]]+", " ", x))
+          md_escape <- function(x) gsub("|", "\\|", one_line(x), fixed = TRUE)
           advice <- paste(
             "If the URLs are acceptable, e.g., they are valid but cannot be reached from CI,",
             "add them to the `.lycheeignore` file."
@@ -238,7 +241,7 @@ jobs:
                   "",
                   sprintf("### %s", res$URL[i]),
                   "",
-                  sprintf("- Status: %s %s", status[i], res$Message[i]),
+                  one_line(sprintf("- Status: %s %s", status[i], res$Message[i])),
                   if (nzchar(res$New[i])) {
                     sprintf("- Redirects to: %s (use this URL instead)", res$New[i])
                   },
@@ -284,10 +287,10 @@ jobs:
                     advice
                   ),
                   "",
-                  sprintf(
+                  one_line(sprintf(
                     "* %s (%s %s) in %s",
                     res$URL, status, res$Message, from
-                  )
+                  ))
                 ),
                 collapse = "\n"
               ),
