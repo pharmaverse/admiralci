@@ -227,8 +227,20 @@ jobs:
           } else {
             from <- vapply(res$From, paste, character(1), collapse = ", ")
             status <- ifelse(nzchar(res$Status), res$Status, "-")
-            new <- ifelse(nzchar(res$New), paste("Moved to", res$New), "")
-            details <- trimws(paste(res$Message, new))
+            # A URL can be reported although its status is 200, e.g., if it was
+            # moved or is not in canonical form. Spell out why it is reported,
+            # using the same wording as `R CMD check --as-cran`.
+            cran_notes <- function(i) {
+              c(
+                if (nzchar(res$New[i])) sprintf("moved to %s", res$New[i]),
+                if (nzchar(res$Spaces[i])) "URL contains spaces",
+                if (nzchar(res$CRAN[i])) "CRAN URL not in canonical form",
+                if (nzchar(res$R[i])) "R-project URL not in canonical form"
+              )
+            }
+            details <- vapply(seq_len(NROW(res)), function(i) {
+              paste(Filter(nzchar, c(trimws(res$Message[i]), cran_notes(i))), collapse = "; ")
+            }, character(1))
             summary_md <- c(
               "# URL Check",
               "",
@@ -256,11 +268,10 @@ jobs:
                   "",
                   sprintf("### %s", res$URL[i]),
                   "",
-                  one_line(sprintf("- Status: %s %s", status[i], res$Message[i])),
+                  one_line(sprintf("- Status: %s %s", status[i], details[i])),
                   if (nzchar(res$New[i])) {
-                    sprintf("- Redirects to: %s (use this URL instead)", res$New[i])
+                    sprintf("- Use %s instead", res$New[i])
                   },
-                  if (nzchar(res$CRAN[i])) sprintf("- CRAN: %s", res$CRAN[i]),
                   "- Occurs in:",
                   paste("  -", locate(res$URL[i]))
                 )
@@ -294,7 +305,7 @@ jobs:
             # is in one place instead of being printed before the error. Long
             # lists are cut off, the report contains all of them.
             urls_listed <- one_line(sprintf(
-              "* %s (%s %s) in %s", res$URL, status, res$Message, from
+              "* %s (%s %s) in %s", res$URL, status, details, from
             ))
             if (length(urls_listed) > 25) {
               urls_listed <- c(
