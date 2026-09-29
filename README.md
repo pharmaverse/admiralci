@@ -12,7 +12,7 @@ package quality standards without compromising performance, security, or
 reproducibility.
 
 Please refer to the
-[`.github/workflows`](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows)
+[`.github/workflows`](https://github.com/pharmaverse/admiralci/tree/main/.github/workflows)
 directory to view the source code for the GitHub Actions workflows.
 
 Notes :
@@ -58,7 +58,7 @@ set up of your repository.
 #### Check Spelling
 
 * [workflow code (YAML
-  file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellchecks.yml)
+  file)](https://github.com/pharmaverse/admiralci/blob/main/.github/workflows/spellcheck.yml)
 * [documentation](https://pharmaverse.github.io/admiralci/articles/spellchecks.html)
 
 #### Code Coverage
@@ -147,7 +147,7 @@ bellow :
 
 * [r-lib-actions](https://github.com/r-lib/actions)
 * [InsightsEngineering](https://github.com/insightsengineering)
-* [lychee](https://github.com/lycheeverse/lychee)
+* `tools::check_package_urls()` (the URL check used by CRAN)
 * [`covr`](https://covr.r-lib.org/)
 * [`lintr`](https://lintr.r-lib.org/)
 * [`pkgdown`](https://pkgdown.r-lib.org/)
@@ -158,7 +158,7 @@ bellow :
 * [workflow\_call](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
 * [r-lib-actions](https://github.com/r-lib/actions)
 * [InsightsEngineering](https://github.com/insightsengineering)
-* [lychee](https://github.com/lycheeverse/lychee)
+* `tools::check_package_urls()` (the URL check used by CRAN)
 * [`covr`](https://covr.r-lib.org/)
 * [`lintr`](https://lintr.r-lib.org/)
 * [`pkgdown`](https://pkgdown.r-lib.org/)

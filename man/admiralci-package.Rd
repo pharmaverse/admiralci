@@ -4,20 +4,27 @@
 \name{admiralci-package}
 \alias{admiralci}
 \alias{admiralci-package}
-\title{admiralci: ADaM in R Asset Library - CI/CD Workflows}
+\title{admiralci: CI/CD Workflows for Admiral}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 A set of common CI/CD workflows originally designed and developed for Admiral R package hosted in the Pharmaverse GitHub organization.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://pharmaverse.github.io/admiralci}
+  \item \url{https://pharmaverse.github.io/admiralci/}
   \item \url{https://github.com/pharmaverse/admiralci}
 }
 
 }
 \author{
-\strong{Maintainer}: Open Source \email{admiralci@pharmaverse.com}
+\strong{Maintainer}: Stefan Bundfuss \email{admiralci@pharmaverse.com} (\href{https://orcid.org/0009-0005-0027-1198}{ORCID})
+
+Authors:
+\itemize{
+  \item Stefan Bundfuss \email{admiralci@pharmaverse.com} (\href{https://orcid.org/0009-0005-0027-1198}{ORCID})
+}
 
 }
 \keyword{internal}
