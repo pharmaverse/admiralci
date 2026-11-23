@@ -112,7 +112,7 @@ jobs:
 
       # ── 5. Install R dependencies ─────────────────────────────────────────
       - name: Install R dependencies
-        run: Rscript -e "install.packages('glue', repos = 'https://cloud.r-project.org')"
+        run: Rscript -e "install.packages(c('glue', 'yaml'), repos = 'https://cloud.r-project.org')"
 
       # ── 6. Generate AGENTS.md files ───────────────────────────────────────
       - name: Create AGENTS.md files
