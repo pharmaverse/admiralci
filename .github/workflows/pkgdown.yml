@@ -101,6 +101,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-fork:
+    name: Check repository type
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fail if running on a fork
+        run: |
+          if [ "${{ github.event.repository.fork }}" = "true" ]; then
+            echo "::error::This pkgdown workflow cannot run on forked repositories due to security restrictions."
+            exit 1
+          fi
+
   pkgdown:
     name: pkgdown
     runs-on: ubuntu-latest
@@ -232,7 +244,7 @@ jobs:
           EOF
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Determine website link
         id: website_link
         run: |
